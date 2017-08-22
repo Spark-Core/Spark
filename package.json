@@ -1,0 +1,27 @@
+{
+  "name": "easy-discord-bot",
+  "version": "0.0.1",
+  "description": "An easy to use discord bot, which uses small modules for getting commands and messages. ",
+  "main": "app.js",
+  "dependencies": {
+    "discord.js": "^11.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TobiasFeld22/Easy-Discord-Bot.git"
+  },
+  "keywords": [
+    "discord",
+    "nodejs"
+  ],
+  "author": "Tobias Feld (tobias.feld@hotmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TobiasFeld22/Easy-Discord-Bot/issues"
+  },
+  "homepage": "https://github.com/TobiasFeld22/Easy-Discord-Bot#readme"
+}
