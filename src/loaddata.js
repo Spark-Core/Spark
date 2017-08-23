@@ -67,7 +67,7 @@ return done(number, num)
 }
 temp.path = path
 data.names.push(temp.name)
-data.commands.set(temp)
+data.commands.set(temp.name, temp)
 aliasnumber = 0
 if (temp.aliases.length == 0){
     return done(number, num)
@@ -99,7 +99,7 @@ data.names.forEach(function(i, index, object){
     if (localdata.names.includes(i)){
 data.commands.delete(i)
     }else{
-        localdata.commands.set(i, data.commands[index])
+        localdata.commands.set(i, data.commands.get(i))
     }
     number  = number + 1;
     if (number == (index + 1)){return resolve(localdata)}

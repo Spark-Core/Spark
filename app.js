@@ -73,7 +73,7 @@ function doCommand(command, client, message){
 var command = client.commanddata.commands.get(command);
 if (command == undefined){return}
 try {
-    command.client(client, message);
+    command.command(client, message);
 }
 catch(err) {
     console.warn(command.name + " | had an error while executing.", err)
