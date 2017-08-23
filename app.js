@@ -5,10 +5,13 @@ const fs = require("fs")
 
 module.exports = {};
 module.exports.start = function(config){
-
+console.log("Loading commands")
     setup(fs, config, __dirname).then((commands) => {
-     start(client, config, commands)
-    })
+        client.commanddata = commands;
+     start(client, config, client.commanddata)
+ }).catch((err) => {
+     console.error("An error occurred while loading commands.", err)
+ })
 
 
 
@@ -22,7 +25,7 @@ module.exports.start = function(config){
 
 
 
-function start(client, config, commands){
+function start(client, config, commanddata){
 var startedAt = new Date();
 client.login(config.token)
 client.on('disconnect', (x) => {
@@ -40,9 +43,37 @@ next()
 })
 .catch(() => {console.error("Bot check failed, This wrapper doesn't support selfbots.")})
 function next(){
-console.log("Loaded "+commands.length+" commands, bot online")
+console.log(commanddata.commands.size + " commands | "+commanddata.aliases.size+", bot online")
 console.log("To add new commands, type \""+config.prefix+"easybot <name>\" to generate a new template!")
 }
 })
 
+client.on('message', (message) => {
+
+
+
+// commands
+if (!message.content.startsWith(prefix)){return}
+var content = message.content.replace(prefix, "")
+var command = content.split(" ")[0].toLowerCase();
+if (commanddata.commands.has(command) == true){
+    doCommand(command, client, message)
+}else if (commanddata.aliases.has(command) == true){
+    doCommand(commanddata.aliases.get(command), client, message);
 }
+})
+}
+
+
+function doCommand(command, client, message){
+var command = client.commanddata.commands.get(command);
+if (command == undefined){return}
+try {
+    command.client(client, message);
+}
+catch(err) {
+    console.warn(command.name + " | had an error while executing.", err)
+}
+
+
+};
