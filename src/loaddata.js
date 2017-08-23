@@ -1,13 +1,15 @@
 var fs = require("fs")
-module.exports = function(type, dir, local){
+module.exports = function(type, local){
 return new Promise(function(resolve, reject) {
 
 switch (type){
     case "cmds":
-    loadcommands(dir, local).then((commanddata) => {resolve(commanddata)}).catch((err) => reject(err));
+    loadcommands(__dirname, local).then((commanddata) => {resolve(commanddata)}).catch((err) => reject(err));
     break;
-    case "messages":
-    messages(dir, local).then(() => {resolve(messagedata)}).catch(err => reject(err))
+//    case "messages":
+//    messages(__dirname, local).then(() => {resolve(messagedata)}).catch(err => reject(err));
+//    break;
+// IDEA: To be done!
 }
 
 
@@ -38,25 +40,30 @@ results.forEach((path, num) => {
 var temp = require(path);
 if (temp.name != null && typeof temp.name == "string"){
     temp.name = temp.name.toLowerCase()
-}
-if (typeof temp != 'object'){
+
+} if (typeof temp != 'object'){
     console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: command_no_object")
 return done(number, num)
-}
-else if (temp.name == null || typeof temp.name != "string"){
+
+} else if (temp.name == null || typeof temp.name != "string"){
     console.warn(path + "  -  File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: invalid_or_no_name")
 return done(number, num)
-}else if (temp.name.includes(" ")) {
+
+} else if (temp.name.includes(" ")) {
     console.warn(path + "  -  File has an error with it's name, command names can't have spaces. Go to <pagelink> to learn more on how to set up commands. | code: space_in_command_name")
     return done(number, num)
-} if(data.commands.has(temp.name)){
+
+} else if(data.commands.has(temp.name)){
     console.warn(path + " -- This file has the same name as: " +  data.commands.get(temp.name).path +" | code: duplicate_file_name")
     return done(number, num)
-} else if (temp.aliases == null || temp.aliases.constructor != Array){
-    temp.aliases = []
-} else if (temp.command == null || typeof temp.command != 'function'){
+
+}   else if (temp.command == null || typeof temp.command != 'function'){
     console.warn(path + "  -  File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: no_command_function_set")
 return done(number, num)
+
+} if (temp.aliases == null || temp.aliases.constructor != Array){
+    temp.aliases = []
+
 }
 temp.path = path
 data.names.push(temp.name)
@@ -74,6 +81,7 @@ if (aliasnumber == num){
 })
 })
 function done(number, num){
+    number = number - 1
     if (number == num){return resolve(data)}
 }
 })
@@ -82,8 +90,9 @@ function done(number, num){
 
 
 function loadcommands(dir, local){
+    return new Promise(function(resolve, reject) {
 commands(dir).then((data) => {
-if (dir == local){next()}
+if (dir == local){return resolve(data)}
 commands(local).then((localdata) => {
     var number = 0;
 data.names.forEach(function(i, index, object){
@@ -93,12 +102,12 @@ data.commands.delete(i)
         localdata.set(i, data.commands[index])
     }
     number  = number + 1;
-    if (number == index){return resolve(localdata)}
+    if (number == (index + 1)){return resolve(localdata)}
 })
 
 
 
-next()
 }).catch((err) => {reject(err)})
 }).catch((err) => {reject(err)})
+});
 }
