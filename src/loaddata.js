@@ -1,13 +1,13 @@
 var fs = require("fs")
-module.exports = function(type, local){
+module.exports = function(type, dir){
 return new Promise(function(resolve, reject) {
-
+var local = require('path').dirname(require.main.filename)
 switch (type){
     case "cmds":
-    loadcommands(__dirname, local).then((commanddata) => {resolve(commanddata)}).catch((err) => reject(err));
+    loadcommands(dir, local).then((commanddata) => {resolve(commanddata)}).catch((err) => reject(err));
     break;
 //    case "messages":
-//    messages(__dirname, local).then(() => {resolve(messagedata)}).catch(err => reject(err));
+//    messages(dir, local).then(() => {resolve(messagedata)}).catch(err => reject(err));
 //    break;
 // IDEA: To be done!
 }
@@ -22,10 +22,10 @@ switch (type){
 
 
 function commands(location){
-    return new Promise(function(resolve, reject) {
 
+    return new Promise(function(resolve, reject) {
 fs.readdir(location + "/commands", function(err, results){
-if (err){return reject(err)}
+if (err){console.log(location); return reject(err)}
 var results = results.map(i => (location + "/commands/" + i)).filter((i) => {return i.endsWith(".js")})
 var data = {commands: new Map() , names: [], aliases: new Map()}
 if (results.length == 0){return resolve(data)}
@@ -99,7 +99,7 @@ data.names.forEach(function(i, index, object){
     if (localdata.names.includes(i)){
 data.commands.delete(i)
     }else{
-        localdata.set(i, data.commands[index])
+        localdata.commands.set(i, data.commands[index])
     }
     number  = number + 1;
     if (number == (index + 1)){return resolve(localdata)}

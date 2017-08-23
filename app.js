@@ -2,19 +2,18 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const setup = require("./setup.js");
 const fs = require("fs")
-var developer = true;
 module.exports = {};
 module.exports.start = function(config){
 console.log("Loading commands")
-    setup(fs, config, __dirname).then((commands) => {
+    setup(fs, config, require('path').dirname(require.main.filename)).then((commands) => {
         client.commanddata = commands;
      start(client, config, client.commanddata)
  }).catch((err) => {
-//     if (!developer){
-//         console.error("An error occurred while loading commands.", err)
-//     }else{
+     if (developer == undefined || developer == false){
+         console.error("An error occurred while loading commands.", err)
+     }else{
          console.log(err, err.stack)
-//     }
+     }
  })
 
 
