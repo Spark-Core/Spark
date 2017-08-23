@@ -7,7 +7,8 @@ module.exports.start = function(config){
 console.log("Loading commands")
     setup(fs, config, require('path').dirname(require.main.filename)).then((commands) => {
         client.commanddata = commands;
-     start(client, config, client.commanddata)
+        client.config = config;
+     start(client, client.config, client.commanddata)
  }).catch((err) => {
      if (developer == undefined || developer == false){
          console.error("An error occurred while loading commands.", err)
@@ -46,7 +47,7 @@ next()
 })
 .catch(() => {console.error("Bot check failed, This wrapper doesn't support selfbots.")})
 function next(){
-console.log(commanddata.commands.size + " commands | "+commanddata.aliases.size+", bot online")
+console.log(commanddata.commands.size + " commands | "+commanddata.aliases.size+" aliases, bot online")
 console.log("To add new commands, type \""+config.prefix+"easybot <name>\" to generate a new template!")
 }
 })
@@ -56,8 +57,8 @@ client.on('message', (message) => {
 
 
 // commands
-if (!message.content.startsWith(prefix)){return}
-var content = message.content.replace(prefix, "")
+if (!message.content.startsWith(config.prefix)){return}
+var content = message.content.replace(config.prefix, "")
 var command = content.split(" ")[0].toLowerCase();
 if (commanddata.commands.has(command) == true){
     doCommand(command, client, message)

@@ -9,11 +9,11 @@ if (config.prefix == null){return reject("You haven't set up your config correct
 fs.access(local + '/commands', fs.constants.R_OK, (err) => {
 if (err){
 fs.mkdir(local + "/commands", function(){
-    util.load('cmds', __dirname).then((data) => {console.log("done"); return resolve(data)}).catch(err => {return reject(err)})
+    util.load('cmds', __dirname).then((data) => {return resolve(data)}).catch(err => {return reject(err)})
 })
 }
 else{
-    util.load('cmds', __dirname).then((data) => {console.log("done"); return resolve(data)}).catch(err => {return reject(err)})
+    util.load('cmds', __dirname).then((data) => {return resolve(data)}).catch(err => {return reject(err)})
 }
 });
 });

@@ -25,7 +25,7 @@ function commands(location){
 
     return new Promise(function(resolve, reject) {
 fs.readdir(location + "/commands", function(err, results){
-if (err){console.log(location); return reject(err)}
+if (err){return reject(err)}
 var results = results.map(i => (location + "/commands/" + i)).filter((i) => {return i.endsWith(".js")})
 var data = {commands: new Map() , names: [], aliases: new Map()}
 if (results.length == 0){return resolve(data)}
