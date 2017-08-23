@@ -3,10 +3,10 @@ const client = new Discord.Client();
 const setup = require("./setup.js");
 const fs = require("fs")
 
-modules.exports = {};
-modules.exports.start = function(config){
+module.exports = {};
+module.exports.start = function(config){
 
-    setup(fs, config).then((commands) => {
+    setup(fs, config, __dirname).then((commands) => {
      start(client, config, commands)
     })
 
