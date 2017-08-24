@@ -44,13 +44,44 @@ function commands(location) {
             }
             var number = 0;
             results.forEach((path, num) => {
-
                 number = number + 1
                 var mod = require.resolve(path);
                 if (mod !== undefined && (require.cache[mod] !== undefined)) {
                     delete require.cache[require.resolve(path)]
                 }
                 var temp = require(path);
+                // komada command support.
+                if (temp.komada != null && temp.komada == true) {
+                    if (temp.conf != null) {
+                        if (temp.conf.aliases != null) {
+                            temp.aliases = temp.conf.aliases
+                        }
+
+                    }
+                    if (temp.help === null) {
+
+                        console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: komada_no_help")
+                        return done(number, num)
+
+                    } else {
+                        if (temp.help.name === null) {
+                            console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: komada_no_help_name")
+                            return done(number, num)
+
+                        } else {
+                            temp.name = temp.help.name.toLowerCase()
+
+                        }
+                    }
+                    if (temp.run != null && typeof temp.run == "function") {
+                        temp.command = temp.run
+                    } else {
+                        console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: komada_no_run_function")
+                        return done(number, num)
+
+                    }
+                }
+                // end komada command support.
                 if (temp.name != null && typeof temp.name === "string") {
                     temp.name = temp.name.toLowerCase()
 
