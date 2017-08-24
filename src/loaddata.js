@@ -1,4 +1,6 @@
 var fs = require("fs")
+const path = require("path");
+
 module.exports = function(type, dir){
 return new Promise(function(resolve, reject) {
 var local = require('path').dirname(require.main.filename)
@@ -24,7 +26,7 @@ switch (type){
 function commands(location){
 
     return new Promise(function(resolve, reject) {
-fs.readdir(location + "/commands", function(err, results){
+fs.readdir(path.resolve(location,  "commands"), function(err, results){
 if (err){return reject(err)}
 var results = results.map(i => (location + "/commands/" + i)).filter((i) => {return i.endsWith(".js")})
 var data = {commands: new Map() , names: [], aliases: new Map()}
@@ -34,7 +36,7 @@ results.forEach((path, num) => {
 
     number  = number + 1
     var mod = require.resolve(path);
-     if (mod && ((mod = require.cache[mod]) !== undefined)){
+     if (mod && (require.cache[mod] !== undefined)){
          delete require.cache[require.resolve(path)]
      }
 var temp = require(path);
