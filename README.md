@@ -11,6 +11,9 @@ You can easily make your own, it's so simple, your coding grandma can do it!
 
 
 First open a command prompt in the directory where you want your bot to run in.
+
+> copy the folder location, then navigate to that location using `cd <folder location>`
+
 Install edb by typing `npm install easy-discord-bot`
 
 In your project folder you can make a javascript file (app.js for example)
@@ -31,6 +34,8 @@ Replace `prefix-here` with the prefix you want to use for the bot (! / % $ etc.)
 Replace `token-here` with the token you got when you made a new application and bot user on [the Discord developer site](https://discordapp.com/developers/applications/me)
 
 >  **Never give out your token to anybody!** If somebody has your token, go to [the Discord developer site](https://discordapp.com/developers/applications/me) and immediately reset your token!!
+
+You can run your bot by typing `node app.js` in the command prompt. (change app.js to how you called your app file.)
 
 That's it, you don't need to install discord.js, because that's already taken care of by this package.
 
