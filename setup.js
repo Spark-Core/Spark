@@ -1,4 +1,5 @@
-module.exports = function(fs, config, local) {
+/* eslint max-params: ["error", 4]*/
+module.exports = function(fs, config, local, reload) {
     var util = require("./src/util.js")
     const path = require("path");
     return new Promise(function(resolve, reject) {
@@ -26,7 +27,7 @@ module.exports = function(fs, config, local) {
                 })
             } else {
 
-                util.load("cmds", __dirname).then((data) => {
+                util.load("cmds", __dirname, reload).then((data) => {
                     return resolve(data)
                 }).catch(err => {
                     return reject(err)

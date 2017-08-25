@@ -2,12 +2,12 @@
 var fs = require("fs")
 const path = require("path");
 
-module.exports = function(type, dir) {
+module.exports = function(type, dir, reload) {
     return new Promise(function(resolve, reject) {
         var local = require("path").dirname(require.main.filename)
         switch (type) {
             case "cmds":
-                loadcommands(dir, local).then((commanddata) => {
+                loadcommands(dir, local, reload).then((commanddata) => {
                     resolve(commanddata)
                 }).catch((err) => reject(err));
                 break;
@@ -24,7 +24,7 @@ module.exports = function(type, dir) {
 }
 
 
-function commands(location) {
+function commands(location, reload) {
 
     return new Promise(function(resolve, reject) {
         fs.readdir(path.resolve(location, "commands"), function(err, results) {
@@ -37,7 +37,8 @@ function commands(location) {
             var data = {
                 commands: new Map(),
                 names: [],
-                aliases: new Map()
+                aliases: new Map(),
+                issues: 0
             }
             if (results.length === 0) {
                 return resolve(data)
@@ -59,25 +60,24 @@ function commands(location) {
 
                     }
                     if (temp.help === null) {
-
                         console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: komada_no_help")
-                        return done(number, num)
+                        return done(number, num, reload)
 
-                    } else {
-                        if (temp.help.name === null) {
-                            console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: komada_no_help_name")
-                            return done(number, num)
-
-                        } else {
-                            temp.name = temp.help.name.toLowerCase()
-
-                        }
                     }
+                    if (temp.help.name === null) {
+                        console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: komada_no_help_name")
+                        return done(number, num, reload)
+
+                    }
+                    temp.name = temp.help.name.toLowerCase()
+
+
+
                     if (temp.run != null && typeof temp.run == "function") {
                         temp.command = temp.run
                     } else {
                         console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: komada_no_run_function")
-                        return done(number, num)
+                        return done(number, num, reload)
 
                     }
                 }
@@ -88,23 +88,23 @@ function commands(location) {
                 }
                 if (typeof temp != "object") {
                     console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: command_no_object")
-                    return done(number, num)
+                    return done(number, num, reload)
 
                 } else if (temp.name === null || typeof temp.name != "string") {
                     console.warn(path + "  -  File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: invalid_or_no_name")
-                    return done(number, num)
+                    return done(number, num, reload)
 
                 } else if (temp.name.includes(" ")) {
                     console.warn(path + "  -  File has an error with it's name, command names can't have spaces. Go to <pagelink> to learn more on how to set up commands. | code: space_in_command_name")
-                    return done(number, num)
+                    return done(number, num, reload)
 
                 } else if (data.commands.has(temp.name)) {
                     console.warn(path + " -- This file has the same name as: " + data.commands.get(temp.name).path + " | code: duplicate_file_name")
-                    return done(number, num)
+                    return done(number, num, reload)
 
                 } else if (temp.command === null || typeof temp.command != "function") {
                     console.warn(path + "  -  File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: no_command_function_set")
-                    return done(number, num)
+                    return done(number, num, reload)
 
                 }
                 if (temp.aliases === null || temp.aliases === undefined) {
@@ -129,7 +129,10 @@ function commands(location) {
                 })
             })
 
-            function done(number, num) {
+            function done(number, num, reload) {
+                if (reload) {
+                    data.issues = data.issues + 1
+                }
                 number = number - 1
                 if (number === num) {
                     return resolve(data)
@@ -140,22 +143,24 @@ function commands(location) {
 }
 
 
-function loadcommands(dir, local) {
+function loadcommands(dir, local, reload) {
     return new Promise(function(resolve, reject) {
-        commands(dir).then((data) => {
+        commands(dir, reload).then((data) => {
             if (dir === local) {
                 return resolve(data)
             }
-            commands(local).then((localdata) => {
-                var number = 0;
+            commands(local, reload).then((localdata) => {
+
                 data.names.forEach(function(i, index) {
                     if (localdata.names.includes(i)) {
                         data.commands.delete(i)
                     } else {
                         localdata.commands.set(i, data.commands.get(i))
                     }
-                    number = number + 1;
-                    if (number === (index + 1)) {
+                    if ((data.names.length - 1) === index) {
+                        if (reload) {
+                            localdata.issues = localdata.issues + data.issues
+                        }
                         return resolve(localdata)
                     }
                 })

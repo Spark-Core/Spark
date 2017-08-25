@@ -14,9 +14,9 @@ module.exports.start = function(config) {
     }).catch((err) => {
         if (developer === false) {
             return console.error("An error occurred while loading commands.", err)
-        } else {
-            console.log(err, err.stack)
         }
+        console.log(err, err.stack)
+
     })
 
 
@@ -41,9 +41,9 @@ function start(client, config, commanddata) {
         client.fetchApplication().then((application) => {
                 if (application.owner === null) {
                     return console.error("Owner check failed, please invite your bot to your server using this url\n https://discordapp.com/oauth2/authorize?client_id=" + client.user.id + "&scope=bot, then try to start the bot again.")
-                } else {
-                    config.owner_id = application.owner.id
                 }
+                config.owner_id = application.owner.id
+
                 next()
             })
             .catch(() => {
@@ -83,7 +83,16 @@ function doCommand(command, client, message) {
     try {
         command.command(client, message);
     } catch (err) {
-        console.warn(command.name + " | had an error while executing.", err)
+        if (developer) {
+            console.warn("Command: " + command.name + " | had an error while executing.", err)
+        } else if (err.code == "MODULE_NOT_FOUND") {
+            var mod = err.stack.split("\n")[0].replace("Error: Cannot find module ", "")
+            console.warn("Command: " + command.name + " | Requires the " + mod + " package to be installed.\nTo install this package, close the script and type: 'npm install " + mod.slice(1, -1) + "'")
+            if (message.author.id == client.config.owner_id) {
+                message.channel.send("[EDB] Command: **" + command.name + "** | Requires the " + mod + " package to be installed.\nTo install this package, close the script and type: `npm install " + mod.slice(1, -1) + "`")
+            }
+
+        }
     }
 
 
