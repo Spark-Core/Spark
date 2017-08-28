@@ -92,6 +92,8 @@ function doCommand(command, client, message) {
                 message.channel.send("[EDB] Command: **" + command.name + "** | Requires the " + mod + " package to be installed.\nTo install this package, close the script and type: `npm install " + mod.slice(1, -1) + "`")
             }
 
+        } else {
+            console.warn("Command: " + command.name + " | had an error. Show the developer of the command module that you are getting this error code: \n" + err)
         }
     }
 
