@@ -122,8 +122,9 @@ function commands(location, reload) {
                 }
                 temp.aliases.forEach((i, num) => {
                     aliasnumber = aliasnumber + 1
+                    i = i.toLowerCase();
                     data.aliases.set(i, temp.name)
-                    if (aliasnumber === num) {
+                    if (temp.aliases.length === (num + 1)) {
                         return done(number, num)
                     }
                 })
