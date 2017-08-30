@@ -1,12 +1,13 @@
 /* eslint no-console: 0 */
 const Discord = require("discord.js");
-const request = require("request");
+
 const client = new Discord.Client();
 const setup = require("./setup.js");
 const fs = require("fs")
+var util = require("./src/util.js")
 var developer = false;
 module.exports = {};
-module.exports.version = require('./package.json').version;
+module.exports.version = require("./package.json").version;
 module.exports.start = function(config) {
     console.log("Loading commands")
     setup(fs, config, require("path").dirname(require.main.filename)).then((commands) => {
@@ -40,47 +41,24 @@ function start(client, config, commanddata) {
         }
     })
     client.on("ready", () => {
-        client.fetchApplication().then((application) => {
-                if (application.owner === null) {
-                    return console.error("Owner check failed, please invite your bot to your server using this url\n https://discordapp.com/oauth2/authorize?client_id=" + client.user.id + "&scope=bot, then try to start the bot again.")
-                }
-                config.owner_id = application.owner.id
-
-                next()
-            })
-            .catch(() => {
-                return console.error("Bot check failed, This wrapper doesn't support selfbots.")
-            })
-
-        function next() {
-            console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
-            console.log("To add new commands, type \"" + config.prefix + "easybot <name>\" to generate a new template!")
-			update()
+        if (client.user.bot == false) {
+            return console.warn("This wrapper doesn't support selfbots.")
         }
-		
-		function update() {
-		request("https://easy-discord-bot.tk/update?currentversion=0.0.1", 
-        function(error, response, body){
-            if (error) {console.log("Sorry, There was a issue whilst checking for a update, try again later.")} 
-            
-            else if (response.statusCode == 200){
-                data = JSON.parse(body)
-                if (data.update_required){
-                    var version;
-                    if (require("easy-discord-bot").version.includes("-")){
-                        version = data.latest_beta
-                    }else{
-                        version = data.latest
-                    }
 
-                    console.log("An update is required, please type npm install easy-discord-bot \nto install the latest version  (v" + version + ")" )
-            } else { return } }
+        console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
+        console.log("To add new commands, type \"" + config.prefix + "easybot <name>\" to generate a new template!")
+        util.checkUpdate(module.exports).then(update => {
+            console.log(update)
+        }).catch(err => {
+            console.warn(err)
+        })
 
 
-})}
+
+
     })
-	
-	
+
+
 
     client.on("message", (message) => {
 
