@@ -1,11 +1,12 @@
 {
   "name": "easy-discord-bot",
-  "version": "0.0.1",
+  "version": "0.0.2-beta.0",
   "description": "An easy to use discord bot, which uses small modules for getting commands and messages. ",
   "main": "app.js",
   "dependencies": {
     "discord.js": "^11.1.0",
-    "fs": "latest"
+    "fs": "latest",
+    "request": "latest"
   },
   "devDependencies": {},
   "scripts": {

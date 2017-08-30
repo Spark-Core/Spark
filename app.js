@@ -1,10 +1,12 @@
 /* eslint no-console: 0 */
 const Discord = require("discord.js");
+const request = require("request");
 const client = new Discord.Client();
 const setup = require("./setup.js");
 const fs = require("fs")
 var developer = false;
 module.exports = {};
+module.exports.version = require('./package.json').version;
 module.exports.start = function(config) {
     console.log("Loading commands")
     setup(fs, config, require("path").dirname(require.main.filename)).then((commands) => {
@@ -53,8 +55,32 @@ function start(client, config, commanddata) {
         function next() {
             console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
             console.log("To add new commands, type \"" + config.prefix + "easybot <name>\" to generate a new template!")
+			update()
         }
+		
+		function update() {
+		request("https://easy-discord-bot.tk/update?currentversion=0.0.1", 
+        function(error, response, body){
+            if (error) {console.log("Sorry, There was a issue whilst checking for a update, try again later.")} 
+            
+            else if (response.statusCode == 200){
+                data = JSON.parse(body)
+                if (data.update_required){
+                    var version;
+                    if (require("easy-discord-bot").version.includes("-")){
+                        version = data.latest_beta
+                    }else{
+                        version = data.latest
+                    }
+
+                    console.log("An update is required, please type npm install easy-discord-bot \nto install the latest version  (v" + version + ")" )
+            } else { return } }
+
+
+})}
     })
+	
+	
 
     client.on("message", (message) => {
 
