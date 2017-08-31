@@ -1,6 +1,7 @@
+/* eslint no-console: 0 */
 var fs = require("fs")
 var path = require("path");
-module.exports = function (dir, local, reload) {
+module.exports = function(dir, local, reload) {
     return new Promise(function(resolve, reject) {
         commands(dir, reload).then((data) => {
             if (dir === local) {
@@ -33,7 +34,7 @@ module.exports = function (dir, local, reload) {
     });
 }
 
- function commands(location, reload) {
+function commands(location, reload) {
 
     return new Promise(function(resolve, reject) {
         fs.readdir(path.resolve(location, "commands"), function(err, results) {

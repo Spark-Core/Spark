@@ -1,4 +1,3 @@
-/* eslint no-console: 0 */
 const path = require("path");
 const util = require("./util");
 module.exports = function(type, dir, reload) {

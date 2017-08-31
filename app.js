@@ -44,9 +44,29 @@ function start(client, config, commanddata) {
         if (client.user.bot == false) {
             return console.warn("This wrapper doesn't support selfbots.")
         }
+        client.fetchApplication().then((application) => {
+            if (application.owner == null){
+                if (client.config.owner_id == null) {
+                    return console.error("Can't fetch the owner's id, please follow instructions here <page_link>.")
+                } else if (client.users.get(client.config.owner_id) == undefined) {
+                    return console.error("The bot can't find the owner_id set up inside your file, \nThis could be because it's not valid, or because you are not in a server with it, please invite it to a server where you are on.")
+                }
+            }else{
+                client.config.owner_id = application.owner.id
+            }
+
+        }).catch((err) => {
+            if (developer) {
+                console.warn("Can't fetch application, error: \n", err)
+            } else if (client.config.owner_id == null) {
+                return console.error("Can't fetch the owner's id, please follow instructions here <page_link>.")
+            } else if (client.users.get(client.config.owner_id) == undefined) {
+                return console.error("The bot can't find the owner_id set up inside your file, \nThis could be because it's not valid, or because you are not in a server with it, please invite it to a server where you are on.")
+            }
+        })
 
         console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
-        console.log("To add new commands, type \"" + config.prefix + "easybot <name>\" to generate a new template!")
+        console.log("To add new commands, type \"" + config.prefix + "createcommand <name> <alias1> <alias2> <alias3>\" to generate a new template!")
         util.checkUpdate(module.exports).then(update => {
             console.log(update)
         }).catch(err => {
