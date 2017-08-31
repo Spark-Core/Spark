@@ -1,10 +1,13 @@
 /* eslint no-console: 0 */
 const Discord = require("discord.js");
+
 const client = new Discord.Client();
 const setup = require("./setup.js");
 const fs = require("fs")
+var util = require("./src/util.js")
 var developer = false;
 module.exports = {};
+module.exports.version = require("./package.json").version;
 module.exports.start = function(config) {
     console.log("Loading commands")
     setup(fs, config, require("path").dirname(require.main.filename)).then((commands) => {
@@ -38,23 +41,44 @@ function start(client, config, commanddata) {
         }
     })
     client.on("ready", () => {
-        client.fetchApplication().then((application) => {
-                if (application.owner === null) {
-                    return console.error("Owner check failed, please invite your bot to your server using this url\n https://discordapp.com/oauth2/authorize?client_id=" + client.user.id + "&scope=bot, then try to start the bot again.")
-                }
-                config.owner_id = application.owner.id
-
-                next()
-            })
-            .catch(() => {
-                return console.error("Bot check failed, This wrapper doesn't support selfbots.")
-            })
-
-        function next() {
-            console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
-            console.log("To add new commands, type \"" + config.prefix + "easybot <name>\" to generate a new template!")
+        if (client.user.bot == false) {
+            return console.warn("This wrapper doesn't support selfbots.")
         }
+        client.fetchApplication().then((application) => {
+            if (application.owner == null){
+                if (client.config.owner_id == null) {
+                    return console.error("Can't fetch the owner's id, please follow instructions here <page_link>.")
+                } else if (client.users.get(client.config.owner_id) == undefined) {
+                    return console.error("The bot can't find the owner_id set up inside your file, \nThis could be because it's not valid, or because you are not in a server with it, please invite it to a server where you are on.")
+                }
+            }else{
+                client.config.owner_id = application.owner.id
+            }
+
+        }).catch((err) => {
+            if (developer) {
+                console.warn("Can't fetch application, error: \n", err)
+            } else if (client.config.owner_id == null) {
+                return console.error("Can't fetch the owner's id, please follow instructions here <page_link>.")
+            } else if (client.users.get(client.config.owner_id) == undefined) {
+                return console.error("The bot can't find the owner_id set up inside your file, \nThis could be because it's not valid, or because you are not in a server with it, please invite it to a server where you are on.")
+            }
+        })
+
+        console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
+        console.log("To add new commands, type \"" + config.prefix + "createcommand <name> <alias1> <alias2> <alias3>\" to generate a new template!")
+        util.checkUpdate(module.exports).then(update => {
+            console.log(update)
+        }).catch(err => {
+            console.warn(err)
+        })
+
+
+
+
     })
+
+
 
     client.on("message", (message) => {
 
@@ -92,6 +116,8 @@ function doCommand(command, client, message) {
                 message.channel.send("[EDB] Command: **" + command.name + "** | Requires the " + mod + " package to be installed.\nTo install this package, close the script and type: `npm install " + mod.slice(1, -1) + "`")
             }
 
+        } else {
+            console.warn("Command: " + command.name + " | had an error. Show the developer of the command module that you are getting this error code: \n" + err)
         }
     }
 

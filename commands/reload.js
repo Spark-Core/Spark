@@ -10,7 +10,6 @@ command.command = function(client, message) {
     if (client.config.owner_id !== message.author.id) {
         return
     }
-    client.commanddata = null;
     var args = message.content.split(" ")
     if (args[1] == null) {
         args[1] = ""
@@ -37,6 +36,7 @@ function reloadcommands(client, config, message) {
                     return m.edit("[EDB] Reloaded **" + client.commanddata.commands.size + "** commands succesfully.\n**" + commands.issues + "** command failed to load. See the console for more info.")
                 }
                 m.edit("[EDB] Reloaded **" + client.commanddata.commands.size + "** commands succesfully.")
+
             }).catch((err) => {
                 err.stack.toLowerCase()
             })
