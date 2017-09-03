@@ -1,4 +1,5 @@
 /* eslint no-console: 0 */
+/* eslint complexity: ["error", 25]*/
 var fs = require("fs")
 var path = require("path");
 module.exports = function(dir, local, reload) {
@@ -67,7 +68,6 @@ function commands(location, reload) {
                         if (temp.conf.aliases != null) {
                             temp.aliases = temp.conf.aliases
                         }
-
                     }
                     if (temp.help === null) {
                         console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: komada_no_help")
@@ -80,8 +80,6 @@ function commands(location, reload) {
 
                     }
                     temp.name = temp.help.name.toLowerCase()
-
-
 
                     if (temp.run != null && typeof temp.run == "function") {
                         temp.command = temp.run
@@ -122,6 +120,10 @@ function commands(location, reload) {
 
                 } else if (temp.aliases.constructor != Array) {
                     temp.aliases = []
+                }
+
+                if (typeof temp.level != "number") {
+                    temp.level = 0
                 }
                 temp.path = path
                 data.names.push(temp.name)
