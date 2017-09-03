@@ -6,4 +6,18 @@ exports.function = function(client, message, command) {
     // owner: 10
     // normal: 0
     //
+    switch (command.level) {
+        case 10:
+            if (message.author.id === client.config.owner_id) {
+                return false;
+            }
+            return true;
+
+
+        default:
+            return true;
+    }
+
+
+
 }

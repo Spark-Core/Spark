@@ -19,7 +19,6 @@ module.exports.start = function(config) {
 
         client.functions.messages.messagefuncs.forEach(i => {
             i.type = i.type.map(i => (i.toLowerCase()))
-            console.log(i.type)
             if (i.type == "all" && i.type.length === 1) {
                 client.functions.types.commands.push(i.name);
                 client.functions.types.messages.push(i.name);
@@ -27,12 +26,9 @@ module.exports.start = function(config) {
                 client.functions.types.messages.push(i.name);
             } else if (i.type == "commands") {
                 client.functions.types.commands.push(i.name);
-            } else {
-                console.log("??")
             }
 
         })
-        console.log(client.functions.types)
         client.config = config;
         start(client, client.config, client.commanddata)
     }).catch((err) => {
@@ -108,7 +104,13 @@ function start(client, config, commanddata) {
 
         // commands
         if (!message.content.startsWith(config.prefix)) {
-            dofuncs(client, message, "message")
+            dofuncs(client, message, "message").then(data => {
+                console.log(data)
+            }).catch((data) => {
+                if (data) {
+                    console.log(data)
+                }
+            })
             return
         }
         var content = message.content.replace(config.prefix, "")
@@ -117,11 +119,19 @@ function start(client, config, commanddata) {
             message.command = commanddata.commands.get(command)
             dofuncs(client, message, "command").then(() => {
                 doCommand(command, client, message)
+            }).catch(data => {
+                if (data) {
+                    console.log(data)
+                }
             })
         } else if (commanddata.aliases.has(command) === true) {
             message.command = commanddata.commands.get(commanddata.aliases.get(command))
             dofuncs(client, message, "command").then(() => {
                 doCommand(commanddata.aliases.get(command), client, message);
+            }).catch(data => {
+                if (data) {
+                    console.log(data)
+                }
             })
         }
     })
@@ -152,13 +162,14 @@ function doCommand(command, client, message) {
 }
 
 function dofuncs(client, message, type) {
-    return new Promise(function(resolve) {
+    return new Promise(function(resolve, reject) {
         if (type == "message") {
-            var funcnumber = -1;
+            var funcnumber = 0;
             if (client.functions.types.messages.length == 0) {
                 return resolve()
             }
-            client.functions.messages.messagefuncs.forEach((i, num) => {
+            client.functions.messages.messagefuncs.forEach(i => {
+                var num = client.functions.messages.messagefuncs.size
                 if (client.functions.types.messages.includes(i.name) == false) {
                     done(funcnumber, num)
                 }
@@ -167,10 +178,22 @@ function dofuncs(client, message, type) {
                     return done(funcnumber, num)
                 }
                 if (typeof result.then == "function") {
-                    result.then(() => {
+                    result.then(data => {
+                        if (data) {
+                            if (typeof data == "string") {
+                                message.channel.send(data)
+                            }
+                            return reject()
+                        }
                         done(funcnumber, num)
                     }).catch(err => console.warn(i.name + " | Message function just stopped working correctly. | Error: \n", err))
                 } else {
+                    if (result) {
+                        if (typeof result == "string") {
+                            message.channel.send(result)
+                        }
+                        return reject()
+                    }
                     done(funcnumber, num)
                 }
             })
@@ -178,11 +201,12 @@ function dofuncs(client, message, type) {
 
         }
         if (type == "command") {
-            var number = -1;
+            var number = 0;
             if (client.functions.types.commands.length == 0) {
                 return resolve()
             }
-            client.functions.messages.messagefuncs.forEach((i, num) => {
+            client.functions.messages.messagefuncs.forEach(i => {
+                var num = client.functions.messages.messagefuncs.size
                 if (client.functions.types.commands.includes(i.name) == false) {
                     done(number, num)
                 }
@@ -192,7 +216,13 @@ function dofuncs(client, message, type) {
                     return done(number, num)
                 }
                 if (typeof result.then == "function") {
-                    result.then(() => {
+                    result.then((data) => {
+                        if (data) {
+                            if (typeof data == "string") {
+                                message.channel.send(data)
+                            }
+                            return reject()
+                        }
                         done(number, num)
                     }).catch(err => console.warn(i.name + " | Message function just stopped working correctly. | Error: \n", err))
                 } else {
