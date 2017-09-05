@@ -16,6 +16,9 @@ module.exports.start = function(config) {
             messages: [],
             commands: []
         }
+        client.data = {};
+        client.data.version = module.exports.version;
+        client.data.util = util
 
         client.functions.messages.messagefuncs.forEach(i => {
             i.type = i.type.map(i => (i.toLowerCase()))
@@ -82,13 +85,22 @@ function start(client, config, commanddata) {
             }
         })
 
+
+client.functions.boot.bootfuncs.forEach((data) => {
+    setTimeout(function(){
+        if (data.time > 0){
+            setInterval(data.function(client), data.time)
+        }else{
+            data.function(client)
+        }
+    }, data.delay);
+})
+
+
+
         console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
         console.log("To add new commands, type \"" + config.prefix + "createcommand <name> <alias1> <alias2> <alias3>\" to generate a new template!")
-        util.checkUpdate(module.exports).then(update => {
-            console.log(update)
-        }).catch(err => {
-            console.warn(err)
-        })
+
 
 
 
@@ -105,10 +117,8 @@ function start(client, config, commanddata) {
         // commands
         if (!message.content.startsWith(config.prefix)) {
             dofuncs(client, message, "message").then(data => {
-                console.log(data)
             }).catch((data) => {
                 if (data) {
-                    console.log(data)
                 }
             })
             return
