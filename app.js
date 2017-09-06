@@ -86,21 +86,26 @@ function start(client, config, commanddata) {
         })
 
 
-client.functions.boot.bootfuncs.forEach((data) => {
-    setTimeout(function(){
-        if (data.time > 0){
-            setInterval(data.function(client), data.time)
-        }else{
-            data.function(client)
-        }
-    }, data.delay);
-})
+        client.functions.boot.bootfuncs.forEach((data) => {
+
+            function returnfunction() {
+                return data.function(client)
+            }
+
+
+            setTimeout(function() {
+                if (data.time > 0) {
+                    setInterval(returnfunction, data.time)
+                }
+                return returnfunction()
+
+            }, data.delay);
+        })
 
 
 
         console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
         console.log("To add new commands, type \"" + config.prefix + "createcommand <name> <alias1> <alias2> <alias3>\" to generate a new template!")
-
 
 
 
@@ -116,9 +121,11 @@ client.functions.boot.bootfuncs.forEach((data) => {
 
         // commands
         if (!message.content.startsWith(config.prefix)) {
-            dofuncs(client, message, "message").then(data => {
-            }).catch((data) => {
+            dofuncs(client, message, "message").catch((data) => {
                 if (data) {
+                    if (developer) {
+                        return console.warn(data)
+                    }
                 }
             })
             return
@@ -131,7 +138,9 @@ client.functions.boot.bootfuncs.forEach((data) => {
                 doCommand(command, client, message)
             }).catch(data => {
                 if (data) {
-                    console.log(data)
+                    if (developer) {
+                        return console.warn(data)
+                    }
                 }
             })
         } else if (commanddata.aliases.has(command) === true) {
@@ -236,6 +245,12 @@ function dofuncs(client, message, type) {
                         done(number, num)
                     }).catch(err => console.warn(i.name + " | Message function just stopped working correctly. | Error: \n", err))
                 } else {
+                    if (result) {
+                        if (typeof result == "string") {
+                            message.channel.send(result)
+                        }
+                        return reject()
+                    }
                     done(number, num)
                 }
             })

@@ -2,12 +2,11 @@ var command = module.exports = {}
 var path = require("path")
 var fs = require("fs")
 command.name = "createcommand"
-
+// Owner only
+command.level = 10;
 command.command = function(client, message) {
     var args = message.content.split(" ");
-    if (!message.author.id == client.config.owner_id) {
-        return
-    }
+
     if (args[1] == null) {
         return message.channel.send("[EDB] Please specify the name for the command. If you want to use aliases, type them space-seperated behind the name.");
 
@@ -17,7 +16,7 @@ command.command = function(client, message) {
         aliases: [],
         name: args[1]
     }
-    if (args[1].match(/[/\\<>:*|]/g)){
+    if (args[1].match(/[/\\<>:*|]/g)) {
         return message.channel.send("[EDB] Filenames can't include one of these characters:  ` / \\ < > : * | `, please try a different filename.")
     }
     if (args[2] != null) {
@@ -32,7 +31,9 @@ command.command = function(client, message) {
             return message.channel.send("[EDB] This file does already exist. Please try a different name. ")
         }
 
-        fs.writeFile(path.resolve(path.dirname(require.main.filename), "commands/" + data.name + ".js"), "exports.name = \"" + data.name + "\" \nexports.aliases = " + JSON.stringify(data.aliases) + "\nexports.command = function(client, message){\n\n//Write your command functions here.\n\n} ", {options: "utf8"}, (err) => {
+        fs.writeFile(path.resolve(path.dirname(require.main.filename), "commands/" + data.name + ".js"), "exports.name = \"" + data.name + "\" \nexports.aliases = " + JSON.stringify(data.aliases) + "\nexports.command = function(client, message){\n\n//Write your command functions here.\n\n} ", {
+            options: "utf8"
+        }, (err) => {
             if (err) {
                 return message.channel.send("[EDB] Failed to create this file, try to create it manually using this template: ```javascript\nexports.name = \"" + data.name + "\" \nexports.aliases = \"" + JSON.stringify(data.aliases) + "\"\nexports.command = function(client, message){\n\n//Write your command functions here.\n\n} \n```")
             }

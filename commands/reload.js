@@ -1,15 +1,14 @@
 var command = module.exports = {}
 
 command.name = "reload";
+// owner only
+command.level = 10;
 
 const setup = require("../setup.js");
 const fs = require("fs")
 command.command = function(client, message) {
 
-    // needs to be replaced with command requirements when started working on!
-    if (client.config.owner_id !== message.author.id) {
-        return
-    }
+
     var args = message.content.split(" ")
     if (args[1] == null) {
         args[1] = ""

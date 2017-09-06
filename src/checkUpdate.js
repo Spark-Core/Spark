@@ -15,7 +15,7 @@ module.exports = function(version) {
                             newversion = data.latest
                         }
 
-                        return resolve("\nAn update is required, please type npm install easy-discord-bot \nto install the latest version  ( v" + newversion + " --> v" + version + ")")
+                        return resolve("\nAn update is required, please type npm install easy-discord-bot \nto install the latest version  ( v" + version + " --> v" + newversion + ")")
                     }
                 }
 

@@ -14,11 +14,10 @@ module.exports = function(dir, local, reload) {
 
         bootFuncs(dir, local, reload).then(data => {
             functions.boot = data
-            if (done(functions) == true){
+            if (done(functions) == true) {
                 resolve(functions)
             }
         }).catch(err => reject(err))
-
 
 
 
@@ -37,12 +36,16 @@ function done(data) {
 function messages(dir, local, reload) {
     return new Promise(function(resolve, reject) {
         messagesLoad(dir, reload).then(data => {
-            if (data == false){return messages(dir, local, reload).then((data) => resolve(data)).catch(err => reject(err))}
+            if (data == false) {
+                return messages(dir, local, reload).then((data) => resolve(data)).catch(err => reject(err))
+            }
             if (dir == local) {
                 return resolve(data)
             }
             messagesLoad(local, reload).then(localdata => {
-                if (localdata == false){return messages(dir, local, reload).then((data) => resolve(data)).catch(err => reject(err))}
+                if (localdata == false) {
+                    return messages(dir, local, reload).then((data) => resolve(data)).catch(err => reject(err))
+                }
                 data.names.forEach(function(i, index) {
                     if (localdata.names.includes(i)) {
                         data.messagefuncs.delete(i)
@@ -64,12 +67,16 @@ function messages(dir, local, reload) {
 function bootFuncs(dir, local, reload) {
     return new Promise(function(resolve, reject) {
         bootLoad(dir, reload).then(data => {
-            if (data == false){return messages(dir, local, reload).then((data) => resolve(data)).catch(err => reject(err))}
+            if (data == false) {
+                return messages(dir, local, reload).then((data) => resolve(data)).catch(err => reject(err))
+            }
             if (dir == local) {
                 return resolve(data)
             }
             bootLoad(local, reload).then(localdata => {
-                if (localdata == false){return messages(dir, local, reload).then((data) => resolve(data)).catch(err => reject(err))}
+                if (localdata == false) {
+                    return messages(dir, local, reload).then((data) => resolve(data)).catch(err => reject(err))
+                }
                 data.names.forEach(function(i, index) {
                     if (localdata.names.includes(i)) {
                         data.bootfuncs.delete(i)
@@ -92,70 +99,73 @@ function bootLoad(location, reload) {
     return new Promise(function(resolve, reject) {
         fs.readdir(path.resolve(location, "functions/boot/"), function(err, results) {
             if (err) {
-                    fs.mkdir(path.resolve(location, "functions/boot/"), function(){
-                        resolve(false)
-                    })
-
-            }
-            if (!err){
-            results = results.map(i => (path.resolve(location, "functions/boot/" + i))).filter((i) => {
-                return i.endsWith(".js")
-            })
-            var data = {
-                bootfuncs: new Map(),
-                names: [],
-                issues: 0
-            }
-            if (results.length === 0) {
-                return resolve(data)
-            }
-            var number = 0;
-
-            results.forEach((path, num) => {
-                number = number + 1
-                var mod = require.resolve(path);
-                if (mod !== undefined && (require.cache[mod] !== undefined)) {
-                    delete require.cache[require.resolve(path)]
-                }
-                var temp = require(path);
-                if (typeof temp != "object") {
-                    console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up boot functions. | code: msgfunc_no_object")
-                    return done(number, num, reload)
-
-                } else if (temp.name === null || typeof temp.name != "string") {
-                    console.warn(path + "  -  File isn't set up correctly, go to <pagelink> to learn more on how to set up boot functions. | code: invalid_or_no_name")
-                    return done(number, num, reload)
-
-                } else if (temp.time == null || typeof temp.time != 'number'){
-                    temp.time = 0;
-
-                } else if (temp.delay == null || typeof temp.delay != 'number'){
-                    temp.delay = 0;
-
-                } else if (temp.function == null || typeof temp.function != "function") {
-                    console.warn(path + "  -  File isn't set up correctly, go to <pagelink> to learn more on how to set up boot functions. | code: no_function_setup")
-                    return done(number, num, reload)
-
-                }
-
-
-
-                data.bootfuncs.set(temp.name, temp)
-                data.names.push(temp.name)
-                return done(number, num)
-
-
-                function done(number, num, reload) {
-                    if (reload) {
-                        data.issues = data.issues + 1
+                fs.mkdir(path.resolve(location, "functions/boot/"), function(err) {
+                    if (err) {
+                        return reject(err)
                     }
-                    number = number - 1
-                    if (number === num) {
-                        return resolve(data)
-                    }
+                    resolve(false)
+                })
+
+            }
+            if (!err) {
+                results = results.map(i => (path.resolve(location, "functions/boot/" + i))).filter((i) => {
+                    return i.endsWith(".js")
+                })
+                var data = {
+                    bootfuncs: new Map(),
+                    names: [],
+                    issues: 0
                 }
-            })
-        }
+                if (results.length === 0) {
+                    return resolve(data)
+                }
+                var number = 0;
+
+                results.forEach((path, num) => {
+                    number = number + 1
+                    var mod = require.resolve(path);
+                    if (mod !== undefined && (require.cache[mod] !== undefined)) {
+                        delete require.cache[require.resolve(path)]
+                    }
+                    var temp = require(path);
+                    if (typeof temp != "object") {
+                        console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up boot functions. | code: msgfunc_no_object")
+                        return done(number, num, reload)
+
+                    } else if (temp.name === null || typeof temp.name != "string") {
+                        console.warn(path + "  -  File isn't set up correctly, go to <pagelink> to learn more on how to set up boot functions. | code: invalid_or_no_name")
+                        return done(number, num, reload)
+
+                    } else if (temp.time == null || typeof temp.time != "number") {
+                        temp.time = 0;
+
+                    } else if (temp.delay == null || typeof temp.delay != "number") {
+                        temp.delay = 0;
+
+                    } else if (temp.function == null || typeof temp.function != "function") {
+                        console.warn(path + "  -  File isn't set up correctly, go to <pagelink> to learn more on how to set up boot functions. | code: no_function_setup")
+                        return done(number, num, reload)
+
+                    }
+
+
+
+                    data.bootfuncs.set(temp.name, temp)
+                    data.names.push(temp.name)
+                    return done(number, num)
+
+
+                    function done(number, num, reload) {
+                        if (reload) {
+                            data.issues = data.issues + 1
+                        }
+                        number = number - 1
+                        if (number === num) {
+                            return resolve(data)
+                        }
+                    }
+                })
+            }
         })
     })
 
@@ -165,9 +175,12 @@ function messagesLoad(location, reload) {
     return new Promise(function(resolve, reject) {
         fs.readdir(path.resolve(location, "functions/messages/"), function(err, results) {
             if (err) {
-                    fs.mkdir(path.resolve(location, "functions/messages/"), function(){
-                        return resolve(false)
-                    })
+                fs.mkdir(path.resolve(location, "functions/messages/"), function(err) {
+                    if (err) {
+                        return reject(err)
+                    }
+                    return resolve(false)
+                })
             }
             results = results.map(i => (path.resolve(location, "functions/messages/" + i))).filter((i) => {
                 return i.endsWith(".js")
