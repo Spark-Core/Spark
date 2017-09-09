@@ -3,15 +3,35 @@ const Discord = require("discord.js");
 
 const client = new Discord.Client();
 const setup = require("./setup.js");
-const fs = require("fs")
 var util = require("./src/util.js")
 var developer = false;
 module.exports = {};
 module.exports.version = require("./package.json").version;
 module.exports.start = function(config) {
     console.log("Loading commands")
-    setup(fs, config, require("path").dirname(require.main.filename)).then((commands) => {
-        client.commanddata = commands;
+    setup(config, require("path").dirname(require.main.filename)).then((data) => {
+        client.commanddata = data.commands;
+        client.functions = data.functions
+        client.functions.types = {
+            messages: [],
+            commands: []
+        }
+        client.data = {};
+        client.data.version = module.exports.version;
+        client.data.util = util
+
+        client.functions.messages.messagefuncs.forEach(i => {
+            i.type = i.type.map(i => (i.toLowerCase()))
+            if (i.type == "all" && i.type.length === 1) {
+                client.functions.types.commands.push(i.name);
+                client.functions.types.messages.push(i.name);
+            } else if (i.type == "messages") {
+                client.functions.types.messages.push(i.name);
+            } else if (i.type == "commands") {
+                client.functions.types.commands.push(i.name);
+            }
+
+        })
         client.config = config;
         start(client, client.config, client.commanddata)
     }).catch((err) => {
@@ -45,13 +65,13 @@ function start(client, config, commanddata) {
             return console.warn("This wrapper doesn't support selfbots.")
         }
         client.fetchApplication().then((application) => {
-            if (application.owner == null){
+            if (application.owner == null) {
                 if (client.config.owner_id == null) {
                     return console.error("Can't fetch the owner's id, please follow instructions here <page_link>.")
                 } else if (client.users.get(client.config.owner_id) == undefined) {
                     return console.error("The bot can't find the owner_id set up inside your file, \nThis could be because it's not valid, or because you are not in a server with it, please invite it to a server where you are on.")
                 }
-            }else{
+            } else {
                 client.config.owner_id = application.owner.id
             }
 
@@ -65,13 +85,27 @@ function start(client, config, commanddata) {
             }
         })
 
+
+        client.functions.boot.bootfuncs.forEach((data) => {
+
+            function returnfunction() {
+                return data.function(client)
+            }
+
+
+            setTimeout(function() {
+                if (data.time > 0) {
+                    setInterval(returnfunction, data.time)
+                }
+                return returnfunction()
+
+            }, data.delay);
+        })
+
+
+
         console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
         console.log("To add new commands, type \"" + config.prefix + "createcommand <name> <alias1> <alias2> <alias3>\" to generate a new template!")
-        util.checkUpdate(module.exports).then(update => {
-            console.log(update)
-        }).catch(err => {
-            console.warn(err)
-        })
 
 
 
@@ -84,16 +118,40 @@ function start(client, config, commanddata) {
 
 
 
+
         // commands
         if (!message.content.startsWith(config.prefix)) {
+            dofuncs(client, message, "message").catch((data) => {
+                if (data) {
+                    if (developer) {
+                        return console.warn(data)
+                    }
+                }
+            })
             return
         }
         var content = message.content.replace(config.prefix, "")
         var command = content.split(" ")[0].toLowerCase();
         if (commanddata.commands.has(command) === true) {
-            doCommand(command, client, message)
+            message.command = commanddata.commands.get(command)
+            dofuncs(client, message, "command").then(() => {
+                doCommand(command, client, message)
+            }).catch(data => {
+                if (data) {
+                    if (developer) {
+                        return console.warn(data)
+                    }
+                }
+            })
         } else if (commanddata.aliases.has(command) === true) {
-            doCommand(commanddata.aliases.get(command), client, message);
+            message.command = commanddata.commands.get(commanddata.aliases.get(command))
+            dofuncs(client, message, "command").then(() => {
+                doCommand(commanddata.aliases.get(command), client, message);
+            }).catch(data => {
+                if (data) {
+                    console.log(data)
+                }
+            })
         }
     })
 }
@@ -120,6 +178,93 @@ function doCommand(command, client, message) {
             console.warn("Command: " + command.name + " | had an error. Show the developer of the command module that you are getting this error code: \n" + err)
         }
     }
+}
+
+function dofuncs(client, message, type) {
+    return new Promise(function(resolve, reject) {
+        if (type == "message") {
+            var funcnumber = 0;
+            if (client.functions.types.messages.length == 0) {
+                return resolve()
+            }
+            client.functions.messages.messagefuncs.forEach(i => {
+                var num = client.functions.messages.messagefuncs.size
+                if (client.functions.types.messages.includes(i.name) == false) {
+                    done(funcnumber, num)
+                }
+                var result = i.function(client, message, message.command)
+                if (result == undefined) {
+                    return done(funcnumber, num)
+                }
+                if (typeof result.then == "function") {
+                    result.then(data => {
+                        if (data) {
+                            if (typeof data == "string") {
+                                message.channel.send(data)
+                            }
+                            return reject()
+                        }
+                        done(funcnumber, num)
+                    }).catch(err => console.warn(i.name + " | Message function just stopped working correctly. | Error: \n", err))
+                } else {
+                    if (result) {
+                        if (typeof result == "string") {
+                            message.channel.send(result)
+                        }
+                        return reject()
+                    }
+                    done(funcnumber, num)
+                }
+            })
 
 
+        }
+        if (type == "command") {
+            var number = 0;
+            if (client.functions.types.commands.length == 0) {
+                return resolve()
+            }
+            client.functions.messages.messagefuncs.forEach(i => {
+                var num = client.functions.messages.messagefuncs.size
+                if (client.functions.types.commands.includes(i.name) == false) {
+                    done(number, num)
+                }
+
+                var result = i.function(client, message, message.command)
+                if (result == undefined) {
+                    return done(number, num)
+                }
+                if (typeof result.then == "function") {
+                    result.then((data) => {
+                        if (data) {
+                            if (typeof data == "string") {
+                                message.channel.send(data)
+                            }
+                            return reject()
+                        }
+                        done(number, num)
+                    }).catch(err => console.warn(i.name + " | Message function just stopped working correctly. | Error: \n", err))
+                } else {
+                    if (result) {
+                        if (typeof result == "string") {
+                            message.channel.send(result)
+                        }
+                        return reject()
+                    }
+                    done(number, num)
+                }
+            })
+
+
+        }
+
+
+        function done(number, num) {
+            number = number + 1
+            if (number == num) {
+                return resolve()
+            }
+        }
+
+    });
 }

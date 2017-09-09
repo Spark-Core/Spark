@@ -9,10 +9,11 @@ module.exports = function(type, dir, reload) {
                     resolve(commanddata)
                 }).catch((err) => reject(err));
                 break;
-                //    case "messages":
-                //    messages(dir, local).then(() => {resolve(messagedata)}).catch(err => reject(err));
-                //    break;
-                // IDEA: To be done!
+            case "functions":
+                util.loadFunctions(dir, local, reload).then((functiondata) => {
+                    resolve(functiondata)
+                }).catch((err) => reject(err));
+                break;
         }
 
 
