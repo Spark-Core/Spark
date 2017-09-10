@@ -26,7 +26,7 @@ function reloadcommands(client, config, message) {
 
     message.channel.send("[EDB] reloading commands")
         .then(m => {
-            setup(fs, config, require("path").dirname(require.main.filename), true).then((commands) => {
+            setup(config, require("path").dirname(require.main.filename), true).then((commands) => {
                 client.commanddata = commands;
                 client.config = config;
                 if (commands.issues > 1) {
@@ -37,7 +37,7 @@ function reloadcommands(client, config, message) {
                 m.edit("[EDB] Reloaded **" + client.commanddata.commands.size + "** commands succesfully.")
 
             }).catch((err) => {
-                err.stack.toLowerCase()
+                m.edit(err.stack.toLowerCase())
             })
         })
 
