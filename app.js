@@ -4,7 +4,7 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const setup = require("./setup.js");
 var util = require("./src/util.js")
-var developer = false;
+client.developer = false;
 module.exports = {};
 module.exports.version = require("./package.json").version;
 module.exports.start = function(config) {
@@ -35,7 +35,7 @@ module.exports.start = function(config) {
         client.config = config;
         start(client, client.config, client.commanddata)
     }).catch((err) => {
-        if (developer === false) {
+        if (client.developer === false) {
             return console.error("An error occurred while loading commands.", err)
         }
         console.log(err, err.stack)
@@ -76,7 +76,7 @@ function start(client, config, commanddata) {
             }
 
         }).catch((err) => {
-            if (developer) {
+            if (client.developer) {
                 console.warn("Can't fetch application, error: \n", err)
             } else if (client.config.owner_id == null) {
                 return console.error("Can't fetch the owner's id, please follow instructions here <page_link>.")
@@ -123,7 +123,7 @@ function start(client, config, commanddata) {
         if (!message.content.startsWith(config.prefix)) {
             dofuncs(client, message, "message").catch((data) => {
                 if (data) {
-                    if (developer) {
+                    if (client.developer) {
                         return console.warn(data)
                     }
                 }
@@ -138,7 +138,7 @@ function start(client, config, commanddata) {
                 doCommand(command, client, message)
             }).catch(data => {
                 if (data) {
-                    if (developer) {
+                    if (client.developer) {
                         return console.warn(data)
                     }
                 }
@@ -165,7 +165,7 @@ function doCommand(command, client, message) {
     try {
         command.command(client, message);
     } catch (err) {
-        if (developer) {
+        if (client.developer) {
             console.warn("Command: " + command.name + " | had an error while executing.", err)
         } else if (err.code == "MODULE_NOT_FOUND") {
             var mod = err.stack.split("\n")[0].replace("Error: Cannot find module ", "")
@@ -175,7 +175,7 @@ function doCommand(command, client, message) {
             }
 
         } else {
-            console.warn("Command: " + command.name + " | had an error. Show the developer of the command module that you are getting this error code: \n" + err)
+            console.warn("Command: " + command.name + " | had an error. Show the client.developer of the command module that you are getting this error code: \n" + err)
         }
     }
 }
@@ -259,8 +259,8 @@ function dofuncs(client, message, type) {
         }
 
 
-        function done(number, num) {
-            number = number + 1
+        function done(xnumber, num) {
+            number = xnumber + 1
             if (number == num) {
                 return resolve()
             }
