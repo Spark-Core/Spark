@@ -196,7 +196,7 @@ function dofuncs(client, message, type) {
                 if (result == undefined) {
                     return done(funcnumber, num)
                 }
-                if (typeof result.then == "function") {
+                if (result instanceof Promise) {
                     result.then(data => {
                         if (data) {
                             if (typeof data == "string") {
@@ -229,12 +229,11 @@ function dofuncs(client, message, type) {
                 if (client.functions.types.commands.includes(i.name) == false) {
                     done(number, num)
                 }
-
                 var result = i.function(client, message, message.command)
                 if (result == undefined) {
                     return done(number, num)
                 }
-                if (typeof result.then == "function") {
+                if (result instanceof Promise) {
                     result.then((data) => {
                         if (data) {
                             if (typeof data == "string") {
