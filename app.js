@@ -175,7 +175,7 @@ function doCommand(command, client, message) {
             }
 
         } else {
-            console.warn("Command: " + command.name + " | had an error. Show the client.developer of the command module that you are getting this error code: \n" + err)
+            console.warn("Command: " + command.name + " | had an error. Show the developer of the command module that you are getting this error code: \n" + err)
         }
     }
 }
