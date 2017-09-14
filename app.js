@@ -182,11 +182,13 @@ function doCommand(command, client, message) {
 
 function dofuncs(client, message, type) {
     return new Promise(function(resolve, reject) {
+        var funcnumber = 0;
+        var number = 0;
         if (type == "message") {
-            var funcnumber = 0;
             if (client.functions.types.messages.length == 0) {
                 return resolve()
             }
+
             client.functions.messages.messagefuncs.forEach(i => {
                 var num = client.functions.messages.messagefuncs.size
                 if (client.functions.types.messages.includes(i.name) == false) {
@@ -220,7 +222,6 @@ function dofuncs(client, message, type) {
 
         }
         if (type == "command") {
-            var number = 0;
             if (client.functions.types.commands.length == 0) {
                 return resolve()
             }
