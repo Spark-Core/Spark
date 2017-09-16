@@ -147,7 +147,9 @@ function bootLoad(location, reload) {
                         return done(number, num, reload)
 
                     }
-
+                    if (typeof temp.system != "boolean" || temp.system != true){
+                        delete temp.system;
+                    }
 
 
                     data.bootfuncs.set(temp.name, temp)

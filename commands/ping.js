@@ -1,8 +1,11 @@
-var command = module.exports = {}
+exports.name = "ping"
+exports.level = 0;
 
-command.name = "ping"
+// Don't use this for regular commands.
+exports.system = true
+// Don't use this for regular commands.
 
-command.command = function(client, message) {
+exports.command = function(client, message) {
     var start = new Date().getTime()
     message.channel.send("Pinging...").then((message) => {
         var end = new Date().getTime()

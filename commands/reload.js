@@ -1,11 +1,13 @@
-var command = module.exports = {}
-
-command.name = "reload";
+exports.name = "reload";
 // owner only
-command.level = 10;
+exports.level = 10;
+
+// Don't use this for regular commands.
+exports.system = true
+// Don't use this for regular commands.
 
 const setup = require("../setup.js");
-command.command = function(client, message) {
+exports.command = function(client, message) {
 
 
     var args = message.content.split(" ")
@@ -31,15 +33,26 @@ function reloadcommands(client, config, message) {
             setup(config, require("path").dirname(require.main.filename), true).then((commands) => {
                 client.commanddata = commands.commands;
                 client.config = config;
+                var system = 0;
+                var regular = 0;
+                commands.commands.commands.forEach((i) => {
+                    if (i.system){
+                        system = system + 1
+                    }else{
+                        regular = regular + 1
+                    }
+                })
                 if (commands.issues > 1) {
-                    return m.edit("[EDB] Reloaded **" + client.commanddata.commands.size + "** commands succesfully.\n**" + commands.issues + "** commands failed to load. See the console for more info.")
+                    return m.edit("[EDB] Reloaded **" + (system + regular) + "** commands succesfully. (S"+ system + " | R"+ regular+")\n**" + commands.issues + "** commands failed to load. See the console for more info.")
                 } else if (commands.issues == 1) {
-                    return m.edit("[EDB] Reloaded **" + client.commanddata.commands.size + "** commands succesfully.\n**" + commands.issues + "** command failed to load. See the console for more info.")
+                    return m.edit("[EDB] Reloaded **" + (system + regular) + "** commands succesfully. (S"+ system + " | R"+ regular+")\n**" + commands.issues + "** command failed to load. See the console for more info.")
                 }
-                m.edit("[EDB] Reloaded **" + client.commanddata.commands.size + "** commands succesfully.")
-
+                m.edit("[EDB] Reloaded **" + (system + regular) + "** commands succesfully. (S"+ system + " | R"+ regular + ")")
             }).catch((err) => {
                 m.edit(err.stack.toLowerCase())
+                if (client.developer){
+                    console.log("error while reloading: \n", err.stack)
+                }
             })
         })
 

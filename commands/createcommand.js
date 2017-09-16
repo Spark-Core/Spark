@@ -1,10 +1,10 @@
-var command = module.exports = {}
 var path = require("path")
 var fs = require("fs")
-command.name = "createcommand"
+exports.name = "createcommand"
 // Owner only
-command.level = 10;
-command.command = function(client, message) {
+exports.level = 10;
+exports.system = true;
+exports.command = function(client, message) {
     var args = message.content.split(" ");
 
     if (args[1] == null) {
