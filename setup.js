@@ -76,7 +76,7 @@ function functions(data, local, reload) {
         var types = ["messages"]
 
         function done(data) {
-            if (Object.keys(data).length === 2) {
+            if (Object.keys(data).length === 3) {
                 return true
             }
 

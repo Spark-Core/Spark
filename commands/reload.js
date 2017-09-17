@@ -1,3 +1,4 @@
+/* eslint no-console: 0 */
 exports.name = "reload";
 // owner only
 exports.level = 10;
@@ -36,21 +37,21 @@ function reloadcommands(client, config, message) {
                 var system = 0;
                 var regular = 0;
                 commands.commands.commands.forEach((i) => {
-                    if (i.system){
+                    if (i.system) {
                         system = system + 1
-                    }else{
+                    } else {
                         regular = regular + 1
                     }
                 })
                 if (commands.issues > 1) {
-                    return m.edit("[EDB] Reloaded **" + (system + regular) + "** commands succesfully. (S"+ system + " | R"+ regular+")\n**" + commands.issues + "** commands failed to load. See the console for more info.")
+                    return m.edit("[EDB] Reloaded **" + (system + regular) + "** commands succesfully. (S" + system + " | R" + regular + ")\n**" + commands.issues + "** commands failed to load. See the console for more info.")
                 } else if (commands.issues == 1) {
-                    return m.edit("[EDB] Reloaded **" + (system + regular) + "** commands succesfully. (S"+ system + " | R"+ regular+")\n**" + commands.issues + "** command failed to load. See the console for more info.")
+                    return m.edit("[EDB] Reloaded **" + (system + regular) + "** commands succesfully. (S" + system + " | R" + regular + ")\n**" + commands.issues + "** command failed to load. See the console for more info.")
                 }
-                m.edit("[EDB] Reloaded **" + (system + regular) + "** commands succesfully. (S"+ system + " | R"+ regular + ")")
+                m.edit("[EDB] Reloaded **" + (system + regular) + "** commands succesfully. (S" + system + " | R" + regular + ")")
             }).catch((err) => {
                 m.edit(err.stack.toLowerCase())
-                if (client.developer){
+                if (client.developer) {
                     console.log("error while reloading: \n", err.stack)
                 }
             })
@@ -66,12 +67,12 @@ function reloadfunctions(client, message) {
             setup(temp, require("path").dirname(require.main.filename), true).then((data) => {
                 client.functions = data.functions
                 client.config = temp;
-                if ((data.functions.messages.issues + data.functions.boot.issues) > 1) {
-                    return m.edit("[EDB] Reloaded **" + client.functions.messages.messagefuncs.size + "** messagefunctions and **" + client.functions.boot.bootfuncs.size + "** bootfunctions succesfully.\n**" + (data.functions.messages.issues + data.functions.boot.issues) + "** issues while loading. See the console for more info.")
-                } else if ((data.functions.messages.issues + data.functions.boot.issues) === 1) {
-                    return m.edit("[EDB] Reloaded **" + client.functions.messages.messagefuncs.size + "** messagefunctions and **" + client.functions.boot.bootfuncs.size + "** bootfunctions succesfully.\n**" + (data.functions.messages.issues + data.functions.boot.issues) + "** issue while loading. See the console for more info.")
+                if ((data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues) > 1) {
+                    return m.edit("[EDB] Reloaded **" + (client.functions.messages.messagefuncs.size + client.functions.boot.bootfuncs.size + client.functions.snippets.snippets.size) + "** messagefunctions, bootfunctions and snippets succesfully.\n**" + (data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues) + "** issues while loading. See the console for more info.")
+                } else if ((data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues) === 1) {
+                    return m.edit("[EDB] Reloaded **" + (client.functions.messages.messagefuncs.size + client.functions.boot.bootfuncs.size + client.functions.snippets.snippets.size) + "** messagefunctions, bootfunctions and snippets succesfully.\n**" + (data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues) + "** issue while loading. See the console for more info.")
                 }
-                m.edit("[EDB] Reloaded **" + client.functions.messages.messagefuncs.size + "** messagefunctions and **" + client.functions.boot.bootfuncs.size + "** bootfunctions succesfully.")
+                m.edit("[EDB] Reloaded **" + (client.functions.messages.messagefuncs.size + client.functions.boot.bootfuncs.size + client.functions.snippets.snippets.size) + "** messagefunctions, bootfunctions and snippets succesfully.")
             }).catch((err) => {
                 m.edit(err.stack.toLowerCase())
             })
