@@ -103,7 +103,7 @@ function bootLoad(location, reload) {
                     if (err) {
                         return reject(err)
                     }
-                    resolve(false)
+                    bootLoad(location, reload).then((data) => resolve(data)).catch(err => reject(err))
                 })
 
             }
@@ -181,7 +181,7 @@ function messagesLoad(location, reload) {
                     if (err) {
                         return reject(err)
                     }
-                    return resolve(false)
+                    messagesLoad(location, reload).then((data) => resolve(data)).catch(err => reject(err))
                 })
             }
             results = results.map(i => (path.resolve(location, "functions/messages/" + i))).filter((i) => {
