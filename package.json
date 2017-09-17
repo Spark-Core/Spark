@@ -25,5 +25,6 @@
   "bugs": {
     "url": "https://github.com/TobiasFeld22/Easy-Discord-Bot/issues"
   },
-  "homepage": "https://github.com/TobiasFeld22/Easy-Discord-Bot#readme"
+  "homepage": "https://github.com/TobiasFeld22/Easy-Discord-Bot#readme",
+  "lock": false
 }
