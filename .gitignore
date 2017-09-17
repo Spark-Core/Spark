@@ -86,3 +86,4 @@ $RECYCLE.BIN/
 
 # custom.
 config.json
+package-lock.json
