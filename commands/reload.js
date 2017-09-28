@@ -65,7 +65,27 @@ function reloadfunctions(client, message) {
         .then(m => {
             var temp = client.config;
             setup(temp, require("path").dirname(require.main.filename), true).then((data) => {
+                var tempsnips = new Map();
                 client.functions = data.functions
+                client.functions.types = {
+                    messages: [],
+                    commands: []
+                }
+                data.functions.snippets.snippets.forEach(i => {
+                    tempsnips.set(i.name, i.function)
+                })
+                client.snippets = tempsnips
+                client.functions.messages.messagefuncs.forEach(i => {
+                    i.type = i.type.map(i => (i.toLowerCase()))
+                    if (i.type == "all" && i.type.length === 1) {
+                        client.functions.types.commands.push(i.name);
+                        client.functions.types.messages.push(i.name);
+                    } else if (i.type == "messages") {
+                        client.functions.types.messages.push(i.name);
+                    } else if (i.type == "commands") {
+                        client.functions.types.commands.push(i.name);
+                    }
+                })
                 client.config = temp;
                 if ((data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues) > 1) {
                     return m.edit("[EDB] Reloaded **" + (client.functions.messages.messagefuncs.size + client.functions.boot.bootfuncs.size + client.functions.snippets.snippets.size) + "** messagefunctions, bootfunctions and snippets succesfully.\n**" + (data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues) + "** issues while loading. See the console for more info.")

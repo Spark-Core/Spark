@@ -23,7 +23,6 @@ module.exports.start = function(config) {
             temp.set(i.name, i.function)
         })
         client.snippets = temp
-        delete temp
         client.functions.messages.messagefuncs.forEach(i => {
             i.type = i.type.map(i => (i.toLowerCase()))
             if (i.type == "all" && i.type.length === 1) {
