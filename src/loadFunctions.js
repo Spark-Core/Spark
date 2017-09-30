@@ -46,9 +46,7 @@ function messages(dir, local, reload) {
                     return messages(dir, local, reload).then((data) => resolve(data)).catch(err => reject(err))
                 }
                 data.names.forEach(function(i, index) {
-                    if (localdata.names.includes(i)) {
-                        data.messagefuncs.delete(i)
-                    } else {
+                    if (!localdata.names.includes(i)) {
                         localdata.messagefuncs.set(i, data.messagefuncs.get(i))
                     }
                     if ((data.messagefuncs.size - 1) === index) {
