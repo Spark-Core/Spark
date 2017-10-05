@@ -75,9 +75,7 @@ function bootFuncs(dir, local, reload) {
                     return messages(dir, local, reload).then((data) => resolve(data)).catch(err => reject(err))
                 }
                 data.names.forEach(function(i, index) {
-                    if (localdata.names.includes(i)) {
-                        data.bootfuncs.delete(i)
-                    } else {
+                    if (!localdata.names.includes(i)) {
                         localdata.bootfuncs.set(i, data.bootfuncs.get(i))
                     }
                     if ((data.bootfuncs.size - 1) === index) {
@@ -244,9 +242,7 @@ function snippetFuncs(dir, local, reload) {
                     return messages(dir, local, reload).then((data) => resolve(data)).catch(err => reject(err))
                 }
                 data.names.forEach(function(i, index) {
-                    if (localdata.names.includes(i)) {
-                        data.snippets.delete(i)
-                    } else {
+                    if (!localdata.names.includes(i)) {
                         localdata.snippets.set(i, data.snippets.get(i))
                     }
                     if ((data.snippets.size - 1) === index) {
