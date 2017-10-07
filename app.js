@@ -7,6 +7,7 @@ client.developer = false;
 module.exports = {};
 module.exports.version = require("./package.json").version;
 module.exports.start = function(config) {
+    if(config.developer){client.developer = config.developer}
     console.log("Loading commands")
     setup(config, require("path").dirname(require.main.filename)).then((data) => {
         client.commanddata = data.commands;
