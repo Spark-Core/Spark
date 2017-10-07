@@ -1,10 +1,10 @@
 {
   "name": "easy-discord-bot",
-  "version": "0.0.3-beta.1",
+  "version": "0.0.3-beta.2",
   "description": "An easy to use discord bot, which uses small modules for getting commands and messages. ",
   "main": "app.js",
   "dependencies": {
-    "discord.js": "hydrabolt/discord.js#cc8060c1bd6f5d9a88cf33ffa0d0b90c0d5b87f2",
+    "discord.js": "github:hydrabolt/discord.js#master",
     "fs": "latest",
     "request": "latest"
   },
