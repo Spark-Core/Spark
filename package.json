@@ -1,5 +1,5 @@
 {
-  "name": "Spark",
+  "name": "sparkbots",
   "version": "0.0.3",
   "description": "An easy to use discord bot, which uses small modules for getting commands and messages. ",
   "main": "app.js",
