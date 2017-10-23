@@ -125,6 +125,9 @@ function commands(location, reload) {
                 if (typeof temp.level != "number") {
                     temp.level = 0
                 }
+                if (typeof temp.system != "boolean" || temp.system != true){
+                    delete temp.system
+                }
                 temp.path = path
                 data.names.push(temp.name)
                 data.commands.set(temp.name, temp)

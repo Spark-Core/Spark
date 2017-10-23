@@ -7,6 +7,7 @@ client.developer = false;
 module.exports = {};
 module.exports.version = require("./package.json").version;
 module.exports.start = function(config) {
+    if(config.developer){client.developer = config.developer}
     console.log("Loading commands")
     setup(config, require("path").dirname(require.main.filename)).then((data) => {
         client.commanddata = data.commands;
@@ -18,7 +19,11 @@ module.exports.start = function(config) {
         client.data = {};
         client.data.version = module.exports.version;
         client.data.util = util
-
+        var temp = new Map();
+        data.functions.snippets.snippets.forEach(i => {
+            temp.set(i.name, i.function)
+        })
+        client.snippets = temp
         client.functions.messages.messagefuncs.forEach(i => {
             i.type = i.type.map(i => (i.toLowerCase()))
             if (i.type == "all" && i.type.length === 1) {
@@ -39,6 +44,7 @@ module.exports.start = function(config) {
         console.log(err, err.stack)
     })
 }
+
 function start(client, config, commanddata) {
     var startedAt = new Date();
     client.login(config.token)
@@ -125,6 +131,7 @@ function start(client, config, commanddata) {
         }
     })
 }
+
 function doCommand(command, client, message) {
     command = client.commanddata.commands.get(command);
     if (command === undefined) {
@@ -146,6 +153,7 @@ function doCommand(command, client, message) {
         }
     }
 }
+
 function dofuncs(client, message, type) {
     return new Promise(function(resolve, reject) {
         var funcnumber = 0;
@@ -220,6 +228,7 @@ function dofuncs(client, message, type) {
                 }
             })
         }
+
         function done(xnumber, num) {
             number = xnumber + 1
             if (number == num) {

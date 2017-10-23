@@ -1,13 +1,18 @@
 /* eslint no-process-exit: 0 */
-var command = module.exports = {}
 
-command.name = "reboot";
-command.aliases = ["restart"];
+
+exports.name = "reboot";
+exports.aliases = ["restart"];
+
+// Don't use this for regular commands.
+exports.system = true
+// Don't use this for regular commands.
+
 
 // Owner only
-command.level = 10
+exports.level = 10
 
-command.command = function(client, message) {
+exports.command = function(client, message) {
 
 
 
