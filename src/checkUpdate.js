@@ -14,12 +14,9 @@ module.exports = function(version) {
                         } else {
                             newversion = data.latest
                         }
-
                         return resolve("\nAn update is required, please type npm install sparkbots \nto install the latest version  ( v" + version + " --> v" + newversion + ")")
                     }
                 }
-
-
             })
     });
 }
