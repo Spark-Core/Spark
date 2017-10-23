@@ -29,7 +29,7 @@ exports.command = function(client, message) {
 
 function reloadcommands(client, config, message) {
 
-    message.channel.send("[EDB] reloading commands")
+    message.channel.send("[Spark] reloading commands")
         .then(m => {
             setup(config, require("path").dirname(require.main.filename), true).then((commands) => {
                 client.commanddata = commands.commands;
@@ -44,11 +44,11 @@ function reloadcommands(client, config, message) {
                     }
                 })
                 if (commands.issues > 1) {
-                    return m.edit("[EDB] Reloaded **" + (system + regular) + "** commands succesfully. (S" + system + " | R" + regular + ")\n**" + commands.issues + "** commands failed to load. See the console for more info.")
+                    return m.edit("[Spark] Reloaded **" + (system + regular) + "** commands succesfully. (S" + system + " | R" + regular + ")\n**" + commands.issues + "** commands failed to load. See the console for more info.")
                 } else if (commands.issues == 1) {
-                    return m.edit("[EDB] Reloaded **" + (system + regular) + "** commands succesfully. (S" + system + " | R" + regular + ")\n**" + commands.issues + "** command failed to load. See the console for more info.")
+                    return m.edit("[Spark] Reloaded **" + (system + regular) + "** commands succesfully. (S" + system + " | R" + regular + ")\n**" + commands.issues + "** command failed to load. See the console for more info.")
                 }
-                m.edit("[EDB] Reloaded **" + (system + regular) + "** commands succesfully. (S" + system + " | R" + regular + ")")
+                m.edit("[Spark] Reloaded **" + (system + regular) + "** commands succesfully. (S" + system + " | R" + regular + ")")
             }).catch((err) => {
                 m.edit(err.stack.toLowerCase())
                 if (client.developer) {
@@ -61,7 +61,7 @@ function reloadcommands(client, config, message) {
 
 function reloadfunctions(client, message) {
 
-    message.channel.send("[EDB] reloading functions")
+    message.channel.send("[Spark] reloading functions")
         .then(m => {
             var temp = client.config;
             setup(temp, require("path").dirname(require.main.filename), true).then((data) => {
@@ -88,11 +88,11 @@ function reloadfunctions(client, message) {
                 })
                 client.config = temp;
                 if ((data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues) > 1) {
-                    return m.edit("[EDB] Reloaded **" + (client.functions.messages.messagefuncs.size + client.functions.boot.bootfuncs.size + client.functions.snippets.snippets.size) + "** messagefunctions, bootfunctions and snippets succesfully.\n**" + (data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues) + "** issues while loading. See the console for more info.")
+                    return m.edit("[Spark] Reloaded **" + (client.functions.messages.messagefuncs.size + client.functions.boot.bootfuncs.size + client.functions.snippets.snippets.size) + "** messagefunctions, bootfunctions and snippets succesfully.\n**" + (data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues) + "** issues while loading. See the console for more info.")
                 } else if ((data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues) === 1) {
-                    return m.edit("[EDB] Reloaded **" + (client.functions.messages.messagefuncs.size + client.functions.boot.bootfuncs.size + client.functions.snippets.snippets.size) + "** messagefunctions, bootfunctions and snippets succesfully.\n**" + (data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues) + "** issue while loading. See the console for more info.")
+                    return m.edit("[Spark] Reloaded **" + (client.functions.messages.messagefuncs.size + client.functions.boot.bootfuncs.size + client.functions.snippets.snippets.size) + "** messagefunctions, bootfunctions and snippets succesfully.\n**" + (data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues) + "** issue while loading. See the console for more info.")
                 }
-                m.edit("[EDB] Reloaded **" + (client.functions.messages.messagefuncs.size + client.functions.boot.bootfuncs.size + client.functions.snippets.snippets.size) + "** messagefunctions, bootfunctions and snippets succesfully.")
+                m.edit("[Spark] Reloaded **" + (client.functions.messages.messagefuncs.size + client.functions.boot.bootfuncs.size + client.functions.snippets.snippets.size) + "** messagefunctions, bootfunctions and snippets succesfully.")
             }).catch((err) => {
                 m.edit(err.stack.toLowerCase())
             })

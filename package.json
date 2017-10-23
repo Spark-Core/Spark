@@ -1,5 +1,5 @@
 {
-  "name": "easy-discord-bot",
+  "name": "sparkbots",
   "version": "0.0.3",
   "description": "An easy to use discord bot, which uses small modules for getting commands and messages. ",
   "main": "app.js",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TobiasFeld22/Easy-Discord-Bot.git"
+    "url": "git+https://github.com/TobiasFeld22/Spark.git"
   },
   "keywords": [
     "discord",
@@ -23,8 +23,8 @@
   "author": "Tobias Feld (tobias.feld@hotmail.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/TobiasFeld22/Easy-Discord-Bot/issues"
+    "url": "https://github.com/TobiasFeld22/Spark/issues"
   },
-  "homepage": "https://github.com/TobiasFeld22/Easy-Discord-Bot#readme",
+  "homepage": "https://github.com/TobiasFeld22/Spark#readme",
   "lock": false
 }

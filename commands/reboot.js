@@ -16,7 +16,7 @@ exports.command = function(client, message) {
 
 
 
-    message.channel.send("[EDB] Restarting bot...")
+    message.channel.send("[Spark] Restarting bot...")
         .then(() => {
             process.exit()
         })
