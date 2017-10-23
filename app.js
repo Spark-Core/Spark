@@ -146,7 +146,7 @@ function doCommand(command, client, message) {
             var mod = err.stack.split("\n")[0].replace("Error: Cannot find module ", "")
             console.warn("Command: " + command.name + " | Requires the " + mod + " package to be installed.\nTo install this package, close the script and type: 'npm install " + mod.slice(1, -1) + "'")
             if (message.author.id == client.config.owner_id) {
-                message.channel.send("[EDB] Command: **" + command.name + "** | Requires the " + mod + " package to be installed.\nTo install this package, close the script and type: `npm install " + mod.slice(1, -1) + "`")
+                message.channel.send("[Spark] Command: **" + command.name + "** | Requires the " + mod + " package to be installed.\nTo install this package, close the script and type: `npm install " + mod.slice(1, -1) + "`")
             }
         } else {
             console.warn("Command: " + command.name + " | had an error. Show the developer of the command module that you are getting this error code: \n" + err)

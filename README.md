@@ -14,15 +14,15 @@ First open a command prompt in the directory where you want your bot to run in.
 
 > copy the folder location, then navigate to that location using `cd <folder location>`
 
-Install edb by typing `npm install easy-discord-bot`
+Install Spark by typing `npm install easy-discord-bot`
 
 In your project folder you can make a javascript file (app.js for example)
 and add the following stuff:
 
 ```js
-const edb = require("easy-discord-bot")
+const Spark = require("easy-discord-bot")
 
-edb.start({
+Spark.start({
 prefix: "prefix-here",
 token: "token-here"
 })
