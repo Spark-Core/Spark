@@ -11,7 +11,6 @@ exports.function = function(client, message, command) {
             }
             return true;
         case 3:
-
             if (message.channel.type != "text") {
                 return true
             }

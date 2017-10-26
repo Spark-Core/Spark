@@ -59,8 +59,8 @@ function checkGit(message, args) {
     })
 }
 
-function reloadall(client, message, edit){
-    if (edit != null){
+function reloadall(client, message, edit) {
+    if (edit != null) {
         var temp = client.config;
         return setup(client.config, require("path").dirname(require.main.filename), true).then((data) => {
             client.commanddata = data.commands;
@@ -85,43 +85,38 @@ function reloadall(client, message, edit){
                     client.functions.types.commands.push(i.name);
                 }
             })
-    var system = 0;
-    var regular = 0;
-    var amount = 0
-    var commandissues = data.commands.commands.issues;
-    data.commands.commands.forEach((i) => {
-        amount = amount + 1
-        if (i.system) {
-            system = system + 1
-        } else {
-            regular = regular + 1
-        }
-    })
-    amount = (amount - data.commands.issues)
-    var functionissues = 0;
-    var functionamount = 0;
-
-        functionissues = (data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues)
-        functionamount = (data.functions.messages.messagefuncs.size + data.functions.boot.bootfuncs.size + data.functions.snippets.snippets.size)
-
-    if (functionissues > 0){
-        functionamount = (functionamount - functionissues);
-    }
-
+            var system = 0;
+            var regular = 0;
+            var amount = 0
+            var commandissues = data.commands.commands.issues;
+            data.commands.commands.forEach((i) => {
+                amount = amount + 1
+                if (i.system) {
+                    system = system + 1
+                } else {
+                    regular = regular + 1
+                }
+            })
+            amount = (amount - data.commands.issues)
+            var functionissues = 0;
+            var functionamount = 0;
+            functionissues = (data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues)
+            functionamount = (data.functions.messages.messagefuncs.size + data.functions.boot.bootfuncs.size + data.functions.snippets.snippets.size)
+            if (functionissues > 0) {
+                functionamount = (functionamount - functionissues);
+            }
             var Text = "";
-
-            Text = Text + "**Commands**\nReloaded **"+ amount + "** commands succesfully. (S" + system + " | R" + regular + ")"
-            if (commandissues > 1){
+            Text = Text + "**Commands**\nReloaded **" + amount + "** commands succesfully. (S" + system + " | R" + regular + ")"
+            if (commandissues > 1) {
                 Text = Text + "\n**" + commandissues + "** command(s) failed to load. See the console for more information."
             }
             Text = Text + "\n**Functions**\nReloaded **" + amount + "** functions succesfully."
-            if (functionissues > 1){
+            if (functionissues > 1) {
                 Text = Text + "\n**" + functionissues + "** function(s) failed to load. See the console for more information."
             }
-
             m.edit(Text)
         })
-return
+        return
     }
     var temp = client.config;
     return setup(client.config, require("path").dirname(require.main.filename), true).then((data) => {
@@ -147,45 +142,38 @@ return
                 client.functions.types.commands.push(i.name);
             }
         })
-var system = 0;
-var regular = 0;
-var amount = 0
-var commandissues = data.commands.commands.issues;
-data.commands.commands.forEach((i) => {
-    amount = amount + 1
-    if (i.system) {
-        system = system + 1
-    } else {
-        regular = regular + 1
-    }
-})
-amount = (amount - data.commands.issues)
-var functionissues = 0;
-var functionamount = 0;
-
-    functionissues = (data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues)
-    functionamount = (data.functions.messages.messagefuncs.size + data.functions.boot.bootfuncs.size + data.functions.snippets.snippets.size)
-
-if (functionissues > 0){
-    functionamount = (functionamount - functionissues);
-}
-
+        var system = 0;
+        var regular = 0;
+        var amount = 0
+        var commandissues = data.commands.commands.issues;
+        data.commands.commands.forEach((i) => {
+            amount = amount + 1
+            if (i.system) {
+                system = system + 1
+            } else {
+                regular = regular + 1
+            }
+        })
+        amount = (amount - data.commands.issues)
+        var functionissues = 0;
+        var functionamount = 0;
+        functionissues = (data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues)
+        functionamount = (data.functions.messages.messagefuncs.size + data.functions.boot.bootfuncs.size + data.functions.snippets.snippets.size)
+        if (functionissues > 0) {
+            functionamount = (functionamount - functionissues);
+        }
         var Text = "";
-
-        Text = Text + "**Commands**\nReloaded **"+ amount + "** commands succesfully. (S" + system + " | R" + regular + ")"
-        if (commandissues > 1){
+        Text = Text + "**Commands**\nReloaded **" + amount + "** commands succesfully. (S" + system + " | R" + regular + ")"
+        if (commandissues > 1) {
             Text = Text + "\n**" + commandissues + "** command(s) failed to load. See the console for more information."
         }
         Text = Text + "\n**Functions**\nReloaded **" + amount + "** functions succesfully."
-        if (functionissues > 1){
+        if (functionissues > 1) {
             Text = Text + "\n**" + functionissues + "** function(s) failed to load. See the console for more information."
         }
-
         message.channel.send(Text)
     })
-
 }
-
 
 function reloadcommands(client, message, edit) {
     if (edit != null) {
