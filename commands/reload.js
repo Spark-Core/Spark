@@ -7,7 +7,6 @@ exports.system = true
 // Don't use this for regular commands.
 const setup = require("../setup.js");
 var childProcess = require("child_process");
-var exec = childProcess.exec;
 exports.command = function(client, message) {
     var args = message.content.split(" ")
     if (args[1] == null) {
@@ -37,7 +36,7 @@ exports.command = function(client, message) {
 function checkGit(message, args) {
     return new Promise(function(resolve) {
         if (args[2] != null && args[2].toLowerCase() === "--git") {
-            exec("git pull", (error, stdout, stderr) => {
+            childProcess.exec("git pull", (error, stdout, stderr) => {
                 console.log(error, stdout, stderr)
                 if (error || stderr) {
                     var choice = stderr;
@@ -61,7 +60,7 @@ function checkGit(message, args) {
 
 function reloadall(client, message, edit) {
     if (edit != null) {
-        var temp = client.config;
+        var m = edit
         return setup(client.config, require("path").dirname(require.main.filename), true).then((data) => {
             client.commanddata = data.commands;
             var tempsnips = new Map();
@@ -110,15 +109,13 @@ function reloadall(client, message, edit) {
             if (commandissues > 1) {
                 Text = Text + "\n**" + commandissues + "** command(s) failed to load. See the console for more information."
             }
-            Text = Text + "\n**Functions**\nReloaded **" + amount + "** functions succesfully."
+            Text = Text + "\n**Functions**\nReloaded **" + functionamount + "** functions succesfully."
             if (functionissues > 1) {
                 Text = Text + "\n**" + functionissues + "** function(s) failed to load. See the console for more information."
             }
             m.edit(Text)
         })
-        return
     }
-    var temp = client.config;
     return setup(client.config, require("path").dirname(require.main.filename), true).then((data) => {
         client.commanddata = data.commands;
         var tempsnips = new Map();
@@ -167,7 +164,7 @@ function reloadall(client, message, edit) {
         if (commandissues > 1) {
             Text = Text + "\n**" + commandissues + "** command(s) failed to load. See the console for more information."
         }
-        Text = Text + "\n**Functions**\nReloaded **" + amount + "** functions succesfully."
+        Text = Text + "\n**Functions**\nReloaded **" + functionamount + "** functions succesfully."
         if (functionissues > 1) {
             Text = Text + "\n**" + functionissues + "** function(s) failed to load. See the console for more information."
         }
@@ -191,10 +188,8 @@ function reloadcommands(client, message, edit) {
                     regular = regular + 1
                 }
             })
-            if (commands.issues > 1) {
-                return m.edit(m.content.replace("Reloading...", "[Spark] Reloaded **" + (system + regular) + "** commands succesfully. (S" + system + " | R" + regular + ")\n**" + commands.issues + "** commands failed to load. See the console for more info."))
-            } else if (commands.issues == 1) {
-                return m.edit(m.content.replace("Reloading...", "[Spark] Reloaded **" + (system + regular) + "** commands succesfully. (S" + system + " | R" + regular + ")\n**" + commands.issues + "** command failed to load. See the console for more info."))
+            if (commands.issues > 0) {
+                return m.edit(m.content.replace("Reloading...", "[Spark] Reloaded **" + (system + regular) + "** commands succesfully. (S" + system + " | R" + regular + ")\n**" + commands.issues + "** command(s) failed to load. See the console for more info."))
             }
             return m.edit(m.content.replace("Reloading...", "[Spark] Reloaded **" + (system + regular) + "** commands succesfully. (S" + system + " | R" + regular + ")"))
         }).catch((err) => {

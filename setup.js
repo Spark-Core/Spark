@@ -17,7 +17,6 @@ module.exports = function(config, local, reload) {
         }
         fs.access(path.resolve(local, "commands"), fs.constants.R_OK, (err) => {
             if (err) {
-
                 fs.mkdir(path.resolve(local, "commands"), function() {
                     util.load("cmds", __dirname).then((data) => {
                         return next(data, local, reload).then(data => resolve(data)).catch(err => reject(err))
@@ -26,7 +25,6 @@ module.exports = function(config, local, reload) {
                     })
                 })
             } else {
-
                 util.load("cmds", __dirname, reload).then((data) => {
                     return next(data, local, reload).then(data => resolve(data)).catch(err => reject(err))
                 }).catch(err => {
@@ -34,44 +32,38 @@ module.exports = function(config, local, reload) {
                 })
             }
         });
-
     });
 }
 
-
 function next(commands, local, reload) {
     return new Promise(function(resolve, reject) {
-
         var data = {}
         data.commands = commands
-
         fs.access(path.resolve(local, "functions"), fs.constants.R_OK, (err) => {
             if (err) {
-
                 fs.mkdir(path.resolve(local, "functions"), function() {
-
                     functions(data, local, reload).then((functiondata) => {
                         data.functions = functiondata
-                        resolve(data)
+                        util.load("events", __dirname, reload).then(eventData => {
+                            data.events = eventData;
+                            resolve(data)
+                        }).catch(err => reject(err));
                     }).catch(err => reject(err))
                 })
             } else {
                 functions(data, local, reload).then((functiondata) => {
                     data.functions = functiondata
-                    resolve(data)
+                    util.load("events", __dirname, reload).then(eventData => {
+                        data.events = eventData;
+                        resolve(data)
+                    }).catch(err => reject(err));
                 }).catch(err => reject(err))
-
-
             }
         });
     });
-
 }
 
-
-
 function functions(data, local, reload) {
-
     return new Promise(function(resolve, reject) {
         var types = ["messages"]
 
@@ -79,7 +71,6 @@ function functions(data, local, reload) {
             if (Object.keys(data).length === 3) {
                 return true
             }
-
             /* LENGTH NEEDS TO BE CHANGED WHEN NEW FUNCTIONS ARE ADDED! */
         }
         types.forEach(i => {
@@ -96,11 +87,9 @@ function functions(data, local, reload) {
                         }).catch(err => {
                             return reject(err)
                         })
-
                     })
                 } else {
                     util.load("functions", __dirname, reload).then((data) => {
-
                         if (done(data) == true) {
                             return resolve(data)
                         }

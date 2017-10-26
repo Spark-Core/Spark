@@ -193,7 +193,6 @@ function messagesLoad(location, reload) {
                 } else if (temp.name === null || typeof temp.name != "string") {
                     console.warn(path + "  -  File isn't set up correctly, go to <pagelink> to learn more on how to set up message functions. | code: invalid_or_no_name")
                     return done(number, num, reload)
-
                 } else if (temp.function == null || typeof temp.function != "function") {
                     console.warn(path + "  -  File isn't set up correctly, go to <pagelink> to learn more on how to set up message functions. | code: no_function_setup")
                     return done(number, num, reload)

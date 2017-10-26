@@ -23,9 +23,8 @@ exports.function = function(client, message, command) {
             }
             if (message.member.roles.has(adminRole) == false) {
                 return true;
-            } else {
-                return false
             }
+            return false
         case 2:
             if (message.channel.type != "text") {
                 return true
@@ -39,9 +38,8 @@ exports.function = function(client, message, command) {
             }
             if (message.member.roles.has(modRole.id) == false) {
                 return true;
-            } else {
-                return false
             }
+            return false
         default:
             return false;
     }
