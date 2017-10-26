@@ -7,7 +7,7 @@ exports.system = true
 // Don't use this for regular commands.
 const setup = require("../setup.js");
 var childProcess = require("child_process");
-var exec = childProcess.exed;
+var exec = childProcess.exec;
 exports.command = function(client, message) {
     var args = message.content.split(" ")
     if (args[1] == null) {
