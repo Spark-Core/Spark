@@ -24,8 +24,13 @@ exports.command = function(client, message) {
                 reloadfunctions(client, message, edit)
             })
             break;
+        case "all":
+            checkGit(message, args).then(edit => {
+                reloadall(client, message, edit)
+            })
+            break;
         default:
-            message.channel.send("You forgot to specify what to reload, choose from: `commands` `functions`")
+            message.channel.send("You forgot to specify what to reload, choose from: `commands` `functions` `all`")
     }
 }
 
@@ -53,6 +58,134 @@ function checkGit(message, args) {
         }
     })
 }
+
+function reloadall(client, message, edit){
+    if (edit != null){
+        var temp = client.config;
+        return setup(client.config, require("path").dirname(require.main.filename), true).then((data) => {
+            client.commanddata = data.commands;
+            var tempsnips = new Map();
+            client.functions = data.functions
+            client.functions.types = {
+                messages: [],
+                commands: []
+            }
+            data.functions.snippets.snippets.forEach(i => {
+                tempsnips.set(i.name, i.function)
+            })
+            client.snippets = tempsnips
+            client.functions.messages.messagefuncs.forEach(i => {
+                i.type = i.type.map(i => (i.toLowerCase()))
+                if (i.type == "all" && i.type.length === 1) {
+                    client.functions.types.commands.push(i.name);
+                    client.functions.types.messages.push(i.name);
+                } else if (i.type == "messages") {
+                    client.functions.types.messages.push(i.name);
+                } else if (i.type == "commands") {
+                    client.functions.types.commands.push(i.name);
+                }
+            })
+    var system = 0;
+    var regular = 0;
+    var amount = 0
+    var commandissues = data.commands.commands.issues;
+    data.commands.commands.forEach((i) => {
+        amount = amount + 1
+        if (i.system) {
+            system = system + 1
+        } else {
+            regular = regular + 1
+        }
+    })
+    amount = (amount - data.commands.issues)
+    var functionissues = 0;
+    var functionamount = 0;
+
+        functionissues = (data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues)
+        functionamount = (data.functions.messages.messagefuncs.size + data.functions.boot.bootfuncs.size + data.functions.snippets.snippets.size)
+
+    if (functionissues > 0){
+        functionamount = (functionamount - functionissues);
+    }
+
+            var Text = "";
+
+            Text = Text + "**Commands**\nReloaded **"+ amount + "** commands succesfully. (S" + system + " | R" + regular + ")"
+            if (commandissues > 1){
+                Text = Text + "\n**" + commandissues + "** command(s) failed to load. See the console for more information."
+            }
+            Text = Text + "\n**Functions**\nReloaded **" + amount + "** functions succesfully."
+            if (functionissues > 1){
+                Text = Text + "\n**" + functionissues + "** function(s) failed to load. See the console for more information."
+            }
+
+            m.edit(Text)
+        })
+return
+    }
+    var temp = client.config;
+    return setup(client.config, require("path").dirname(require.main.filename), true).then((data) => {
+        client.commanddata = data.commands;
+        var tempsnips = new Map();
+        client.functions = data.functions
+        client.functions.types = {
+            messages: [],
+            commands: []
+        }
+        data.functions.snippets.snippets.forEach(i => {
+            tempsnips.set(i.name, i.function)
+        })
+        client.snippets = tempsnips
+        client.functions.messages.messagefuncs.forEach(i => {
+            i.type = i.type.map(i => (i.toLowerCase()))
+            if (i.type == "all" && i.type.length === 1) {
+                client.functions.types.commands.push(i.name);
+                client.functions.types.messages.push(i.name);
+            } else if (i.type == "messages") {
+                client.functions.types.messages.push(i.name);
+            } else if (i.type == "commands") {
+                client.functions.types.commands.push(i.name);
+            }
+        })
+var system = 0;
+var regular = 0;
+var amount = 0
+var commandissues = data.commands.commands.issues;
+data.commands.commands.forEach((i) => {
+    amount = amount + 1
+    if (i.system) {
+        system = system + 1
+    } else {
+        regular = regular + 1
+    }
+})
+amount = (amount - data.commands.issues)
+var functionissues = 0;
+var functionamount = 0;
+
+    functionissues = (data.functions.messages.issues + data.functions.boot.issues + data.functions.snippets.issues)
+    functionamount = (data.functions.messages.messagefuncs.size + data.functions.boot.bootfuncs.size + data.functions.snippets.snippets.size)
+
+if (functionissues > 0){
+    functionamount = (functionamount - functionissues);
+}
+
+        var Text = "";
+
+        Text = Text + "**Commands**\nReloaded **"+ amount + "** commands succesfully. (S" + system + " | R" + regular + ")"
+        if (commandissues > 1){
+            Text = Text + "\n**" + commandissues + "** command(s) failed to load. See the console for more information."
+        }
+        Text = Text + "\n**Functions**\nReloaded **" + amount + "** functions succesfully."
+        if (functionissues > 1){
+            Text = Text + "\n**" + functionissues + "** function(s) failed to load. See the console for more information."
+        }
+
+        message.channel.send(Text)
+    })
+
+}
+
 
 function reloadcommands(client, message, edit) {
     if (edit != null) {
