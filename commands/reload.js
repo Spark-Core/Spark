@@ -227,7 +227,7 @@ function reloadfunctions(client, message, edit) {
     if (edit != null) {
         var m = edit;
         var temp = client.config;
-        setup(temp, require("path").dirname(require.main.filename), true).then((data) => {
+        return setup(temp, require("path").dirname(require.main.filename), true).then((data) => {
             var tempsnips = new Map();
             client.functions = data.functions
             client.functions.types = {
@@ -260,6 +260,7 @@ function reloadfunctions(client, message, edit) {
             console.error(err.stack)
             return m.edit(m.content.replace("Reloading...", "An error occurred while trying to reload, see error info in the console."))
         })
+
     }
     message.channel.send("[Spark] reloading functions").then(m => {
         var temp = client.config;
