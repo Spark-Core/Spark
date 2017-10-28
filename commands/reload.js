@@ -57,7 +57,6 @@ function checkGit(message, args) {
         }
     })
 }
-
 function reloadall(client, message, edit) {
     if (edit != null) {
         var m = edit
@@ -113,7 +112,7 @@ function reloadall(client, message, edit) {
             if (functionissues > 1) {
                 Text = Text + "\n**" + functionissues + "** function(s) failed to load. See the console for more information."
             }
-            m.edit(Text)
+            m.edit(m.content.replace("Reloading...", Text));
         })
     }
     return setup(client.config, require("path").dirname(require.main.filename), true).then((data) => {
@@ -171,7 +170,6 @@ function reloadall(client, message, edit) {
         message.channel.send(Text)
     })
 }
-
 function reloadcommands(client, message, edit) {
     if (edit != null) {
         var m = edit;
@@ -225,7 +223,6 @@ function reloadcommands(client, message, edit) {
         })
     })
 }
-
 function reloadfunctions(client, message, edit) {
     if (edit != null) {
         var m = edit;
