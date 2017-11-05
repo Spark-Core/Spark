@@ -37,7 +37,6 @@ function checkGit(message, args) {
     return new Promise(function(resolve) {
         if (args[2] != null && args[2].toLowerCase() === "--git") {
             childProcess.exec("git pull", (error, stdout, stderr) => {
-                console.log(error, stdout, stderr)
                 if (error || stderr) {
                     var choice = stderr;
                     if (error) {
