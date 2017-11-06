@@ -1,5 +1,6 @@
 /* eslint no-console: 0 */
 /* eslint max-params: 0 */
+/* eslint func-style: 0 */
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const setup = require("./setup.js");
@@ -23,11 +24,7 @@ module.exports.start = function(config) {
         client.data = {};
         client.data.version = module.exports.version;
         client.data.util = util
-        var temp = new Map();
-        data.functions.snippets.snippets.forEach(i => {
-            temp.set(i.name, i.function)
-        })
-        client.snippets = temp
+        client.snippets = data.functions.snippets.snippets
         client.functions.messages.messagefuncs.forEach(i => {
             i.type = i.type.map(i => (i.toLowerCase()))
             if (i.type == "all" && i.type.length === 1) {

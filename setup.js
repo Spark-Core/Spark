@@ -1,3 +1,6 @@
+/* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
+/* eslint func-style: 0 */
+
 var fs = require("fs")
 const path = require("path");
 var util = require("./src/util.js")
@@ -69,8 +72,36 @@ function functions(data, local, reload) {
 
         function done(data) {
             if (Object.keys(data).length === 3) {
+                const Snippets = function(data){
+                    this._list = data.snippets.snippets
+                     if (data.snippets.snippets.size == 0){
+                         this.list = new Map();
+                     }else{
+                         this.list = function(name){
+                            if (name == null){
+                                var temp = []
+                                this._list.forEach(i => {
+                                    temp.push(i.name)
+                                })
+                                return temp
+                            }
+                            if (!this._list.has(name)){
+                                return new Error("No snippet found under this name")
+                            }
+                                return this._list.get(name)
+
+                     }
+                     this._list.forEach(i => {
+                         this[i.name] = i.function
+                     })
+
+                 }
+             }
+                 var temp = new Snippets(data)
+                 data.snippets.snippets = temp
                 return true
             }
+
             /* LENGTH NEEDS TO BE CHANGED WHEN NEW FUNCTIONS ARE ADDED! */
         }
         types.forEach(i => {
