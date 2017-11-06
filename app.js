@@ -94,11 +94,11 @@ function start(client, config, commanddata) {
         console.log("To add new commands, type \"" + config.prefix + "createcommand <name> <alias1> <alias2> <alias3>\" to generate a new template!")
         client.events.events.forEach(i => {
             client.on(i.event, (one, two, three, four, five) => {
-                try{
-                i.function(client, one, two, three, four, five)
-            }catch(e){
-                    console.warn("An error occurred in the event \""+i.event+"\"")
-                    if (client.developer){
+                try {
+                    i.function(client, one, two, three, four, five)
+                } catch (e) {
+                    console.warn("An error occurred in the event \"" + i.event + "\"")
+                    if (client.developer) {
                         console.warn(e)
                     }
                 }

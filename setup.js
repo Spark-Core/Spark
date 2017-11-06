@@ -72,33 +72,33 @@ function functions(data, local, reload) {
 
         function done(data) {
             if (Object.keys(data).length === 3) {
-                const Snippets = function(data){
+                const Snippets = function(data) {
                     this._list = data.snippets.snippets
-                     if (data.snippets.snippets.size == 0){
-                         this.list = new Map();
-                     }else{
-                         this.list = function(name){
-                            if (name == null){
+                    if (data.snippets.snippets.size == 0) {
+                        this.list = new Map();
+                    } else {
+                        this.list = function(name) {
+                            if (name == null) {
                                 var temp = []
                                 this._list.forEach(i => {
                                     temp.push(i.name)
                                 })
                                 return temp
                             }
-                            if (!this._list.has(name)){
+                            if (!this._list.has(name)) {
                                 return new Error("No snippet found under this name")
                             }
-                                return this._list.get(name)
+                            return this._list.get(name)
 
-                     }
-                     this._list.forEach(i => {
-                         this[i.name] = i.function
-                     })
+                        }
+                        this._list.forEach(i => {
+                            this[i.name] = i.function
+                        })
 
-                 }
-             }
-                 var temp = new Snippets(data)
-                 data.snippets.snippets = temp
+                    }
+                }
+                var temp = new Snippets(data)
+                data.snippets.snippets = temp
                 return true
             }
 
