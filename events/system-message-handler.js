@@ -2,6 +2,8 @@
 exports.name = "system-message-handler"
 exports.event = "message"
 exports.function = (client, message) => {
+    if (message.system == true){return}
+    if (client.config.allowBots == false && message.author.bot == true){return}
     if (!message.content.startsWith(client.config.prefix)) {
         client.data.util.handleMessages.dofuncs(client, message, "message").catch((data) => {
             if (data) {

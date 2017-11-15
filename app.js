@@ -12,6 +12,9 @@ module.exports.start = function(config) {
     if (config.developer) {
         client.developer = config.developer
     }
+    if (config.allowBots == null){
+        config.allowBots = false
+    }
     console.log("Loading commands")
     setup(config, require("path").dirname(require.main.filename)).then((data) => {
         client.commanddata = data.commands;
