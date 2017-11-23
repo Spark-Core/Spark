@@ -94,7 +94,9 @@ function start(client, config, commanddata) {
             }, data.delay);
         })
         console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
-        console.log("To add new commands, type \"" + config.prefix + "createcommand <name> <alias1> <alias2> <alias3>\" to generate a new template!")
+        if (client.config.firstTime){
+            console.log(`Welcome to Spark! You are running Spark version ${client.data.version}\n\nTo add new commands, type "${config.prefix}createcommand <name> <alias1> <alias2> <alias3>" to generate a new template!`)
+        }
         client.events.events.forEach(i => {
             client.on(i.event, (one, two, three, four, five) => {
                 try {

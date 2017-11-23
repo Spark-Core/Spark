@@ -20,7 +20,10 @@ module.exports = function(config, local, reload) {
         }
         fs.access(path.resolve(local, "commands"), fs.constants.R_OK, (err) => {
             if (err) {
-                fs.mkdir(path.resolve(local, "commands"), function() {
+                fs.mkdir(path.resolve(local, "commands"), function(err) {
+                    if(!err){
+                        config.firstTime = true
+                    }
                     util.load("cmds", __dirname).then((data) => {
                         return next(data, local, reload).then(data => resolve(data)).catch(err => reject(err))
                     }).catch(err => {
@@ -47,18 +50,30 @@ function next(commands, local, reload) {
                 fs.mkdir(path.resolve(local, "functions"), function() {
                     functions(data, local, reload).then((functiondata) => {
                         data.functions = functiondata
-                        util.load("events", __dirname, reload).then(eventData => {
-                            data.events = eventData;
-                            resolve(data)
+                        util.load("events", __dirname, reload).then(eventdata => {
+                            util.load("events", local, reload).then(eventdataLocal => {
+                                eventdataLocal.events.forEach((i) => {
+                                    eventdata.events.set(i.name, i)
+                                    eventdata.issues = eventdata.issues + eventdataLocal.issues
+                                })
+                                data.events = eventdata
+                                resolve(data)
+                            }).catch(err => reject(err));
                         }).catch(err => reject(err));
                     }).catch(err => reject(err))
                 })
             } else {
                 functions(data, local, reload).then((functiondata) => {
                     data.functions = functiondata
-                    util.load("events", __dirname, reload).then(eventData => {
-                        data.events = eventData;
-                        resolve(data)
+                    util.load("events", __dirname, reload).then(eventdata => {
+                        util.load("events", local, reload).then(eventdataLocal => {
+                            eventdataLocal.events.forEach((i) => {
+                                eventdata.events.set(i.name, i)
+                                eventdata.issues = eventdata.issues + eventdataLocal.issues
+                            })
+                            data.events = eventdata
+                            resolve(data)
+                        }).catch(err => reject(err));
                     }).catch(err => reject(err));
                 }).catch(err => reject(err))
             }

@@ -1,7 +1,9 @@
 /* eslint no-console: 0 */
 var fs = require("fs")
 var path = require("path");
+var util = require("./util.js")
 module.exports = function(dir, location, reload) {
+
     return new Promise(function(resolve, reject) {
         loadevent(dir, reload).then(data => {
             if (dir == location) {
@@ -26,13 +28,24 @@ module.exports = function(dir, location, reload) {
 
 function loadevent(location, reload) {
     return new Promise(function(resolve, reject) {
+        if (!location) {
+            var data = {
+                events: {
+                    events: new Map(),
+                    names: [],
+                    issues: 0
+                }
+            }
+            return resolve(data)
+        }
+
         fs.readdir(path.resolve(location, "events/"), function(err, results) {
             if (err) {
                 fs.mkdir(path.resolve(location, "events/"), function(err) {
                     if (err) {
                         return reject(err)
                     }
-                    module.exports(location, reload).then((data) => resolve(data)).catch(err => reject(err))
+                    util.load("events", location, reload).then((data) => resolve(data)).catch(err => reject(err))
                 })
             }
             if (!err) {
