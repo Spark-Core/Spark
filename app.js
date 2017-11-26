@@ -1,4 +1,6 @@
 /* eslint no-console: 0 */
+/* eslint max-params: 0 */
+/* eslint func-style: 0 */
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const setup = require("./setup.js");
@@ -7,10 +9,16 @@ client.developer = false;
 module.exports = {};
 module.exports.version = require("./package.json").version;
 module.exports.start = function(config) {
-    if(config.developer){client.developer = config.developer}
+    if (config.developer) {
+        client.developer = config.developer
+    }
+    if (config.allowBots == null){
+        config.allowBots = false
+    }
     console.log("Loading commands")
     setup(config, require("path").dirname(require.main.filename)).then((data) => {
         client.commanddata = data.commands;
+        client.events = data.events;
         client.functions = data.functions
         client.functions.types = {
             messages: [],
@@ -19,11 +27,7 @@ module.exports.start = function(config) {
         client.data = {};
         client.data.version = module.exports.version;
         client.data.util = util
-        var temp = new Map();
-        data.functions.snippets.snippets.forEach(i => {
-            temp.set(i.name, i.function)
-        })
-        client.snippets = temp
+        client.snippets = data.functions.snippets.snippets
         client.functions.messages.messagefuncs.forEach(i => {
             i.type = i.type.map(i => (i.toLowerCase()))
             if (i.type == "all" && i.type.length === 1) {
@@ -79,7 +83,6 @@ function start(client, config, commanddata) {
             }
         })
         client.functions.boot.bootfuncs.forEach((data) => {
-
             function returnfunction() {
                 return data.function(client)
             }
@@ -88,152 +91,28 @@ function start(client, config, commanddata) {
                     setInterval(returnfunction, data.time)
                 }
                 return returnfunction()
-
             }, data.delay);
         })
         console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
-        console.log("To add new commands, type \"" + config.prefix + "createcommand <name> <alias1> <alias2> <alias3>\" to generate a new template!")
-    })
-    client.on("message", (message) => {
-        // commands
-        if (!message.content.startsWith(config.prefix)) {
-            dofuncs(client, message, "message").catch((data) => {
-                if (data) {
+        if (client.config.firstTime){
+            console.log(`Welcome to Spark! You are running Spark version ${client.data.version}\n\nTo add new commands, type "${config.prefix}createcommand <name> <alias1> <alias2> <alias3>" to generate a new template!`)
+        }
+        client.events.events.forEach(i => {
+            client.on(i.event, (one, two, three, four, five) => {
+                try {
+                    i.function(client, one, two, three, four, five)
+                } catch (e) {
+                    console.warn("An error occurred in the event \"" + i.event + "\"")
                     if (client.developer) {
-                        return console.warn(data)
+                        console.warn(e)
                     }
                 }
             })
-            return
-        }
-        var content = message.content.replace(config.prefix, "")
-        var command = content.split(" ")[0].toLowerCase();
-        if (commanddata.commands.has(command) === true) {
-            message.command = commanddata.commands.get(command)
-            dofuncs(client, message, "command").then(() => {
-                doCommand(command, client, message)
-            }).catch(data => {
-                if (data) {
-                    if (client.developer) {
-                        return console.warn(data)
-                    }
-                }
-            })
-        } else if (commanddata.aliases.has(command) === true) {
-            message.command = commanddata.commands.get(commanddata.aliases.get(command))
-            dofuncs(client, message, "command").then(() => {
-                doCommand(commanddata.aliases.get(command), client, message);
-            }).catch(data => {
-                if (data) {
-                    console.log(data)
-                }
-            })
-        }
+        })
+        client.events.events.forEach(i => {
+            if (i.event === "ready") {
+                i.function(client)
+            }
+        })
     })
-}
-
-function doCommand(command, client, message) {
-    command = client.commanddata.commands.get(command);
-    if (command === undefined) {
-        return
-    }
-    try {
-        command.command(client, message);
-    } catch (err) {
-        if (client.developer) {
-            console.warn("Command: " + command.name + " | had an error while executing.", err)
-        } else if (err.code == "MODULE_NOT_FOUND") {
-            var mod = err.stack.split("\n")[0].replace("Error: Cannot find module ", "")
-            console.warn("Command: " + command.name + " | Requires the " + mod + " package to be installed.\nTo install this package, close the script and type: 'npm install " + mod.slice(1, -1) + "'")
-            if (message.author.id == client.config.owner_id) {
-                message.channel.send("[Spark] Command: **" + command.name + "** | Requires the " + mod + " package to be installed.\nTo install this package, close the script and type: `npm install " + mod.slice(1, -1) + "`")
-            }
-        } else {
-            console.warn("Command: " + command.name + " | had an error. Show the developer of the command module that you are getting this error code: \n" + err)
-        }
-    }
-}
-
-function dofuncs(client, message, type) {
-    return new Promise(function(resolve, reject) {
-        var funcnumber = 0;
-        var number = 0;
-        if (type == "message") {
-            if (client.functions.types.messages.length == 0) {
-                return resolve()
-            }
-            client.functions.messages.messagefuncs.forEach(i => {
-                var num = client.functions.messages.messagefuncs.size
-                if (client.functions.types.messages.includes(i.name) == false) {
-                    done(funcnumber, num)
-                }
-                var result = i.function(client, message, message.command)
-                if (result == undefined) {
-                    return done(funcnumber, num)
-                }
-                if (result instanceof Promise) {
-                    result.then(data => {
-                        if (data) {
-                            if (typeof data == "string") {
-                                message.channel.send(data)
-                            }
-                            return reject()
-                        }
-                        done(funcnumber, num)
-                    }).catch(err => console.warn(i.name + " | Message function just stopped working correctly. | Error: \n", err))
-                } else {
-                    if (result) {
-                        if (typeof result == "string") {
-                            message.channel.send(result)
-                        }
-                        return reject()
-                    }
-                    done(funcnumber, num)
-                }
-            })
-
-
-        }
-        if (type == "command") {
-            if (client.functions.types.commands.length == 0) {
-                return resolve()
-            }
-            client.functions.messages.messagefuncs.forEach(i => {
-                var num = client.functions.messages.messagefuncs.size
-                if (client.functions.types.commands.includes(i.name) == false) {
-                    done(number, num)
-                }
-                var result = i.function(client, message, message.command)
-                if (result == undefined) {
-                    return done(number, num)
-                }
-                if (result instanceof Promise) {
-                    result.then((data) => {
-                        if (data) {
-                            if (typeof data == "string") {
-                                message.channel.send(data)
-                            }
-                            return reject()
-                        }
-                        done(number, num)
-                    }).catch(err => console.warn(i.name + " | Message function just stopped working correctly. | Error: \n", err))
-                } else {
-                    if (result) {
-                        if (typeof result == "string") {
-                            message.channel.send(result)
-                        }
-                        return reject()
-                    }
-                    done(number, num)
-                }
-            })
-        }
-
-        function done(xnumber, num) {
-            number = xnumber + 1
-            if (number == num) {
-                return resolve()
-            }
-        }
-    });
 }

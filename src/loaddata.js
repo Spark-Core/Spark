@@ -14,10 +14,11 @@ module.exports = function(type, dir, reload) {
                     resolve(functiondata)
                 }).catch((err) => reject(err));
                 break;
+            case "events":
+                util.loadEvents(dir, local, reload).then(data => {
+                    resolve(data)
+                }).catch(err => reject(err));
+                break;
         }
-
-
-
-
     });
 }

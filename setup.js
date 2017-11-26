@@ -1,3 +1,6 @@
+/* eslint no-underscore-dangle: ["error", { "allowAfterThis": true }] */
+/* eslint func-style: 0 */
+
 var fs = require("fs")
 const path = require("path");
 var util = require("./src/util.js")
@@ -17,8 +20,10 @@ module.exports = function(config, local, reload) {
         }
         fs.access(path.resolve(local, "commands"), fs.constants.R_OK, (err) => {
             if (err) {
-
-                fs.mkdir(path.resolve(local, "commands"), function() {
+                fs.mkdir(path.resolve(local, "commands"), function(err) {
+                    if(!err){
+                        config.firstTime = true
+                    }
                     util.load("cmds", __dirname).then((data) => {
                         return next(data, local, reload).then(data => resolve(data)).catch(err => reject(err))
                     }).catch(err => {
@@ -26,7 +31,6 @@ module.exports = function(config, local, reload) {
                     })
                 })
             } else {
-
                 util.load("cmds", __dirname, reload).then((data) => {
                     return next(data, local, reload).then(data => resolve(data)).catch(err => reject(err))
                 }).catch(err => {
@@ -34,49 +38,82 @@ module.exports = function(config, local, reload) {
                 })
             }
         });
-
     });
 }
 
-
 function next(commands, local, reload) {
     return new Promise(function(resolve, reject) {
-
         var data = {}
         data.commands = commands
-
         fs.access(path.resolve(local, "functions"), fs.constants.R_OK, (err) => {
             if (err) {
-
                 fs.mkdir(path.resolve(local, "functions"), function() {
-
                     functions(data, local, reload).then((functiondata) => {
                         data.functions = functiondata
-                        resolve(data)
+                        util.load("events", __dirname, reload).then(eventdata => {
+                            util.load("events", local, reload).then(eventdataLocal => {
+                                eventdataLocal.events.forEach((i) => {
+                                    eventdata.events.set(i.name, i)
+                                    eventdata.issues = eventdata.issues + eventdataLocal.issues
+                                })
+                                data.events = eventdata
+                                resolve(data)
+                            }).catch(err => reject(err));
+                        }).catch(err => reject(err));
                     }).catch(err => reject(err))
                 })
             } else {
                 functions(data, local, reload).then((functiondata) => {
                     data.functions = functiondata
-                    resolve(data)
+                    util.load("events", __dirname, reload).then(eventdata => {
+                        util.load("events", local, reload).then(eventdataLocal => {
+                            eventdataLocal.events.forEach((i) => {
+                                eventdata.events.set(i.name, i)
+                                eventdata.issues = eventdata.issues + eventdataLocal.issues
+                            })
+                            data.events = eventdata
+                            resolve(data)
+                        }).catch(err => reject(err));
+                    }).catch(err => reject(err));
                 }).catch(err => reject(err))
-
-
             }
         });
     });
-
 }
 
-
-
 function functions(data, local, reload) {
-
     return new Promise(function(resolve, reject) {
         var types = ["messages"]
 
         function done(data) {
             if (Object.keys(data).length === 3) {
+                const Snippets = function(data) {
+                    this._list = data.snippets.snippets
+                    if (data.snippets.snippets.size == 0) {
+                        this.list = new Map();
+                    } else {
+                        this.list = function(name) {
+                            if (name == null) {
+                                var temp = []
+                                this._list.forEach(i => {
+                                    temp.push(i.name)
+                                })
+                                return temp
+                            }
+                            if (!this._list.has(name)) {
+                                return new Error("No snippet found under this name")
+                            }
+                            return this._list.get(name)
+
+                        }
+                        this._list.forEach(i => {
+                            this[i.name] = i.function
+                        })
+
+                    }
+                }
+                var temp = new Snippets(data)
+                data.snippets.snippets = temp
                 return true
             }
 
@@ -96,11 +133,9 @@ function functions(data, local, reload) {
                         }).catch(err => {
                             return reject(err)
                         })
-
                     })
                 } else {
                     util.load("functions", __dirname, reload).then((data) => {
-
                         if (done(data) == true) {
                             return resolve(data)
                         }
