@@ -1,5 +1,6 @@
 /* eslint no-console: 0 */
 /* eslint max-params: 0 */
+/* eslint func-style: 0 */
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const setup = require("./setup.js");
@@ -10,6 +11,9 @@ module.exports.version = require("./package.json").version;
 module.exports.start = function(config) {
     if (config.developer) {
         client.developer = config.developer
+    }
+    if (config.allowBots == null){
+        config.allowBots = false
     }
     console.log("Loading commands")
     setup(config, require("path").dirname(require.main.filename)).then((data) => {
@@ -23,11 +27,7 @@ module.exports.start = function(config) {
         client.data = {};
         client.data.version = module.exports.version;
         client.data.util = util
-        var temp = new Map();
-        data.functions.snippets.snippets.forEach(i => {
-            temp.set(i.name, i.function)
-        })
-        client.snippets = temp
+        client.snippets = data.functions.snippets.snippets
         client.functions.messages.messagefuncs.forEach(i => {
             i.type = i.type.map(i => (i.toLowerCase()))
             if (i.type == "all" && i.type.length === 1) {
@@ -94,14 +94,16 @@ function start(client, config, commanddata) {
             }, data.delay);
         })
         console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
-        console.log("To add new commands, type \"" + config.prefix + "createcommand <name> <alias1> <alias2> <alias3>\" to generate a new template!")
+        if (client.config.firstTime){
+            console.log(`Welcome to Spark! You are running Spark version ${client.data.version}\n\nTo add new commands, type "${config.prefix}createcommand <name> <alias1> <alias2> <alias3>" to generate a new template!`)
+        }
         client.events.events.forEach(i => {
             client.on(i.event, (one, two, three, four, five) => {
-                try{
-                i.function(client, one, two, three, four, five)
-            }catch(e){
-                    console.warn("An error occurred in the event \""+i.event+"\"")
-                    if (client.developer){
+                try {
+                    i.function(client, one, two, three, four, five)
+                } catch (e) {
+                    console.warn("An error occurred in the event \"" + i.event + "\"")
+                    if (client.developer) {
                         console.warn(e)
                     }
                 }
