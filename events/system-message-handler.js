@@ -10,9 +10,9 @@ exports.function = (client, message) => {
         return
     }
     var prefix = client.config.prefix
-    if (client.customconfig.has(message.guild.id)) {
-        if (client.customconfig.get(message.guild.id).prefix != null) {
-            prefix = client.customconfig.get(message.guild.id).prefix
+    if (client.customConfig.has(message.guild.id)) {
+        if (client.customConfig.get(message.guild.id).prefix != null) {
+            prefix = client.customConfig.get(message.guild.id).prefix
         }
     }
     if (!message.content.startsWith(prefix)) {

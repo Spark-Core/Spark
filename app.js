@@ -30,11 +30,11 @@ module.exports.start = function(config) {
                 return console.warn("Invalid first argument, expecting a snowflake.")
             }
             if (data || typeof data == 'object') {
-                client.customconfig.set(serverid, data)
+                client.customConfig.set(serverid, data)
             } else if (typeof data != "object") {
                 return console.warn("Invalid second argument, expecting an object.")
             } else {
-                client.customconfig.delete(serverid)
+                client.customConfig.delete(serverid)
             }
         }
         client.commanddata = new Map()
