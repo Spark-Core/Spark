@@ -1,10 +1,21 @@
 /* eslint no-console: 0 */
+/* eslint prefer-destructuring: 0*/
 exports.name = "system-message-handler"
 exports.event = "message"
 exports.function = (client, message) => {
-    if (message.system == true){return}
-    if (client.config.allowBots == false && message.author.bot == true){return}
-    if (!message.content.startsWith(client.config.prefix)) {
+    if (message.system == true) {
+        return
+    }
+    if (client.config.allowBots == false && message.author.bot == true) {
+        return
+    }
+    var prefix = client.config.prefix
+    if (client.customconfig.has(message.guild.id)) {
+        if (client.customconfig.get(message.guild.id).prefix != null) {
+            prefix = client.customconfig.get(message.guild.id).prefix
+        }
+    }
+    if (!message.content.startsWith(prefix)) {
         client.data.util.handleMessages.dofuncs(client, message, "message").catch((data) => {
             if (data) {
                 if (client.developer) {
@@ -14,7 +25,7 @@ exports.function = (client, message) => {
         })
         return
     }
-    var content = message.content.replace(client.config.prefix, "")
+    var content = message.content.replace(prefix, "")
     var command = content.split(" ")[0].toLowerCase();
     if (client.commanddata.commands.has(command) === true) {
         message.command = client.commanddata.commands.get(command)

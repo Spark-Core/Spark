@@ -12,10 +12,10 @@ module.exports.start = function(config) {
     if (config.developer) {
         client.developer = config.developer
     }
-    if (config.allowBots == null){
+    if (config.allowBots == null) {
         config.allowBots = false
     }
-    console.log("Loading commands")
+    console.log("Booting Spark")
     setup(config, require("path").dirname(require.main.filename)).then((data) => {
         client.commanddata = data.commands;
         client.events = data.events;
@@ -24,6 +24,20 @@ module.exports.start = function(config) {
             messages: [],
             commands: []
         }
+        client.customConfig = new Map()
+        client.addCustom = client.addCustomConfig = (serverid, data) => {
+            if (!serverid || typeof serverid != "string" || isNaN(serverid)) {
+                return console.warn("Invalid first argument, expecting a snowflake.")
+            }
+            if (data || typeof data == 'object') {
+                client.customconfig.set(serverid, data)
+            } else if (typeof data != "object") {
+                return console.warn("Invalid second argument, expecting an object.")
+            } else {
+                client.customconfig.delete(serverid)
+            }
+        }
+        client.commanddata = new Map()
         client.data = {};
         client.data.version = module.exports.version;
         client.data.util = util
@@ -94,7 +108,7 @@ function start(client, config, commanddata) {
             }, data.delay);
         })
         console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
-        if (client.config.firstTime){
+        if (client.config.firstTime) {
             console.log(`Welcome to Spark! You are running Spark version ${client.data.version}\n\nTo add new commands, type "${config.prefix}createcommand <name> <alias1> <alias2> <alias3>" to generate a new template!`)
         }
         client.events.events.forEach(i => {
