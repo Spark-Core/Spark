@@ -27,17 +27,18 @@ module.exports.start = function(config) {
         client.customConfig = new Map()
         client.addCustom = client.addCustomConfig = (serverid, data) => {
             if (!serverid || typeof serverid != "string" || isNaN(serverid)) {
-                return console.warn("Invalid first argument, expecting a snowflake.")
+                return "Invalid first argument, expecting a discord guild id."
             }
-            if (data || typeof data == 'object') {
+            if (typeof data == "object") {
                 client.customConfig.set(serverid, data)
-            } else if (typeof data != "object") {
-                return console.warn("Invalid second argument, expecting an object.")
-            } else {
+                return "Updated config for this guild."
+            } else if (data == null) {
                 client.customConfig.delete(serverid)
+                return "Deleted config if one was available for this guild"
             }
+            return "Invalid second argument, expecting an object."
+
         }
-        client.commanddata = new Map()
         client.data = {};
         client.data.version = module.exports.version;
         client.data.util = util
@@ -54,7 +55,7 @@ module.exports.start = function(config) {
             }
         })
         client.config = config;
-        start(client, client.config, client.commanddata)
+        start(client, client.config)
     }).catch((err) => {
         if (client.developer === false) {
             return console.error("An error occurred while loading commands.", err)
@@ -63,7 +64,7 @@ module.exports.start = function(config) {
     })
 }
 
-function start(client, config, commanddata) {
+function start(client, config) {
     var startedAt = new Date();
     client.login(config.token)
     client.on("disconnect", (x) => {
@@ -107,7 +108,7 @@ function start(client, config, commanddata) {
                 return returnfunction()
             }, data.delay);
         })
-        console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
+        console.log(client.commanddata.commands.size + " commands | " + client.commanddata.aliases.size + " aliases, bot online")
         if (client.config.firstTime) {
             console.log(`Welcome to Spark! You are running Spark version ${client.data.version}\n\nTo add new commands, type "${config.prefix}createcommand <name> <alias1> <alias2> <alias3>" to generate a new template!`)
         }
