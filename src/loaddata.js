@@ -19,6 +19,10 @@ module.exports = function(type, dir, reload) {
                     resolve(data)
                 }).catch(err => reject(err));
                 break;
+            case "permissions":
+                util.loadPerms(dir, local, reload).then(data => {
+                    resolve(data)
+                }).catch(err => reject(err))
         }
     });
 }

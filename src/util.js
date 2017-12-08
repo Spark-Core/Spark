@@ -8,6 +8,7 @@ module.exports.checkUpdate = require("./checkUpdate.js");
 module.exports.loadCommands = require("./loadCommands.js");
 module.exports.loadFunctions = require("./loadFunctions.js");
 module.exports.loadEvents = require("./loadEvents.js");
+module.exports.loadPerms = require("./loadpermissions.js")
 
 // handling messages
 module.exports.handleMessages = require("./handleMessages.js")

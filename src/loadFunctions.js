@@ -159,6 +159,7 @@ function bootLoad(location, reload) {
 
 function messagesLoad(location, reload) {
     return new Promise(function(resolve, reject) {
+
         fs.readdir(path.resolve(location, "functions/messages/"), function(err, results) {
             if (err) {
                 fs.mkdir(path.resolve(location, "functions/messages/"), function(err) {

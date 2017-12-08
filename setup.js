@@ -41,10 +41,21 @@ module.exports = function(config, local, reload) {
     });
 }
 
-function next(commands, local, reload) {
+function next(commands, local, reload){
+    return new Promise(function(resolve, reject) {
+        util.load("permissions", __dirname, local).then(permissions => {
+            permsDone({commands, permissions}, local, reload).then(resolve).catch(reject)
+        }).catch(e => {
+            reject(e)
+        })
+    });
+}
+
+function permsDone(processedData, local, reload) {
     return new Promise(function(resolve, reject) {
         var data = {}
-        data.commands = commands
+        data.commands = processedData.commands
+        data.permissions = processedData.permissions
         fs.access(path.resolve(local, "functions"), fs.constants.R_OK, (err) => {
             if (err) {
                 fs.mkdir(path.resolve(local, "functions"), function() {

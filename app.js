@@ -18,6 +18,7 @@ module.exports.start = function(config) {
     console.log("Booting Spark")
     setup(config, require("path").dirname(require.main.filename)).then((data) => {
         client.commanddata = data.commands;
+        client.permissions = data.permissions
         client.events = data.events;
         client.functions = data.functions
         client.functions.types = {
