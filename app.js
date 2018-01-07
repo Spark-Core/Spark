@@ -126,7 +126,7 @@ function start(client, config) {
                 try {
                     i.function(client, one, two, three, four, five)
                 } catch (e) {
-                    console.warn("An error occurred in the event \"" + chalk.red(i.event) + "\"")
+                    console.log("An error occurred in the event \"" + chalk.red(i.event) + "\"")
                     if (client.developer) {
                         console.warn(e)
                     }

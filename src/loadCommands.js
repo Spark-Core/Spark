@@ -70,12 +70,12 @@ function commands(location, reload) {
                         }
                     }
                     if (temp.help === null) {
-                        console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: komada_no_help")
+                        console.warn(path + "  -- File isn't set up correctly, go to https://discordspark.tk/docs/commands to learn more on how to set up commands. | code: komada_no_help")
                         return done(number, num, reload)
 
                     }
                     if (temp.help.name === null) {
-                        console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: komada_no_help_name")
+                        console.warn(path + "  -- File isn't set up correctly, go to https://discordspark.tk/docs/commands to learn more on how to set up commands. | code: komada_no_help_name")
                         return done(number, num, reload)
 
                     }
@@ -84,7 +84,7 @@ function commands(location, reload) {
                     if (temp.run != null && typeof temp.run == "function") {
                         temp.command = temp.run
                     } else {
-                        console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: komada_no_run_function")
+                        console.warn(path + "  -- File isn't set up correctly, go to https://discordspark.tk/docs/commands to learn more on how to set up commands. | code: komada_no_run_function")
                         return done(number, num, reload)
 
                     }
@@ -95,15 +95,15 @@ function commands(location, reload) {
 
                 }
                 if (typeof temp != "object") {
-                    console.warn(path + "  -- File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: command_no_object")
+                    console.warn(path + "  -- File isn't set up correctly, go to https://discordspark.tk/docs/commands to learn more on how to set up commands. | code: command_no_object")
                     return done(number, num, reload)
 
                 } else if (temp.name === null || typeof temp.name != "string") {
-                    console.warn(path + "  -  File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: invalid_or_no_name")
+                    console.warn(path + "  -  File isn't set up correctly, go to https://discordspark.tk/docs/commands to learn more on how to set up commands. | code: invalid_or_no_name")
                     return done(number, num, reload)
 
                 } else if (temp.name.includes(" ")) {
-                    console.warn(path + "  -  File has an error with it's name, command names can't have spaces. Go to <pagelink> to learn more on how to set up commands. | code: space_in_command_name")
+                    console.warn(path + "  -  File has an error with it's name, command names can't have spaces. Go to https://discordspark.tk/docs/commands to learn more on how to set up commands. | code: space_in_command_name")
                     return done(number, num, reload)
 
                 } else if (data.commands.has(temp.name)) {
@@ -111,7 +111,7 @@ function commands(location, reload) {
                     return done(number, num, reload)
 
                 } else if (temp.command === null || typeof temp.command != "function") {
-                    console.warn(path + "  -  File isn't set up correctly, go to <pagelink> to learn more on how to set up commands. | code: no_command_function_set")
+                    console.warn(path + "  -  File isn't set up correctly, go to https://discordspark.tk/docs/commands to learn more on how to set up commands. | code: no_command_function_set")
                     return done(number, num, reload)
 
                 }
@@ -125,9 +125,29 @@ function commands(location, reload) {
                 if (typeof temp.level != "number") {
                     temp.level = 0
                 }
-                if (typeof temp.system != "boolean" || temp.system != true){
+                if (typeof temp.system != "boolean" || temp.system != true) {
                     delete temp.system
                 }
+                if (temp.ignoredChannels.constructor == Array) {
+                    var tempIgnoredChannels = []
+                    temp.ignoredChannels.forEach(i => {
+                        if ([
+                                "dm",
+                                "group",
+                                "text"
+                            ].includes(i)) {
+                            tempIgnoredChannels.push(i)
+                        }
+                        temp.ignoredChannels = tempIgnoredChannels;
+                    })
+
+                } else {
+                    temp.ignoredChannels.contructor = [
+                        "dm",
+                        "group"
+                    ];
+                }
+
                 temp.path = path
                 data.names.push(temp.name)
                 data.commands.set(temp.name, temp)

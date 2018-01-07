@@ -5,6 +5,8 @@ exports.level = 0;
 exports.system = true
 // Don't use this for regular commands.
 
+exports.ignoredChannels = [];
+
 exports.command = function(client, message) {
     var start = new Date().getTime()
     message.channel.send("Pinging...").then((message) => {
