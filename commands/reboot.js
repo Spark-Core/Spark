@@ -3,7 +3,7 @@
 
 exports.name = "reboot";
 exports.aliases = ["restart"];
-
+exports.ignoredChannels = [];
 // Don't use this for regular commands.
 exports.system = true
 // Don't use this for regular commands.

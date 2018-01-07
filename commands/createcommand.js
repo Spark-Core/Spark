@@ -4,6 +4,7 @@ exports.name = "createcommand"
 // Owner only
 exports.level = 10;
 exports.system = true;
+exports.ignoredChannels = [];
 exports.command = function(client, message) {
     var args = message.content.split(" ");
 

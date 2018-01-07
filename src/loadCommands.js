@@ -1,5 +1,6 @@
 /* eslint no-console: 0 */
 /* eslint complexity: ["error", 25]*/
+/* eslint-disable no-negated-condition */
 var fs = require("fs")
 var path = require("path");
 module.exports = function(dir, local, reload) {
@@ -128,7 +129,13 @@ function commands(location, reload) {
                 if (typeof temp.system != "boolean" || temp.system != true) {
                     delete temp.system
                 }
-                if (temp.ignoredChannels.constructor == Array) {
+                if (temp.ignoredChannels.constructor != Array) {
+                    temp.ignoredChannels = [
+                        "dm",
+                        "group"
+                    ];
+                } else {
+
                     var tempIgnoredChannels = []
                     temp.ignoredChannels.forEach(i => {
                         if ([
@@ -141,11 +148,6 @@ function commands(location, reload) {
                         temp.ignoredChannels = tempIgnoredChannels;
                     })
 
-                } else {
-                    temp.ignoredChannels.contructor = [
-                        "dm",
-                        "group"
-                    ];
                 }
 
                 temp.path = path
