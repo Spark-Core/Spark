@@ -58,7 +58,8 @@ function sort(a,b) {
 function load(location, results){
     return new Promise(function(resolve) {
         var array = []
-        if (results.length == 0){
+
+        if (!results || results.length == 0){
             var result = done(array)
             if (result){
                 resolve(result)
