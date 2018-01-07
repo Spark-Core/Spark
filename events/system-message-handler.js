@@ -6,9 +6,7 @@ exports.function = (client, message) => {
     if (message.system == true) {
         return
     }
-    if (client.config.allowBots == false && message.author.bot == true) {
-        return
-    }
+
     var prefix = client.config.prefix
     if (client.customConfig.has(message.guild.id)) {
         if (client.customConfig.get(message.guild.id).prefix != null) {
@@ -16,6 +14,9 @@ exports.function = (client, message) => {
         }
     }
     if (!message.content.startsWith(prefix)) {
+        if (client.author.bot){
+            if (client.config.allowBots == "message" || client.config.allowBots == true) {return}
+        }
         client.data.util.handleMessages.dofuncs(client, message, "message").catch((data) => {
             if (data) {
                 if (client.developer) {
@@ -24,6 +25,9 @@ exports.function = (client, message) => {
             }
         })
         return
+    }
+    if (client.author.bot){
+        if (client.config.allowBots == "command" || client.config.allowBots == true) {return}
     }
     var content = message.content.replace(prefix, "")
     var command = content.split(" ")[0].toLowerCase();

@@ -4,7 +4,8 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const setup = require("./setup.js");
-var util = require("./src/util.js")
+var util = require("./src/util.js");
+var chalk = require("chalk");
 client.developer = false;
 module.exports = {};
 module.exports.version = require("./package.json").version;
@@ -14,8 +15,15 @@ module.exports.start = function(config) {
     }
     if (config.allowBots == null) {
         config.allowBots = false
+    } else if (![
+            true,
+            "command",
+            "message"
+        ].includes(config.allowBots)) {
+        config.allowBots = false;
+        console.log(`[${chalk.red("Config error")}] ${chalk.blue("allowBots")} has an invalid value. Must be one of these: ${chalk.blue("true")} , ${chalk.blue("\"command\"")}, ${chalk.blue("\"message\"")}`)
     }
-    console.log("Booting Spark")
+    console.log(chalk.yellow("Booting Spark"))
     setup(config, require("path").dirname(require.main.filename)).then((data) => {
         client.commanddata = data.commands;
         client.permissions = data.permissions
@@ -109,7 +117,7 @@ function start(client, config) {
                 return returnfunction()
             }, data.delay);
         })
-        console.log(client.commanddata.commands.size + " commands | " + client.commanddata.aliases.size + " aliases, bot online")
+        console.log(chalk.green(client.commanddata.commands.size) + " commands | " + chalk.green(client.commanddata.aliases.size) + " aliases, bot online")
         if (client.config.firstTime) {
             console.log(`Welcome to Spark! You are running Spark version ${client.data.version}\n\nTo add new commands, type "${config.prefix}createcommand <name> <alias1> <alias2> <alias3>" to generate a new template!`)
         }
@@ -118,7 +126,7 @@ function start(client, config) {
                 try {
                     i.function(client, one, two, three, four, five)
                 } catch (e) {
-                    console.warn("An error occurred in the event \"" + i.event + "\"")
+                    console.warn("An error occurred in the event \"" + chalk.red(i.event) + "\"")
                     if (client.developer) {
                         console.warn(e)
                     }
