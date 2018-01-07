@@ -9,7 +9,7 @@ exports.function = (client, message) => {
 
     var prefix = client.config.prefix
     var id = message.channel.id;
-    if (message.guild){
+    if (message.guild) {
         id = message.guild.id;
     }
 
@@ -19,8 +19,10 @@ exports.function = (client, message) => {
         }
     }
     if (!message.content.startsWith(prefix)) {
-        if (message.author.bot){
-            if (client.config.allowBots == "message" || client.config.allowBots == true) {return}
+        if (message.author.bot) {
+            if (client.config.allowBots == "message" || client.config.allowBots == true) {
+                return
+            }
         }
         client.data.util.handleMessages.dofuncs(client, message, "message").catch((data) => {
             if (data) {
@@ -31,14 +33,18 @@ exports.function = (client, message) => {
         })
         return
     }
-    if (message.author.bot){
-        if (client.config.allowBots == "command" || client.config.allowBots == true) {return}
+    if (message.author.bot) {
+        if (client.config.allowBots == "command" || client.config.allowBots == true) {
+            return
+        }
     }
     var content = message.content.replace(prefix, "")
     var command = content.split(" ")[0].toLowerCase();
     if (client.commanddata.commands.has(command) === true) {
         message.command = client.commanddata.commands.get(command)
-        if (message.channel.ignoredChannels.includes(message.channel.type)){return}
+        if (message.channel.ignoredChannels.includes(message.channel.type)) {
+            return
+        }
 
         client.data.util.handleMessages.dofuncs(client, message, "command").then(() => {
             client.data.util.handleMessages.doCommand(command, client, message)
