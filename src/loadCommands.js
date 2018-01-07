@@ -129,7 +129,7 @@ function commands(location, reload) {
                 if (typeof temp.system != "boolean" || temp.system != true) {
                     delete temp.system
                 }
-                if (temp.ignoredChannels.constructor != Array) {
+                if (!temp.ignoredChannls || temp.ignoredChannels.constructor != Array) {
                     temp.ignoredChannels = [
                         "dm",
                         "group"
