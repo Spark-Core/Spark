@@ -42,7 +42,7 @@ exports.function = (client, message) => {
     var command = content.split(" ")[0].toLowerCase();
     if (client.commanddata.commands.has(command) === true) {
         message.command = client.commanddata.commands.get(command)
-        if (message.channel.ignoredChannels.includes(message.channel.type)) {
+        if (message.command.ignoredChannels.includes(message.channel.type)) {
             return
         }
 
