@@ -8,8 +8,9 @@ exports.system = true;
 // Don't use this on your own commands, this is internal use only.
 exports.ignoredChannels = [];
 exports.command = function(client, message) {
-    var args = message.content.split(" ");
-
+  var content = message.content.split(" ");
+  var args = content.replace(client.prefix, "").split(" ");
+  
     if (args[1] == null) {
         return message.channel.send("[Spark] Please specify the name for the command. If you want to use aliases, type them space-seperated behind the name.");
 
