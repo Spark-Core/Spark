@@ -69,7 +69,11 @@ module.exports.start = function(config) {
         if (client.developer === false) {
             return console.error("An error occurred while loading commands.", err)
         }
-        console.log(err, err.stack)
+        if (err.stack){
+            console.log(err, err.stack)
+        }else{
+            console.log(err)
+        }
     })
 }
 
