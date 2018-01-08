@@ -10,8 +10,7 @@ exports.system = true
 const setup = require("../setup.js");
 var childProcess = require("child_process");
 exports.command = function(client, message) {
-    var content = message.content.split(" ");
-    var args = content.replace(client.prefix, "").split(" ");
+    var args = message.content.split(" ")
     if (args[1] == null) {
         args[1] = ""
     }
