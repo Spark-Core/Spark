@@ -3,6 +3,7 @@
 
 var fs = require("fs")
 const path = require("path");
+const chalk = require("chalk");
 var util = require("./src/util.js")
 module.exports = function(config, local, reload) {
     return new Promise(function(resolve, reject) {
@@ -13,15 +14,18 @@ module.exports = function(config, local, reload) {
             return reject("You forgot to add your config. (https://discordspark.tk/getting-started)")
         }
         if (config.token === null) {
-            return reject("You haven't set up your config correctly, please add your token in the config object. (https://discordspark.tk/getting-started)")
+            return reject(`[${chalk.red("Config error")}] You haven't set up your config correctly, please add your ${chalk.blue("token")}  in the config object. (https://discordspark.tk/getting-started)`)
         }
         if (config.prefix === null) {
-            return reject("You haven't set up your config correctly, please add your prefix in the config object. (https://discordspark.tk/getting-started)")
+            return reject(`[${chalk.red("Config error")}] You haven't set up your config correctly, please add your ${chalk.blue("prefix")} in the config object. (https://discordspark.tk/getting-started)`)
+        }
+        if (/\s+/g.test(config.prefix)) {
+            return reject(`[${chalk.red("Config error")}] You haven't set up your config correctly, you can't have any spaces in your ${chalk.blue("prefix")}. (https://discordspark.tk/getting-started)`)
         }
         fs.access(path.resolve(local, "commands"), fs.constants.R_OK, (err) => {
             if (err) {
                 fs.mkdir(path.resolve(local, "commands"), function(err) {
-                    if(!err){
+                    if (!err) {
                         config.firstTime = true
                     }
                     util.load("cmds", __dirname).then((data) => {
@@ -41,10 +45,13 @@ module.exports = function(config, local, reload) {
     });
 }
 
-function next(commands, local, reload){
+function next(commands, local, reload) {
     return new Promise(function(resolve, reject) {
         util.load("permissions", __dirname, local).then(permissions => {
-            permsDone({commands, permissions}, local, reload).then(resolve).catch(reject)
+            permsDone({
+                commands,
+                permissions
+            }, local, reload).then(resolve).catch(reject)
         }).catch(e => {
             reject(e)
         })
