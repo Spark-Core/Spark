@@ -13,15 +13,15 @@ module.exports.start = function(config) {
     if (config.developer) {
         client.developer = config.developer
     }
-    if (config.allowBots == null) {
-        config.allowBots = false
+    if (config.ignoreBots == null) {
+        config.ignoreBots = false
     } else if (![
             true,
             "command",
             "message"
-        ].includes(config.allowBots)) {
-        config.allowBots = false;
-        console.log(`[${chalk.red("Config error")}] ${chalk.blue("allowBots")} has an invalid value. Must be one of these: ${chalk.blue("true")} , ${chalk.blue("\"command\"")}, ${chalk.blue("\"message\"")}`)
+        ].includes(config.ignoreBots)) {
+        config.ignoreBots = false;
+        console.log(`[${chalk.red("Config error")}] ${chalk.blue("ignoreBots")} has an invalid value. Must be one of these: ${chalk.blue("true")} , ${chalk.blue("\"command\"")}, ${chalk.blue("\"message\"")}`)
     }
     console.log(chalk.yellow("Booting Spark"))
     setup(config, require("path").dirname(require.main.filename)).then((data) => {

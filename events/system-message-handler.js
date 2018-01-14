@@ -20,7 +20,7 @@ exports.function = (client, message) => {
     }
     if (!message.content.startsWith(prefix)) {
         if (message.author.bot) {
-            if (client.config.allowBots == "message" || client.config.allowBots == true) {
+            if (client.config.ignoreBots == "message" || client.config.ignoreBots == true) {
                 return
             }
         }
@@ -34,7 +34,7 @@ exports.function = (client, message) => {
         return
     }
     if (message.author.bot) {
-        if (client.config.allowBots == "command" || client.config.allowBots == true) {
+        if (client.config.ignoreBots == "command" || client.config.ignoreBots == true) {
             return
         }
     }
