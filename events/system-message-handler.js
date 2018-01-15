@@ -12,7 +12,9 @@ exports.function = (client, message) => {
     if (message.guild) {
         id = message.guild.id;
     }
-
+    if (!(client.customConfig instanceof Map)){
+        client.customConfig = new Map()
+    }
     if (client.customConfig.has(id)) {
         if (client.customConfig.get(id).prefix != null) {
             prefix = client.customConfig.get(id).prefix
