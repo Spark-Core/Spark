@@ -9,9 +9,6 @@ module.exports = function(client) {
             client.addCommand(this.name, this)
         }
 
-        execute(f){
-            f(this.client)
-        }
 
         addAlias(alias) {
             var {aliases} = this.client.commands.get(this.name)

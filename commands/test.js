@@ -3,6 +3,6 @@ const Command = Spark.command("test")
 
 Command.addAlias("test-alias")
 
-Command.execute((client, message) => {
+Command.code = (client, message) => {
     message.channel.send(client.version)
-})
+}
