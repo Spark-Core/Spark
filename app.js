@@ -35,9 +35,7 @@ exports.start = function(options) {
         }
 
         search() {
-            console.log("rest")
             var results = require("./src/search.js")(this)
-            console.log(results)
             return this;
         }
         event() {
