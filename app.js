@@ -4,7 +4,8 @@
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const setup = require("./setup.js");
-var util = require("./src/util.js")
+var util = require("./src/util.js");
+var chalk = require("chalk");
 client.developer = false;
 module.exports = {};
 module.exports.version = require("./package.json").version;
@@ -12,17 +13,40 @@ module.exports.start = function(config) {
     if (config.developer) {
         client.developer = config.developer
     }
-    if (config.allowBots == null){
-        config.allowBots = false
+    if (config.ignoreBots == null) {
+        config.ignoreBots = false
+    } else if (![
+            true,
+            "command",
+            "message"
+        ].includes(config.ignoreBots)) {
+        config.ignoreBots = false;
+        console.log(`[${chalk.red("Config error")}] ${chalk.blue("ignoreBots")} has an invalid value. Must be one of these: ${chalk.blue("true")} , ${chalk.blue("\"command\"")}, ${chalk.blue("\"message\"")}`)
     }
-    console.log("Loading commands")
+    console.log(chalk.yellow("Booting Spark"))
     setup(config, require("path").dirname(require.main.filename)).then((data) => {
         client.commanddata = data.commands;
+        client.permissions = data.permissions
         client.events = data.events;
         client.functions = data.functions
         client.functions.types = {
             messages: [],
             commands: []
+        }
+        client.customConfig = new Map()
+        client.addCustom = client.addCustomConfig = (serverid, data) => {
+            if (!serverid || typeof serverid != "string" || isNaN(serverid)) {
+                return "Invalid first argument, expecting a discord guild id."
+            }
+            if (typeof data == "object") {
+                client.customConfig.set(serverid, data)
+                return "Updated config for this guild."
+            } else if (data == null) {
+                client.customConfig.delete(serverid)
+                return "Deleted config if one was available for this guild"
+            }
+            return "Invalid second argument, expecting an object."
+
         }
         client.data = {};
         client.data.version = module.exports.version;
@@ -40,16 +64,20 @@ module.exports.start = function(config) {
             }
         })
         client.config = config;
-        start(client, client.config, client.commanddata)
+        start(client, client.config)
     }).catch((err) => {
         if (client.developer === false) {
             return console.error("An error occurred while loading commands.", err)
         }
-        console.log(err, err.stack)
+        if (err.stack){
+            console.log(err, err.stack)
+        }else{
+            console.log(err)
+        }
     })
 }
 
-function start(client, config, commanddata) {
+function start(client, config) {
     var startedAt = new Date();
     client.login(config.token)
     client.on("disconnect", (x) => {
@@ -93,8 +121,8 @@ function start(client, config, commanddata) {
                 return returnfunction()
             }, data.delay);
         })
-        console.log(commanddata.commands.size + " commands | " + commanddata.aliases.size + " aliases, bot online")
-        if (client.config.firstTime){
+        console.log(chalk.green(client.commanddata.commands.size) + " commands | " + chalk.green(client.commanddata.aliases.size) + " aliases, bot online")
+        if (client.config.firstTime) {
             console.log(`Welcome to Spark! You are running Spark version ${client.data.version}\n\nTo add new commands, type "${config.prefix}createcommand <name> <alias1> <alias2> <alias3>" to generate a new template!`)
         }
         client.events.events.forEach(i => {
@@ -102,7 +130,7 @@ function start(client, config, commanddata) {
                 try {
                     i.function(client, one, two, three, four, five)
                 } catch (e) {
-                    console.warn("An error occurred in the event \"" + i.event + "\"")
+                    console.log("An error occurred in the event \"" + chalk.red(i.event) + "\"")
                     if (client.developer) {
                         console.warn(e)
                     }

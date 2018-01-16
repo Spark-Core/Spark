@@ -1,7 +1,9 @@
 /* eslint no-console: 0 */
+/* eslint max-lines: ["error", 350] */
 exports.name = "reload";
 // owner only
 exports.level = 10;
+exports.ignoredChannels = [];
 // Don't use this for regular commands.
 exports.system = true
 // Don't use this for regular commands.
@@ -56,6 +58,7 @@ function checkGit(message, args) {
         }
     })
 }
+
 function reloadall(client, message, edit) {
     if (edit != null) {
         var m = edit
@@ -169,6 +172,7 @@ function reloadall(client, message, edit) {
         message.channel.send(Text)
     })
 }
+
 function reloadcommands(client, message, edit) {
     if (edit != null) {
         var m = edit;
@@ -222,6 +226,7 @@ function reloadcommands(client, message, edit) {
         })
     })
 }
+
 function reloadfunctions(client, message, edit) {
     if (edit != null) {
         var m = edit;

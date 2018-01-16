@@ -3,7 +3,10 @@ var fs = require("fs")
 exports.name = "createcommand"
 // Owner only
 exports.level = 10;
+// Don't use this on your own commands, this is internal use only.
 exports.system = true;
+// Don't use this on your own commands, this is internal use only.
+exports.ignoredChannels = [];
 exports.command = function(client, message) {
     var args = message.content.split(" ");
 
@@ -31,7 +34,9 @@ exports.command = function(client, message) {
             return message.channel.send("[Spark] This file does already exist. Please try a different name. ")
         }
 
-        fs.writeFile(path.resolve(path.dirname(require.main.filename), "commands/" + data.name + ".js"), "exports.name = \"" + data.name + "\" \nexports.aliases = " + JSON.stringify(data.aliases) + "\nexports.command = function(client, message){\n\n//Write your command functions here.\n\n} ", {options: "utf8"}, (err) => {
+        fs.writeFile(path.resolve(path.dirname(require.main.filename), "commands/" + data.name + ".js"), "exports.name = \"" + data.name + "\" \nexports.aliases = " + JSON.stringify(data.aliases) + "\nexports.level = 0\nexports.command = function(client, message){\n\n//Write your command functions here.\n\n} ", {
+            options: "utf8"
+        }, (err) => {
             if (err) {
                 return message.channel.send("[Spark] Failed to create this file, try to create it manually using this template: ```javascript\nexports.name = \"" + data.name + "\" \nexports.aliases = \"" + JSON.stringify(data.aliases) + "\"\nexports.command = function(client, message){\n\n//Write your command functions here.\n\n} \n```")
             }

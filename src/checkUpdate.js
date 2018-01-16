@@ -1,7 +1,7 @@
 const request = require("request");
 module.exports = function(version) {
     return new Promise(function(resolve, reject) {
-        request("https://spark.a3c-bot.com/update?currentversion=" + version,
+        request("https://discordspark.tk/update?currentversion=" + version,
             function(error, response, body) {
                 if (error) {
                     return reject("Sorry, There was a issue whilst checking for a update, try again later.")

@@ -4,6 +4,29 @@ exports.doCommand = (command, client, message) => {
     if (command === undefined) {
         return
     }
+
+    var stop = false;
+    var amount = 0
+    client.permissions.filter(i => {return i.level == command.level}).forEach(i => {
+        if (stop == true){return}
+        var result = i.filter(client, message)
+        if (result instanceof Promise){
+            result
+            .then(r => {
+                amount = amount + 1
+                if (amount == client.permissions.filter(i => {return i.level == command.level}).length){
+                    if (!stop){c()}
+                    return
+                }
+                if (r == true){stop = true}
+            }).catch(err => {return console.warn(err)})
+        }else if (result == true){stop = true}
+        amount = amount + 1
+        if (amount == client.permissions.filter(i => {return i.level == command.level}).length){
+            if (!stop){c()}
+        }
+    })
+    function c(){
     try {
         command.command(client, message);
     } catch (err) {
@@ -19,6 +42,7 @@ exports.doCommand = (command, client, message) => {
             console.warn("Command: " + command.name + " | had an error. Show the developer of the command module that you are getting this error code: \n" + err)
         }
     }
+    }
 }
 exports.dofuncs = (client, message, type) => {
     return new Promise(function(resolve, reject) {
@@ -28,6 +52,8 @@ exports.dofuncs = (client, message, type) => {
             if (client.functions.types.messages.length == 0) {
                 return resolve()
             }
+
+
             client.functions.messages.messagefuncs.forEach(i => {
                 var num = client.functions.messages.messagefuncs.size
                 if (client.functions.types.messages.includes(i.name) == false) {
