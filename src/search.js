@@ -1,11 +1,8 @@
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["searchLocations"] }] */
 /* eslint no-console: 0 */
+/* eslint class-methods-use-this: 0 */
 
-
-const {
-    resolve,
-    dirname
-} = require("path");
+const {resolve, dirname} = require("path");
 const fs = require("fs-extra")
 module.exports = (client) => {
 
@@ -14,15 +11,15 @@ module.exports = (client) => {
         constructor(client) {
             this.client = client;
 
-
             this.aliases = new Map()
-            this.clientLocations = this.searchLocations(dirname("../"))
+            this.clientLocations = this.searchLocations(dirname(__dirname, "/../"))
             this.userLocations = this.searchLocations(dirname(require.main.filename))
         }
 
         searchLocations(location) {
             return {
                 "commands": resolve(location, "commands"),
+                "functions": resolve(location, "functions"),
                 "messageFunctions": resolve(location, "functions/messages"),
                 "bootFunctions": resolve(location, "functions/boot"),
                 "snippets": resolve(location, "functions/snippets"),
@@ -34,14 +31,24 @@ module.exports = (client) => {
         async loadAll(locations) {
 
             await this.loadCommands(locations.commands)
-            //    this.loadMF(locations.messageFunctions),
-            //    this.loadBF(locations.bootFunctions),
-            //    this.loadSnippets(locations.snippets),
-            //    this.loadEvents(locations.events),
+            if (!(await fs.exists(locations.functions))) {
+                await this.genFolder(locations.functions)
+            }
+            await this.loadMF(locations.messageFunctions)
+            //    this.loadBF(locations.bootFunctions)
+            //    this.loadSnippets(locations.snippets)
+            //    this.loadEvents(locations.events)
             //    this.loadPermissions(locations.permissions)
             return this;
         }
 
+        async genFolder(location) {
+            try {
+                await fs.mkdir(location)
+            } catch (e) {
+                console.error(`${location} | Error while trying to generate folder: \n ${e}`)
+            }
+        }
 
         async loadCommands(location) {
             this.client.commands = new Map();
@@ -50,10 +57,7 @@ module.exports = (client) => {
             tempcommands.forEach(i => {
                 try {
                     var temp = require(i)
-                    commands.push({
-                        command: temp,
-                        location: i
-                    })
+                    commands.push({command: temp, location: i})
                 } catch (e) {
                     console.error(`${i} | Error while loading command: \n ${e}`)
                 }
@@ -87,11 +91,63 @@ module.exports = (client) => {
             return commands;
         }
 
+        async loadMF(location) {
+            if (!this.client.functions) {
+                this.client.functions = {};
+            }
+            this.client.functions.message = new Map();
+            var temp = await this.searchInDirectories(location);
+            var mf = [];
+            temp.forEach(i => {
+                try {
+                    var temp = require(i)
+                    mf.push({mf: temp, location: i})
+                } catch (e) {
+                    console.error(`${i} | Error while loading message function: \n ${e}`)
+                }
+
+            })
+
+            mf.forEach(i => {
+                var {mf} = i
+                if (mf.constructor.name !== "MF") {
+                    console.warn(`${i.location} | Error while loading message function: \n File is not a message function class | See https://discordspark.tk/docs/message_function for more info.`)
+                    i = null;
+                    return;
+                }
+                if (typeof mf.type != "string" || ![
+                        "messages",
+                        "commands",
+                        "all"
+                    ].includes(mf.type)) {
+                    mf.type = "all"
+                }
+                if (typeof mf.code != "function") {
+                    console.warn(`${i.location} | Error while loading message function: \n No code specified. | see https://discordspark.tk/docs/message_function for more info.`)
+                    i = null;
+                    // add return if more checks are added.
+                }
+
+            })
+            mf = mf.filter(i => {
+                return i != null
+            })
+            return mf;
+        }
+
         async searchInDirectories(location, notFirst) {
-            var files = await fs.readdir(location)
-                .catch(err => {
-                    return console.error("An error occurred while searching directories.", err)
-                })
+            var files = null;
+            try {
+                files = await fs.readdir(location)
+            } catch (err) {
+
+                if (err.code == "ENOENT") {
+                    await this.genFolder(location)
+                    var x = await this.searchInDirectories(location, notFirst)
+                    return x;
+                }
+                return console.error("An error occurred while searching directories.", err)
+            }
             var jsFiles = files.filter(i => {
                 return i.endsWith(".js")
             })
@@ -113,18 +169,12 @@ module.exports = (client) => {
             }
             return jsFiles
 
-
-
-
-
-
-
         }
-
 
     }
     var loader = new Searchloader(client)
     loader.loadAll(loader.clientLocations);
     loader.loadAll(loader.userLocations);
+    return loader;
     // combine and return here.
 }

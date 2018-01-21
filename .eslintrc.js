@@ -16,6 +16,7 @@ module.exports = {
         "array-element-newline": "error",
         "arrow-body-style": "off",
         "arrow-parens": "off",
+        "no-console": 0,
         "arrow-spacing": [
             "error",
             {

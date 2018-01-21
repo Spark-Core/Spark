@@ -1,4 +1,3 @@
-/* eslint no-console: 0 */
 /* eslint init-declarations: 0 */
 const discord = require("discord.js")
 let Client;
@@ -9,6 +8,10 @@ exports.command = function(name, options) {
     return new Command(name, options)
 }
 
+exports.mf = function(name, options) {
+    const MF = require("./src/Message_Function.js")(Client)
+    return new MF(name, options)
+}
 exports.start = function(options) {
     if (typeof options != "object") {
         return console.log("You're trying to start without a token, please read this article on the docs on how to setup: https://discordspark.tk/getting-started")
@@ -21,7 +24,8 @@ exports.start = function(options) {
             super()
             this.version = require("./package.json").version
             this.commands = new Map()
-            this.command = exports.command
+            this.functions = {}
+            this.functions.message = new Map()
             this.events = {};
         }
 
@@ -31,11 +35,17 @@ exports.start = function(options) {
                 return
             }
             this.commands.set(name, command)
-
+        }
+        addMF(name, messageFunction) {
+            if (this.functions.message.has(name)) {
+                return
+            }
+            this.commands.set(name, messageFunction)
         }
 
         search() {
             var results = require("./src/search.js")(this)
+            //        console.log(results)
             return this;
         }
         event() {
