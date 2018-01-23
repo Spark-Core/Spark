@@ -12,6 +12,10 @@ exports.mf = function(name, options) {
     const MF = require("./src/Message_Function.js")(Client)
     return new MF(name, options)
 }
+exports.bf = function(name, options) {
+    const BF = require("./src/Message_Function.js")(Client)
+    return new BF(name, options)
+}
 exports.start = function(options) {
     if (typeof options != "object") {
         return console.log("You're trying to start without a token, please read this article on the docs on how to setup: https://discordspark.tk/getting-started")
@@ -26,6 +30,8 @@ exports.start = function(options) {
             this.commands = new Map()
             this.functions = {}
             this.functions.message = new Map()
+            this.functions.boot = new Map()
+            this.functions.snippet = new Map()
             this.events = {};
         }
 
@@ -40,7 +46,14 @@ exports.start = function(options) {
             if (this.functions.message.has(name)) {
                 return
             }
-            this.commands.set(name, messageFunction)
+            this.functions.message.set(name, messageFunction)
+        }
+
+        addBF(name, bootFunction) {
+            if (this.functions.boot.has(name)) {
+                return
+            }
+            this.functions.boot.set(name, bootFunction)
         }
 
         search() {
