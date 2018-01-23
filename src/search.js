@@ -12,8 +12,12 @@ module.exports = (client) => {
             this.client = client;
 
             this.aliases = new Map()
-            this.clientLocations = this.searchLocations(dirname(__dirname, "/../"))
-            this.userLocations = this.searchLocations(dirname(require.main.filename))
+            if (dirname(__dirname, "/../") != dirname(require.main.filename)) {
+                this.clientLocations = this.searchLocations(dirname(__dirname, "/../"))
+                this.userLocations = this.searchLocations(dirname(require.main.filename))
+            } else {
+                this.clientLocations = this.searchLocations(dirname(__dirname, "/../"))
+            }
         }
 
         searchLocations(location) {
@@ -35,7 +39,7 @@ module.exports = (client) => {
                 await this.genFolder(locations.functions)
             }
             await this.loadMF(locations.messageFunctions)
-            //    this.loadBF(locations.bootFunctions)
+            await this.loadBF(locations.bootFunctions)
             //    this.loadSnippets(locations.snippets)
             //    this.loadEvents(locations.events)
             //    this.loadPermissions(locations.permissions)
@@ -133,6 +137,49 @@ module.exports = (client) => {
                 return i != null
             })
             return mf;
+        }
+
+        async loadBF(location) {
+            if (!this.client.functions) {
+                this.client.functions = {};
+            }
+            this.client.functions.message = new Map();
+            var temp = await this.searchInDirectories(location);
+            var bf = [];
+            temp.forEach(i => {
+                try {
+                    var temp = require(i)
+                    bf.push({bf: temp, location: i})
+                } catch (e) {
+                    console.error(`${i} | Error while loading boot function: \n ${e}`)
+                }
+
+            })
+
+            bf.forEach(i => {
+                var {bf} = i
+                if (bf.constructor.name !== "BF") {
+                    console.warn(`${i.location} | Error while loading boot function: \n File is not a boot function class | See https://discordspark.tk/docs/boot_function for more info.`)
+                    i = null;
+                    return;
+                }
+                if (typeof bf.time != "number") {
+                    bf.time = 0
+                }
+                if (typeof bf.delay != "number") {
+                    bf.delay = 0
+                }
+                if (typeof bf.code != "function") {
+                    console.warn(`${i.location} | Error while loading boot function: \n No code specified. | see https://discordspark.tk/docs/boot_function for more info.`)
+                    i = null;
+                    // add return if more checks are added.
+                }
+
+            })
+            bf = bf.filter(i => {
+                return i != null
+            })
+            return bf;
         }
 
         async searchInDirectories(location, notFirst) {

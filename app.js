@@ -68,7 +68,6 @@ exports.start = function(options) {
         }
     }
     Client = new Client();
-
     Client.login(options.token).then(() => {
         Client.search()
 
