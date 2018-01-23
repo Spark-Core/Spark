@@ -1,6 +1,13 @@
 # Spark
 ###### Javascript framework for Discord bots based on discord.js
 ---
-This is a small project made by [Tobias#5233](https://discordapp.com/) that should make it easy to create a bot.  
 
-For instructions on how to install, [read this page](https://discordspark.tk/getting-started).
+
+Spark is a easy to use Discord.js wrapper framework so you can make bots easily, and the framework will do the heavy lifting for you.
+
+
+#### ** Warning | This branch is highly unstable. We suggest to ** NOT ** use this unless you want to improve this framework or know what you're doing. **
+** You have been warned..**
+
+Want to get started?
+[Go to our docs!](https://discordspark.tk/getting-started).

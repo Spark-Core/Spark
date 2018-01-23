@@ -1,12 +1,12 @@
 {
   "name": "sparkbots",
-  "version": "0.0.6-beta.0",
+  "version": "0.1",
   "description": "An easy to use discord bot, which uses small modules for getting commands and messages. ",
   "main": "app.js",
   "dependencies": {
     "chalk": "^2.3.0",
     "discord.js": "github:hydrabolt/discord.js#master",
-    "fs": "latest",
+    "fs-extra": "^5.0.0",
     "request": "latest"
   },
   "devDependencies": {},
