@@ -5,7 +5,8 @@ module.exports = {
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaVersion": 2018
     },
     "rules": {
         "accessor-pairs": "error",
@@ -15,6 +16,7 @@ module.exports = {
         "array-element-newline": "error",
         "arrow-body-style": "off",
         "arrow-parens": "off",
+        "no-console": 0,
         "arrow-spacing": [
             "error",
             {
@@ -88,8 +90,7 @@ module.exports = {
         "keyword-spacing": "off",
         "line-comment-position": "error",
         "linebreak-style": [
-            "error",
-            "windows"
+            "off"
         ],
         "lines-around-comment": "error",
         "lines-around-directive": "error",
