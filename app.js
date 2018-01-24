@@ -13,7 +13,7 @@ exports.mf = function(name, options) {
     return new MF(name, options)
 }
 exports.bf = function(name, options) {
-    const BF = require("./src/Message_Function.js")(Client)
+    const BF = require("./src/Boot_Function.js")(Client)
     return new BF(name, options)
 }
 exports.start = function(options) {
