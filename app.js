@@ -1,5 +1,6 @@
 /* eslint init-declarations: 0 */
 const discord = require("discord.js")
+const chalk = require("chalk")
 let Client;
 
 exports.command = function(name, options) {
@@ -18,47 +19,48 @@ exports.bf = function(name, options) {
 }
 exports.start = function(options) {
     if (typeof options != "object") {
-        return console.log("You're trying to start without a token, please read this article on the docs on how to setup: https://discordspark.tk/getting-started")
+        return console.log(`You're trying to start without ${chalk.red("a starting object")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
     } else if (typeof options.token != "string") {
-        return console.log("You're trying to start without a default prefix, please read this article on the docs on how to setup: https://discordspark.tk/getting-started")
+        return console.log(`You're trying to start without ${chalk.red("a valid token")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
+    } else if (typeof options.prefix != "string" || options.prefix.includes(" ")) {
+        return console.log(`You're trying to start without ${chalk.red("a valid prefix")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
     }
 
     Client = class Client extends discord.Client {
         constructor() {
             super()
             this.version = require("./package.json").version
-            this.commands = new Map()
-            this.functions = {}
-            this.functions.message = new Map()
-            this.functions.boot = new Map()
-            this.functions.snippet = new Map()
-            this.events = {};
+            this.config = {}
         }
 
 
-        addCommand(name, command) {
-            if (this.commands.has(name)) {
-                return
+        async search() {
+            var data = await require("./src/search.js")(this)
+            return data;
+        }
+        async start() {
+            this.dataStore = await this.dataStore;
+            if (this.config.first) {console.log(`Welcome to ${chalk.yellow(`Spark V${this.version}`)}!\nTo see the changelog for this update go to this page:\n${chalk.blue("https://github.com/TobiasFeld22/Spark/releases")}\nTo learn more about using Spark, please visit our docs:\n${chalk.blue("https://discordspark.tk/")}\n-------------------`)}
+            var commandtext = `${this.dataStore.commands.size} commands\n`
+            var mftext = `${this.dataStore.functions.message.size} message functions\n`
+            var bftext = `${this.dataStore.functions.boot.size} boot functions\n`
+            if (this.dataStore.commands.size == 0) {
+                commandtext = chalk.red(commandtext)
+            } else {
+                commandtext = chalk.green(commandtext)
             }
-            this.commands.set(name, command)
-        }
-        addMF(name, messageFunction) {
-            if (this.functions.message.has(name)) {
-                return
+            if (this.dataStore.functions.message.size == 0) {
+                mftext = chalk.red(mftext)
+            } else {
+                mftext = chalk.green(mftext)
             }
-            this.functions.message.set(name, messageFunction)
-        }
-
-        addBF(name, bootFunction) {
-            if (this.functions.boot.has(name)) {
-                return
+            if (this.dataStore.functions.boot.size == 0) {
+                bftext = chalk.red(bftext)
+            } else {
+                bftext = chalk.green(bftext)
             }
-            this.functions.boot.set(name, bootFunction)
-        }
 
-        search() {
-            require("./src/search.js")(this)
-            return this;
+            console.log(`Your bot (${chalk.yellow(this.user.tag)}) is now ${chalk.green("online!")} | Running on ${this.guilds.size} servers | ${chalk.yellow(`Spark v${this.version}`)}\nWe detected the following data:\n \n ${commandtext} ${mftext} ${bftext}`)
         }
         event() {
             this.on("message", () => {
@@ -67,8 +69,11 @@ exports.start = function(options) {
         }
     }
     Client = new Client();
+    Client.config = options
     Client.login(options.token).then(() => {
-        Client.search()
+        Client.dataStore = Client.search()
+
+        Client.start(Client)
 
     }).catch(err => {
         return console.error("An error occured while trying to login, check your token.", err)

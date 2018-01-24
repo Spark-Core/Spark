@@ -4,13 +4,12 @@
 
 const {resolve, dirname} = require("path");
 const fs = require("fs-extra")
-module.exports = (client) => {
+module.exports = async (client) => {
 
     class Searchloader {
 
         constructor(client) {
             this.client = client;
-
             this.aliases = new Map()
             if (dirname(__dirname, "/../") == dirname(require.main.filename)) {
                 this.clientLocations = this.searchLocations(dirname(__dirname, "/../"))
@@ -34,6 +33,10 @@ module.exports = (client) => {
 
         async loadAll(locations) {
 
+            if (this.dataStore) {
+                this.backupDataStore = this.dataStore
+            }
+            this.dataStore = {}
             await this.loadCommands(locations.commands)
             if (!(await fs.exists(locations.functions))) {
                 await this.genFolder(locations.functions)
@@ -43,10 +46,11 @@ module.exports = (client) => {
             //    this.loadSnippets(locations.snippets)
             //    this.loadEvents(locations.events)
             //    this.loadPermissions(locations.permissions)
-            return this;
+            return this.dataStore;
         }
 
         async genFolder(location) {
+            this.client.config.first = true;
             try {
                 await fs.mkdir(location)
             } catch (e) {
@@ -55,7 +59,7 @@ module.exports = (client) => {
         }
 
         async loadCommands(location) {
-            this.client.commands = new Map();
+            this.dataStore.commands = new Map();
             var tempcommands = await this.searchInDirectories(location);
             var commands = [];
             tempcommands.forEach(i => {
@@ -92,14 +96,18 @@ module.exports = (client) => {
             commands = commands.filter(i => {
                 return i != null
             })
-            return commands;
+            commands.forEach(i => {
+                if (!this.dataStore.commands.has(i.command.name)) {
+                    this.dataStore.commands.set(i.command.name, i)
+                }
+            })
         }
 
         async loadMF(location) {
-            if (!this.client.functions) {
-                this.client.functions = {};
+            if (!this.dataStore.functions) {
+                this.dataStore.functions = {};
             }
-            this.client.functions.message = new Map();
+            this.dataStore.functions.message = new Map();
             var temp = await this.searchInDirectories(location);
             var mf = [];
             temp.forEach(i => {
@@ -136,14 +144,18 @@ module.exports = (client) => {
             mf = mf.filter(i => {
                 return i != null
             })
-            return mf;
+            mf.forEach(i => {
+                if (!this.dataStore.functions.message.has(i.mf.name)) {
+                    this.dataStore.functions.message.set(i.mf.name, i)
+                }
+            })
         }
 
         async loadBF(location) {
-            if (!this.client.functions) {
-                this.client.functions = {};
+            if (!this.dataStore.functions) {
+                this.dataStore.functions = {};
             }
-            this.client.functions.message = new Map();
+            this.dataStore.functions.boot = new Map();
             var temp = await this.searchInDirectories(location);
             var bf = [];
             temp.forEach(i => {
@@ -179,7 +191,11 @@ module.exports = (client) => {
             bf = bf.filter(i => {
                 return i != null
             })
-            return bf;
+            bf.forEach(i => {
+                if (!this.dataStore.functions.boot.has(i.bf.name)) {
+                    this.dataStore.functions.boot.set(i.bf.name, i)
+                }
+            })
         }
 
         async searchInDirectories(location, notFirst) {
@@ -218,10 +234,28 @@ module.exports = (client) => {
 
         }
 
+        merge(c, u) {
+            if (!u) {return c}
+            u.commands.forEach((i, n) => {
+                if (!c.commands.has(n)) {
+                    c.commands.set(n, i)
+                }
+            })
+            u.functions.message.forEach((i, n) => {
+                if (!c.functions.message.has(n)) {
+                    c.functions.message.set(n, i)
+                }
+            })
+            u.functions.boot.forEach((i, n) => {
+                if (!c.functions.boot.has(n)) {
+                    c.functions.boot.set(n, i)
+                }
+            })
+            return c;
+        }
+
     }
     var loader = new Searchloader(client)
-    loader.loadAll(loader.clientLocations);
-    loader.loadAll(loader.userLocations);
-    return loader;
-    // combine and return here.
+
+    return loader.merge(await loader.loadAll(loader.clientLocations), await loader.loadAll(loader.userLocations))
 }

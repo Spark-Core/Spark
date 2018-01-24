@@ -10,7 +10,6 @@ module.exports = function(client) {
             }
             this.time = options.time
             this.delay = options.delay
-            client.addBF(this.name, this)
         }
 
 

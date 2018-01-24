@@ -9,7 +9,6 @@ module.exports = function(client) {
                 options = {}
             }
             this.type = options.type
-            client.addMF(this.name, this)
         }
 
 
