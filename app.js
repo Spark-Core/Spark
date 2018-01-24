@@ -57,8 +57,7 @@ exports.start = function(options) {
         }
 
         search() {
-            var results = require("./src/search.js")(this)
-            //        console.log(results)
+            require("./src/search.js")(this)
             return this;
         }
         event() {
