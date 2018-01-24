@@ -3,7 +3,7 @@
 ---
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/TobiasFeld22/Spark.svg)](https://greenkeeper.io/)
-
+[![Build Status](https://travis-ci.org/TobiasFeld22/Spark.svg?branch=V0.1-rewrite)](https://travis-ci.org/TobiasFeld22/Spark)
 
 Spark is a easy to use Discord.js wrapper framework so you can make bots easily, and the framework will do the heavy lifting for you.
 
