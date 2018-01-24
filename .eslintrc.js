@@ -90,8 +90,7 @@ module.exports = {
         "keyword-spacing": "off",
         "line-comment-position": "error",
         "linebreak-style": [
-            "error",
-            "windows"
+            "off"
         ],
         "lines-around-comment": "error",
         "lines-around-directive": "error",
