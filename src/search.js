@@ -12,11 +12,11 @@ module.exports = (client) => {
             this.client = client;
 
             this.aliases = new Map()
-            if (dirname(__dirname, "/../") != dirname(require.main.filename)) {
+            if (dirname(__dirname, "/../") == dirname(require.main.filename)) {
                 this.clientLocations = this.searchLocations(dirname(__dirname, "/../"))
-                this.userLocations = this.searchLocations(dirname(require.main.filename))
             } else {
                 this.clientLocations = this.searchLocations(dirname(__dirname, "/../"))
+                this.userLocations = this.searchLocations(dirname(require.main.filename))
             }
         }
 
