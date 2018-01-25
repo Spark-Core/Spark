@@ -82,7 +82,7 @@ module.exports = async (client) => {
                 if (command.aliases.length > 0) {
                     command.aliases.forEach(i => {
                         if (!this.aliases.has(i)) {
-                            this.aliases.set(i, command.name)
+                            this.aliases.set(i, command.name.toLowerCase())
                         }
                     })
                 }
@@ -97,8 +97,8 @@ module.exports = async (client) => {
                 return i != null
             })
             commands.forEach(i => {
-                if (!this.dataStore.commands.has(i.command.name)) {
-                    this.dataStore.commands.set(i.command.name, i)
+                if (!this.dataStore.commands.has(i.command.name.toLowerCase())) {
+                    this.dataStore.commands.set(i.command.name.toLowerCase(), i)
                 }
             })
         }
@@ -145,8 +145,8 @@ module.exports = async (client) => {
                 return i != null
             })
             mf.forEach(i => {
-                if (!this.dataStore.functions.message.has(i.mf.name)) {
-                    this.dataStore.functions.message.set(i.mf.name, i)
+                if (!this.dataStore.functions.message.has(i.mf.name.toLowerCase())) {
+                    this.dataStore.functions.message.set(i.mf.name.toLowerCase(), i)
                 }
             })
         }
@@ -192,8 +192,8 @@ module.exports = async (client) => {
                 return i != null
             })
             bf.forEach(i => {
-                if (!this.dataStore.functions.boot.has(i.bf.name)) {
-                    this.dataStore.functions.boot.set(i.bf.name, i)
+                if (!this.dataStore.functions.boot.has(i.bf.name.toLowerCase())) {
+                    this.dataStore.functions.boot.set(i.bf.name.toLowerCase(), i)
                 }
             })
         }

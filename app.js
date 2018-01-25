@@ -1,20 +1,21 @@
 /* eslint init-declarations: 0 */
 const discord = require("discord.js")
 const chalk = require("chalk")
+const startBot = require("./src/start.js")
 let Client;
 
 exports.command = function(name, options) {
-    const Command = require("./src/command.js")(Client)
+    const Command = require("./src/module classes/command.js")(Client)
 
     return new Command(name, options)
 }
 
 exports.mf = function(name, options) {
-    const MF = require("./src/Message_Function.js")(Client)
+    const MF = require("./src/module classes/Message_Function.js")(Client)
     return new MF(name, options)
 }
 exports.bf = function(name, options) {
-    const BF = require("./src/Boot_Function.js")(Client)
+    const BF = require("./src/module classes/Boot_Function.js")(Client)
     return new BF(name, options)
 }
 exports.start = function(options) {
@@ -22,7 +23,19 @@ exports.start = function(options) {
         return console.log(`You're trying to start without ${chalk.red("a starting object")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
     } else if (typeof options.token != "string") {
         return console.log(`You're trying to start without ${chalk.red("a valid token")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
-    } else if (typeof options.prefix != "string" || options.prefix.includes(" ")) {
+    }
+    if (typeof options.prefix == "string") {
+        if (options.prefix.includes(" ")) {
+            return console.log(`You're trying to start without ${chalk.red("a valid prefix")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
+        }
+        options.prefix = [options.prefix]
+    } else if (options.prefix instanceof Array) {
+        options.prefix.forEach(i => {
+            if (i.includes(" ")) {
+                return console.log(`You're trying to start without ${chalk.red("a valid prefix")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
+            }
+        })
+    } else {
         return console.log(`You're trying to start without ${chalk.red("a valid prefix")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
     }
 
@@ -59,6 +72,7 @@ exports.start = function(options) {
             } else {
                 bftext = chalk.green(bftext)
             }
+            startBot(this)
 
             console.log(`Your bot (${chalk.yellow(this.user.tag)}) is now ${chalk.green("online!")} | Running on ${this.guilds.size} servers | ${chalk.yellow(`Spark v${this.version}`)}\nWe detected the following data:\n \n ${commandtext} ${mftext} ${bftext}`)
         }
