@@ -14,8 +14,5 @@ module.exports = function(client) {
             }
             this.level = level;
         }
-
-
-
     }
 }

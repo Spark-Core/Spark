@@ -71,27 +71,21 @@ exports.start = function(options) {
         async start() {
             this.dataStore = await this.dataStore;
             if (this.config.first) {console.log(`Welcome to ${chalk.yellow(`Spark V${this.version}`)}!\nTo see the changelog for this update go to this page:\n${chalk.blue("https://github.com/TobiasFeld22/Spark/releases")}\nTo learn more about using Spark, please visit our docs:\n${chalk.blue("https://discordspark.tk/")}\n-------------------`)}
-            var commandtext = `${this.dataStore.commands.size} commands\n`
-            var mftext = `${this.dataStore.functions.message.size} message functions\n`
-            var bftext = `${this.dataStore.functions.boot.size} boot functions\n`
-            if (this.dataStore.commands.size == 0) {
-                commandtext = chalk.red(commandtext)
-            } else {
-                commandtext = chalk.green(commandtext)
+
+            function colours(text, size) {
+                if (size == 0) {
+                    return chalk.red(text)
+                }
+                return chalk.green(text)
             }
-            if (this.dataStore.functions.message.size == 0) {
-                mftext = chalk.red(mftext)
-            } else {
-                mftext = chalk.green(mftext)
-            }
-            if (this.dataStore.functions.boot.size == 0) {
-                bftext = chalk.red(bftext)
-            } else {
-                bftext = chalk.green(bftext)
-            }
+            var commandtext = colours(`${this.dataStore.commands.size} commands\n`, this.dataStore.commands.size)
+            var mftext = colours(`${this.dataStore.functions.message.size} message functions\n`, this.dataStore.functions.message.size)
+            var bftext = colours(`${this.dataStore.functions.boot.size} boot functions\n`, this.dataStore.functions.boot.size)
+            var snippettext = colours(`${this.dataStore.functions.snippet.size} snippets\n`, this.dataStore.functions.snippet.size)
+            var permissiontext = colours(`${this.dataStore.permissions.size} permissions\n`, this.dataStore.permissions.size)
             startBot(this)
 
-            console.log(`Your bot (${chalk.yellow(this.user.tag)}) is now ${chalk.green("online!")} | Running on ${this.guilds.size} servers | ${chalk.yellow(`Spark v${this.version}`)}\nWe detected the following data:\n \n ${commandtext} ${mftext} ${bftext}`)
+            console.log(`Your bot (${chalk.yellow(this.user.tag)}) is now ${chalk.green("online!")} | Running on ${this.guilds.size} servers | ${chalk.yellow(`Spark v${this.version}`)}\nWe detected the following data:\n \n ${commandtext} ${mftext} ${bftext} ${snippettext} ${permissiontext}`)
         }
         event() {
             this.on("message", () => {
