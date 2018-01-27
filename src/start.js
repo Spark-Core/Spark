@@ -39,8 +39,12 @@ module.exports = (client) => {
 }
 
 function isValidCommand(client, commandName) {
-    console.log(client.dataStore.commands.has(commandName));
-
+    if (client.dataStore.commands.has(commandName)) {
+        var {command} = client.dataStore.commands.get(commandName)
+        console.log(command.level)
+    } else {
+        return false;
+    }
 
 }
 

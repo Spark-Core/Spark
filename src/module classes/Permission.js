@@ -1,24 +1,12 @@
 module.exports = function(client) {
-    return class Command {
+    return class Permission {
 
         constructor(name, options) {
             this.name = name;
             if (!options) {options = {}}
             this.options = options
             this.client = client
-            this.aliases = []
             this.level = (options.level || 0)
-        }
-
-
-        addAlias(alias) {
-            if (typeof alias != "string") {
-                return console.log("Incorrect alias type, use a string")
-            }
-            if (this.aliases.map(i => (i.name)).indexOf == -1) {
-                return console.log("This alias was already added.")
-            }
-            this.aliases.push({name: alias, command: this})
         }
         setLevel(level) {
             if (typeof level != "number") {
@@ -26,6 +14,7 @@ module.exports = function(client) {
             }
             this.level = level;
         }
+
 
 
     }
