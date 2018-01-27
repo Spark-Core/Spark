@@ -87,11 +87,7 @@ exports.start = function(options) {
 
             console.log(`Your bot (${chalk.yellow(this.user.tag)}) is now ${chalk.green("online!")} | Running on ${this.guilds.size} servers | ${chalk.yellow(`Spark v${this.version}`)}\nWe detected the following data:\n \n ${commandtext} ${mftext} ${bftext} ${snippettext} ${permissiontext}`)
         }
-        event() {
-            this.on("message", () => {
-                require("./loadEvents")
-            })
-        }
+
     }
     Client = new Client();
     Client.config = options
