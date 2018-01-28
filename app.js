@@ -65,7 +65,7 @@ exports.start = function(options) {
 
 
         async search() {
-            var data = await require("./src/search.js")(this)
+            var data = await require("./src/search/search.js")(this)
             return data;
         }
         async start() {
