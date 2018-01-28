@@ -1,8 +1,9 @@
+const DataStore = require("./../dataStore.js")
 module.exports = async function(data, location) {
     if (!data.dataStore.functions) {
         data.dataStore.functions = {};
     }
-    data.dataStore.functions.message = new Map();
+    data.dataStore.functions.message = new DataStore();
     var temp = await data.searchInDirectories(location);
     var mf = [];
     temp.forEach(i => {

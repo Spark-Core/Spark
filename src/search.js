@@ -1,30 +1,34 @@
+"/../../"
+
 /* eslint class-methods-use-this: ["error", { "exceptMethods": ["searchLocations"] }] */
 /* eslint no-console: 0 */
 /* eslint class-methods-use-this: 0 */
 
 const {resolve, dirname} = require("path");
 const fs = require("fs-extra")
+const DataStore = require("./dataStore.js")
 module.exports = async (client) => {
 
     class Searchloader {
 
         constructor(client) {
             this.client = client;
-            this.aliases = new Map()
-            if (dirname(__dirname, "/../../") == dirname(require.main.filename)) {
+            this.aliases = new DataStore()
+            if (dirname(__dirname, "/../") == dirname(require.main.filename)) {
                 this.clientLocations = this.searchLocations(dirname(__dirname, "/../"))
             } else {
                 this.clientLocations = this.searchLocations(dirname(__dirname, "/../"))
                 this.userLocations = this.searchLocations(dirname(require.main.filename))
             }
-            this.loadCommands = require("./loadCommands.js")
-            this.loadMF = require("./loadMf.js")
-            this.loadBF = require("./loadBf.js")
-            this.loadSnippets = require("./loadSnippet.js")
-            this.loadPermissions = require("./loadPermission.js")
+            this.loadCommands = require("./search_files/loadCommands.js")
+            this.loadMF = require("./search_files/loadMf.js")
+            this.loadBF = require("./search_files/loadBf.js")
+            this.loadSnippets = require("./search_files/loadSnippet.js")
+            this.loadPermissions = require("./search_files/loadPermission.js")
         }
 
         searchLocations(location) {
+            console.log(location)
             return {
                 "commands": resolve(location, "commands"),
                 "functions": resolve(location, "functions"),
@@ -42,15 +46,15 @@ module.exports = async (client) => {
                 this.backupDataStore = this.dataStore
             }
             this.dataStore = {}
-            await this.loadCommands(locations.commands)
+            await this.loadCommands(this, locations.commands)
             if (!(await fs.exists(locations.functions))) {
                 await this.genFolder(locations.functions)
             }
-            await this.loadMF(locations.messageFunctions)
-            await this.loadBF(locations.bootFunctions)
-            await this.loadSnippets(locations.snippets)
-            await this.loadPermissions(locations.permissions)
-            //    this.loadEvents(locations.events)
+            await this.loadMF(this, locations.messageFunctions)
+            await this.loadBF(this, locations.bootFunctions)
+            await this.loadSnippets(this, locations.snippets)
+            await this.loadPermissions(this, locations.permissions)
+            //    this.loadEvents(this, locations.events)
             return this.dataStore;
         }
 
@@ -81,7 +85,7 @@ module.exports = async (client) => {
             })
             jsFiles = jsFiles.map(i => (resolve(location, i)))
             if (!files) {
-                return new Map()
+                return new DataStore()
             }
             if (!notFirst) {
                 var folders = files.filter(i => {

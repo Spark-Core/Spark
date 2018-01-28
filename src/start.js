@@ -1,5 +1,5 @@
+var Chalk = require("chalk")
 module.exports = (client) => {
-
 
     /*
     client.dataStore.events.forEach((i,n) => {
@@ -8,6 +8,7 @@ module.exports = (client) => {
     })
     })
     */
+
     client.on("ready", () => {
         client.dataStore.functions.boot.forEach(i => {
             setTimeout(() => {
@@ -23,10 +24,14 @@ module.exports = (client) => {
     })
     client.on("message", (message) => {
 
-        client.config.prefix.forEach(i => {
+        client.config.prefix.forEach(async i => {
             if (message.content.toLowerCase().startsWith(i)) {
-                if (isValidCommand(client, message.content.toLowerCase().split(" ")[0].replace(i, ""))) {
-                    executeCommand(client, message)
+
+                if (await isValidCommand(client, message, message.content.toLowerCase().split(" ")[0].replace(i, "")) == true) {
+                    //
+                    // Check for message functions here!
+                    //
+                    executeCommand(client, message, message.content.toLowerCase().split(" ")[0].replace(i, ""))
                 }
             }
         })
@@ -38,18 +43,36 @@ module.exports = (client) => {
 
 }
 
-function isValidCommand(client, commandName) {
+async function isValidCommand(client, message, commandName) {
     if (client.dataStore.commands.has(commandName)) {
         var {command} = client.dataStore.commands.get(commandName)
-        console.log(command.level)
-    } else {
-        return false;
+        var permissions = client.dataStore.permissions.filter(i => {
+            return i.permission.level == command.level
+        })
+        if (permissions.size == 0) {return true}
+        var results = permissions.map(async i => {
+            var {permission} = i
+            var result = await permission.code(client, message)
+            if (typeof result != "boolean") {
+                console.log(Chalk.red("Error | ") + "Permission " + Chalk.yellow(permission.name) + " is not returning the correct value, read " + Chalk.blue("https://discordspark.tk/docs/permissions"))
+                return true;
+            }
+            return result;
+
+        })
+        results = await Promise.all(results)
+        if (results.includes(true)) {
+            return false;
+        }
+        return true;
     }
+    return false;
+
 
 }
 
-function executeCommand(client, message) {
-
-    message.channel.send("")
+function executeCommand(client, message, commandName) {
+    var {command} = client.dataStore.commands.get(commandName)
+    command.code(client, message)
 
 }
