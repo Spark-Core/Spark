@@ -1,4 +1,4 @@
-const Spark = require("C:\\code\\spark\\Spark")
+const Spark = require("../")
 const Permission = Spark.permission("Member", {level: 0})
 Permission.code = () => {
 
