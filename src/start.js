@@ -72,7 +72,12 @@ async function isValidCommand(client, message, commandName) {
 }
 
 function executeCommand(client, message, commandName) {
-    var {command} = client.dataStore.commands.get(commandName)
-    command.code(client, message)
+    var {command, location} = client.dataStore.commands.get(commandName)
+
+    try {
+        command.code(client, message)
+    } catch (e) {
+        console.error(location + " | An error occured while executing the command.\n" + e)
+    }
 
 }

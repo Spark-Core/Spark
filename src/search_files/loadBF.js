@@ -1,5 +1,6 @@
 const DataStore = require("./../dataStore.js")
 module.exports = async function(data, location) {
+    if (!data.dataStore) {data.dataStore = {}}
     if (!data.dataStore.functions) {
         data.dataStore.functions = {};
     }
@@ -44,4 +45,5 @@ module.exports = async function(data, location) {
             data.dataStore.functions.boot.set(i.bf.name.toLowerCase(), i)
         }
     })
+    return bf;
 }

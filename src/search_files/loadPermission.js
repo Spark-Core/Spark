@@ -1,5 +1,6 @@
 const DataStore = require("./../dataStore.js")
 module.exports = async function(data, location) {
+    if (!data.dataStore) {data.dataStore = {}}
 
     data.dataStore.permissions = new DataStore();
     var temp = await data.searchInDirectories(location);
@@ -39,4 +40,5 @@ module.exports = async function(data, location) {
             data.dataStore.permissions.set(i.permission.name.toLowerCase(), i)
         }
     })
+    return permissions;
 }

@@ -8,6 +8,7 @@ let Client;
 /*
     All modular classes
 */
+exports.methods = {RichEmbed: discord.RichEmbed}
 
 exports.command = function(name, options) {
     const Command = require("./src/module classes/Command.js")(Client)
@@ -65,7 +66,7 @@ exports.start = function(options) {
 
 
         async search() {
-            var data = await require("./src/search.js")(this)
+            var data = await require("./src/search.js").func(this)
             return data;
         }
         async start() {
