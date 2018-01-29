@@ -19,8 +19,8 @@ module.exports.SearchLoader = class SearchLoader {
             this.userLocations = this.searchLocations(dirname(require.main.filename))
         }
         this.loadCommands = require("./search_files/loadCommands.js")
-        this.loadMF = require("./search_files/loadMf.js")
-        this.loadBF = require("./search_files/loadBf.js")
+        this.loadMF = require("./search_files/loadMF.js")
+        this.loadBF = require("./search_files/loadBF.js")
         this.loadSnippets = require("./search_files/loadSnippet.js")
         this.loadPermissions = require("./search_files/loadPermission.js")
     }
