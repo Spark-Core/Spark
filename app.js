@@ -11,28 +11,28 @@ let Client;
 exports.methods = {RichEmbed: discord.RichEmbed}
 
 exports.command = function(name, options) {
-    const Command = require("./src/module classes/Command.js")(Client)
+    const Command = require("./src/module_classes/Command.js")(Client)
 
     return new Command(name, options)
 }
 
 exports.mf = function(name, options) {
-    const MF = require("./src/module classes/Message_Function.js")(Client)
+    const MF = require("./src/module_classes/Message_Function.js")(Client)
     return new MF(name, options)
 }
 
 exports.bf = function(name, options) {
-    const BF = require("./src/module classes/Boot_Function.js")(Client)
+    const BF = require("./src/module_classes/Boot_Function.js")(Client)
     return new BF(name, options)
 }
 
 exports.snippet = function(name, options) {
-    const Snippet = require("./src/module classes/Snippet.js")(Client)
+    const Snippet = require("./src/module_classes/Snippet.js")(Client)
     return new Snippet(name, options)
 }
 
 exports.permission = function(name, options) {
-    const Permission = require("./src/module classes/Permission.js")(Client)
+    const Permission = require("./src/module_classes/Permission.js")(Client)
     return new Permission(name, options)
 }
 
