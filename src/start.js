@@ -26,12 +26,11 @@ module.exports = (client) => {
 
         client.config.prefix.forEach(async i => {
             if (message.content.toLowerCase().startsWith(i)) {
-
-                if (await isValidCommand(client, message, message.content.toLowerCase().split(" ")[0].replace(i, "")) == true) {
-                    //
-                    // Check for message functions here!
-                    //
-                    executeCommand(client, message, message.content.toLowerCase().split(" ")[0].replace(i, ""))
+                var command = await isValidCommand(client, message, message.content.toLowerCase().split(" ")[0].replace(i, ""))
+                if (command == true) {
+                    if (await mf(client, message, command)) {executeCommand(client, message, message.content.toLowerCase().split(" ")[0].replace(i, ""))}
+                } else {
+                    await mf(client, message)
                 }
             }
         })
@@ -41,6 +40,34 @@ module.exports = (client) => {
 
 
 
+}
+
+async function mf(client, message, command) {
+    var results = null;
+    if (command) {
+        try {
+            results = await client.dataStore.functions.message.filter(i => {
+                return (i.mf.type == "all" || i.mf.type == "commands")
+            }).map(i => (i.mf.code(client, message)))
+        } catch (e) {
+            console.log(e)
+        }
+        if (results.includes(true)) {
+            return false;
+        }
+        return true;
+    }
+    try {
+        results = await client.dataStore.functions.message.filter(i => {
+            return (i.mf.type == "all" || i.mf.type == "messages")
+        }).map(i => (i.mf.code(client, message)))
+    } catch (e) {
+        console.log(e)
+    }
+    if (results.includes(true)) {
+        return false;
+    }
+    return true;
 }
 
 async function isValidCommand(client, message, commandName) {
