@@ -12,9 +12,9 @@ exports.version = require("./package.json").version;
 exports.methods = {RichEmbed: discord.RichEmbed}
 
 exports.command = function(name, options) {
-    const Command = require("./src/module_classes/Command.js")(Client)
+    const Command = require("./src/module_classes/Command.js")()
 
-    return new Command(name, options)
+    return new Command(name, options, Client)
 }
 
 exports.mf = function(name, options) {

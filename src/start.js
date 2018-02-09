@@ -27,8 +27,8 @@ module.exports = (client) => {
         client.config.prefix.forEach(async i => {
             if (message.content.toLowerCase().startsWith(i)) {
                 var command = await isValidCommand(client, message, message.content.toLowerCase().split(" ")[0].replace(i, ""))
-                if (command == true) {
-                    if (await mf(client, message, command)) {executeCommand(client, message, message.content.toLowerCase().split(" ")[0].replace(i, ""))}
+                if (command.value == true) {
+                    if (await mf(client, message, command.value)) {executeCommand(client, message, command.name)}
                 } else {
                     await mf(client, message)
                 }
@@ -82,25 +82,28 @@ async function isValidCommand(client, message, commandName) {
             var result = await permission.code(client, message)
             if (typeof result != "boolean") {
                 console.log(Chalk.red("Error | ") + "Permission " + Chalk.yellow(permission.name) + " is not returning the correct value, please read " + Chalk.blue("https://discordspark.tk/docs/permissions") + " for more information.")
-                return true;
+                return {value: true, name: commandName};
             }
             return result;
 
         })
         results = await Promise.all(results)
         if (results.includes(true)) {
-            return false;
+            return {value: false, name: commandName};
         }
-        return true;
+        return {value: true, name: commandName};
     }
-    return false;
+    if (client.dataStore.aliases.has(commandName)) {
+        return isValidCommand(client, message, client.dataStore.aliases.get(commandName))
+
+    }
+    return {value: false, name: commandName};
 
 
 }
 
 function executeCommand(client, message, commandName) {
     var {command, location} = client.dataStore.commands.get(commandName)
-
     try {
         command.code(client, message)
     } catch (e) {

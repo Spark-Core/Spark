@@ -11,7 +11,6 @@ module.exports.SearchLoader = class SearchLoader {
 
     constructor(client) {
         this.client = client;
-        this.aliases = new DataStore()
         if (dirname(__dirname, "/../") == dirname(require.main.filename)) {
             this.clientLocations = this.searchLocations(dirname(__dirname, "/../"))
         } else {
@@ -43,6 +42,7 @@ module.exports.SearchLoader = class SearchLoader {
         if (!(await fs.exists(locations.functions))) {
             await this.genFolder(locations.functions)
         }
+        this.aliases = new DataStore()
         await this.loadMF(this, locations.messageFunctions)
         await this.loadBF(this, locations.bootFunctions)
         await this.loadSnippets(this, locations.snippets)
@@ -99,20 +99,28 @@ module.exports.SearchLoader = class SearchLoader {
     merge(c, u) {
         if (!u) {return c}
         u.commands.forEach((i, n) => {
-            if (!c.commands.has(n)) {
-                c.commands.set(n, i)
-            }
+            c.commands.set(n, i)
         })
         u.functions.message.forEach((i, n) => {
-            if (!c.functions.message.has(n)) {
-                c.functions.message.set(n, i)
-            }
+            c.functions.message.set(n, i)
         })
         u.functions.boot.forEach((i, n) => {
-            if (!c.functions.boot.has(n)) {
-                c.functions.boot.set(n, i)
-            }
+            c.functions.boot.set(n, i)
         })
+        u.functions.snippet.forEach((i, n) => {
+            c.functions.snippet.set(n, i)
+        })
+        u.permissions.forEach((i, n) => {
+            c.permissions.set(n, i)
+        })
+        u.aliases.forEach((i, n) => {
+            c.aliases.set(n, i)
+        })
+        // u.events.forEach((i,n) => {
+        //    c.events.set(n, i)
+        // })
+        //
+        // for future reference
         return c;
     }
 

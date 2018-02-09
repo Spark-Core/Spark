@@ -2,6 +2,7 @@ const DataStore = require("./../dataStore.js")
 module.exports = async function(data, location) {
     if (!data.dataStore) {data.dataStore = {}}
     data.dataStore.commands = new DataStore();
+    data.dataStore.aliases = new DataStore();
     var tempcommands = await data.searchInDirectories(location);
     var commands = [];
     tempcommands.forEach(i => {
@@ -21,8 +22,8 @@ module.exports = async function(data, location) {
         }
         if (command.aliases.length > 0) {
             command.aliases.forEach(i => {
-                if (!data.aliases.has(i)) {
-                    data.aliases.set(i, command.name.toLowerCase())
+                if (!data.dataStore.aliases.has(i.name)) {
+                    data.dataStore.aliases.set(i.name, command.name.toLowerCase())
                 }
             })
         }

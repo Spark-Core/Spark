@@ -1,7 +1,7 @@
-module.exports = function(client) {
+module.exports = function() {
     return class Command {
 
-        constructor(name, options) {
+        constructor(name, options, client) {
             this.name = name;
             if (!options) {options = {}}
             this.options = options
