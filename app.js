@@ -8,6 +8,7 @@ let Client;
 /*
     All modular classes
 */
+exports.version = require("./package.json").version;
 exports.methods = {RichEmbed: discord.RichEmbed}
 
 exports.command = function(name, options) {

@@ -3,9 +3,8 @@ const MF = Spark.mf("example")
 
 MF.setType("commands")
 
-MF.code = (client, message) => {
-    message.channel.send("test")
-    return true;
+MF.code = () => {
+    return false;
 }
 
 module.exports = MF;
