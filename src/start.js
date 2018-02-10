@@ -33,6 +33,7 @@ module.exports = (client) => {
                     await mf(client, message)
                 }
             }
+            await mf(client, message)
         })
 
     })
@@ -64,10 +65,7 @@ async function mf(client, message, command) {
     } catch (e) {
         console.log(e)
     }
-    if (results.includes(true)) {
-        return false;
-    }
-    return true;
+
 }
 
 async function isValidCommand(client, message, commandName) {

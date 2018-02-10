@@ -9,6 +9,7 @@ let Client;
     All modular classes
 */
 exports.version = require("./package.json").version;
+exports.DataStore = require("./src/dataStore.js")
 exports.methods = {RichEmbed: discord.RichEmbed}
 
 exports.command = function(name, options) {
@@ -63,6 +64,7 @@ exports.start = function(options) {
             super()
             this.version = require("./package.json").version
             this.config = {}
+            this.customConfig = new exports.DataStore()
         }
 
 
