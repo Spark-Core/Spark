@@ -95,9 +95,19 @@ exports.start = function(options) {
     }
     Client = new Client();
     Client.config = options
-    Client.login(options.token).then(() => {
-        Client.dataStore = Client.search()
-
+    Client.login(options.token).then(async () => {
+        Client.dataStore = await Client.search()
+        Client.snippets = {
+            list: (name) => {
+                if (!name) {return Client.dataStore.functions.snippet.map((i, n) => n)} else if (Client.dataStore.functions.snippet.has(name)) {
+                    return Client.dataStore.functions.snippet.get(name)
+                }
+                return null;
+            }
+        }
+        Client.dataStore.functions.snippet.forEach((i, n) => {
+            Client.snippets[n] = i.snippet.code
+        })
         Client.start(Client)
 
     }).catch(err => {
