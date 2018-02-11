@@ -3,7 +3,7 @@ module.exports = class CustomConfig {
     constructor(client, id) {
         this.id = id;
         this.client = client;
-        this.ignoreBots = 0;
+        this.ignoreBots = null;
     }
 
     setPrefix(prefix) {
@@ -32,17 +32,21 @@ module.exports = class CustomConfig {
             throw new Error("Expected argument to be a string or boolean.")
         }
         if (type == true) {
-            this.ignoreBots = 1;
+            this.ignoreBots = 4;
             this.client.emit("cc_update", this)
         } else if (type == false) {
             this.ignoreBots = 0;
             this.client.emit("cc_update", this)
         } else if (type == "message") {
-            this.ignoreBots = 2;
+            this.ignoreBots = 1;
             this.client.emit("cc_update", this)
         } else if (type == "command") {
-            this.ignoreBots = 3;
+            this.ignoreBots = 2;
             this.client.emit("cc_update", this)
         }
+    }
+    clearIgnoreBots() {
+        this.ignoreBots = null;
+        this.client.emit("cc_update")
     }
 }

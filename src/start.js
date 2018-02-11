@@ -8,6 +8,10 @@ module.exports = (client) => {
     })
     })
     */
+    client.on("guild_create", guild => {
+        guild.customConfig = new client.CustomConfig()
+        client.customConfig.set(guild.id, guild.customConfig)
+    })
 
     client.on("ready", () => {
         client.dataStore.functions.boot.forEach(i => {
@@ -45,7 +49,12 @@ module.exports = (client) => {
 
 async function mf(client, message, command) {
     var results = null;
+    var {ignoreBots} = client.config
+    if (message.guild.customConfig.ignoreBots) {
+        ignoreBots = message.guild.customConfig;
+    }
     if (command) {
+        if (ignoreBots >= 3) {return}
         try {
             results = await client.dataStore.functions.message.filter(i => {
                 return (i.mf.type == "all" || i.mf.type == "commands")
@@ -58,6 +67,7 @@ async function mf(client, message, command) {
         }
         return true;
     }
+    if (ignoreBots == 2 || ignoreBots == 4) {return}
     try {
         results = await client.dataStore.functions.message.filter(i => {
             return (i.mf.type == "all" || i.mf.type == "messages")

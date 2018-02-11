@@ -58,6 +58,18 @@ exports.start = function(options) {
     } else {
         return console.log(`You're trying to start without ${chalk.red("a valid prefix")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
     }
+    if (typeof options.ignoreBots != "boolean" && typeof options.ignoreBots != "string" && options.ignoreBots != null) {
+        return console.log(`You're trying to start with ${chalk.red("an invalid option:")} ${chalk.red("ignoreBots")}, Please read this article on the docs on how to use this option: ${chalk.blue("https://discordspark.tk/docs/config")}`)
+    }
+    if (options.ignoreBots == true) {
+        options.ignoreBots = 4;
+    } else if (options.ignoreBots == false) {
+        options.ignoreBots = null
+    } else if (options.ignoreBots == "message") {
+        options.ignoreBots = 1
+    } else if (options.ignoreBots == "command") {
+        options.ignoreBots = 2
+    }
 
     Client = class Client extends discord.Client {
         constructor() {
@@ -65,6 +77,7 @@ exports.start = function(options) {
             this.version = require("./package.json").version
             this.config = {}
             this.customConfig = new exports.DataStore()
+            this.CustomConfig = exports.CustomConfig
         }
 
 
