@@ -11,7 +11,7 @@ let Client;
 exports.version = require("./package.json").version;
 exports.DataStore = require("./src/dataStore.js")
 exports.methods = {RichEmbed: discord.RichEmbed}
-
+exports.CustomConfig = require("./src/CustomConfig.js")
 exports.command = function(name, options) {
     const Command = require("./src/module_classes/Command.js")()
 
@@ -94,8 +94,15 @@ exports.start = function(options) {
 
     }
     Client = new Client();
+    Client.on("cc_update", function(data) {
+        Client.customConfig.set(data.id, data)
+    });
     Client.config = options
     Client.login(options.token).then(async () => {
+        Client.guilds.forEach(i => {
+            i.customConfig = new exports.CustomConfig(Client, i.id);
+            Client.customConfig.set(i.id, i.customConfig)
+        })
         Client.dataStore = await Client.search()
         Client.snippets = {
             list: (name) => {
