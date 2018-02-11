@@ -1,6 +1,5 @@
 module.exports = class CustomConfig {
 
-
     constructor(client, id) {
         this.id = id;
         this.client = client;
@@ -46,7 +45,4 @@ module.exports = class CustomConfig {
             this.client.emit("cc_update", this)
         }
     }
-
-
-
 }
