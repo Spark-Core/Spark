@@ -8,7 +8,7 @@ module.exports = (client) => {
     })
     })
     */
-    client.on("guild_create", guild => {
+    client.on("guildCreate", guild => {
         guild.customConfig = new client.CustomConfig()
         client.customConfig.set(guild.id, guild.customConfig)
     })
