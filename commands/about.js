@@ -6,6 +6,9 @@ Command.addAlias("test-alias")
 Command.setLevel(0)
 
 Command.code = (client, message) => {
+    var temp = 2
+    if (temp == 2) {return}
+    // because this command is not yet ready.
     if (message.channel.permissionsFor(message.guild.members.get(client.user.id)).serialize().EMBED_LINKS) {
         embed.setTitle("<| title |>")
         embed.setDescription("<| Add some text here about Spark and some stats or something |>")
