@@ -1,15 +1,14 @@
-# Spark
+# Spark Framework
 ###### Javascript framework for Discord bots based on discord.js
 ---
-
+[![Discord](https://discordapp.com/api/guilds/248505281741455360/embed.png)](https://discord.gg/TezD2Zg)
 [![Greenkeeper badge](https://badges.greenkeeper.io/TobiasFeld22/Spark.svg)](https://greenkeeper.io/)
-[![Build Status](https://travis-ci.org/TobiasFeld22/Spark.svg?branch=V0.1-rewrite)](https://travis-ci.org/TobiasFeld22/Spark)
+[![Build Status](https://api.travis-ci.org/TobiasFeld22/Spark.svg?branch=Stable)](https://travis-ci.org/TobiasFeld22/Spark)
 
-Spark is a easy to use Discord.js wrapper framework so you can make bots easily, and the framework will do the heavy lifting for you.
+Spark is framework for Discord bots making modularity easy. Modules can be build by yourself or downloaded from our docs.
 
+To learn about Spark, you should go to our [documentation](https://discordspark.tk/getting-started)
+Here you can learn about creating your own modules and / or download modules made by others. 
 
-#### ** Warning | This branch is highly unstable. We suggest to ** NOT ** use this unless you want to improve this framework or know what you're doing. **
-** You have been warned..**
+Read [our getting started guide](https://discordspark.tk/getting-started) to get you up to speed.
 
-Want to get started?
-[Go to our docs!](https://discordspark.tk/getting-started).
