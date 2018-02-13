@@ -10,5 +10,5 @@ Spark is framework for Discord bots making modularity easy. Modules can be build
 To learn about Spark, you should go to our [documentation](https://discordspark.tk/getting-started)
 Here you can learn about creating your own modules and / or download modules made by others. 
 
-Read [our getting started guide](https://discordspark.tk/getting-started) to get you up to speed.
+Read [our getting started guide](https://discordspark.tk/getting-started) to get yourself up to speed.
 
