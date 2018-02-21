@@ -1,6 +1,19 @@
 var Chalk = require("chalk")
 module.exports = (client) => {
 
+    function bf() {
+        client.dataStore.functions.boot.forEach(i => {
+            setTimeout(() => {
+                if (i.bf.time == 0) {
+                    i.bf.code(client)
+                } else {
+                    i.bf.code(client)
+                    setInterval(() => {i.bf.code(client)}, i.bf.time)
+                }
+            }, i.bf.delay)
+        })
+    }
+
     /*
     client.dataStore.events.forEach((i,n) => {
     client.on(name, (one, two, three, four, five) => {
@@ -12,22 +25,9 @@ module.exports = (client) => {
         guild.customConfig = new client.CustomConfig()
         client.customConfig.set(guild.id, guild.customConfig)
     })
+    bf()
 
-    client.on("ready", () => {
-        client.dataStore.functions.boot.forEach(i => {
-            setTimeout(() => {
-
-                if (i.time == 0) {
-                    i.function(client)
-                } else {
-                    i.function(client)
-                    setInterval(() => {i.function(client)}, i.time)
-                }
-            }, i.delay)
-        })
-    })
     client.on("message", (message) => {
-
         client.config.prefix.forEach(async i => {
             if (message.content.toLowerCase().startsWith(i)) {
                 var command = await isValidCommand(client, message, message.content.toLowerCase().split(" ")[0].replace(i, ""))
