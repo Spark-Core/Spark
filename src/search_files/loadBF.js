@@ -14,7 +14,6 @@ module.exports = async function(data, location) {
         } catch (e) {
             console.error(`${i} | Error while loading boot function: \n ${e}`)
         }
-
     })
 
     bf.forEach(i => {
@@ -24,10 +23,10 @@ module.exports = async function(data, location) {
             i = null;
             return;
         }
-        if (typeof bf.time != "number") {
+        if (typeof bf.time != "number" || bf.time < 0) {
             bf.time = 0
         }
-        if (typeof bf.delay != "number") {
+        if (typeof bf.delay != "number" || bf.delay < 0) {
             bf.delay = 0
         }
         if (typeof bf.code != "function") {
