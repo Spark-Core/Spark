@@ -4,18 +4,17 @@ var fs = require("fs-extra")
 var path = require("path")
 const request = require("request-promise")
 const BF = Spark.bf("checkUpdate")
-BF.code = async (client) => {
-    //    client.data.util.checkUpdate(client.data.version).then(update => {
-    //        console.log(update)
-    //    }).catch(err => {
-    //        console.warn(err)
-    //    })
+BF.code = (client) => {
     if (!client.config.authURL || typeof client.config.authURL != "string") {
         client.config.authURL = "https://auth.discordspark.tk"
     }
     try {
-        var exists = await fs.exists(path.join(require.main.filename.replace(/\\\w*.js/g, ""), "data.spark"))
-        if (exists) {checkConnection(client)} else {register(client)}
+        fs.readFile(path.join(require.main.filename.replace(/\\\w*.js/g, ""), "data.spark"), "utf8").then((data) => {
+            client.config.Auth = parseConfig(data)
+            checkConnection(client)
+        }).catch(() => {
+            register(client)
+        })
     } catch (e) {
         if (!client.authErrors) {
             client.authErrors = []
@@ -30,10 +29,7 @@ BF.delay = 0;
 
 module.exports = BF;
 
-
-async function checkConnection(client) {
-
-    var data = await fs.readFile(path.join(require.main.filename.replace(/\\\w*.js/g, ""), "data.spark"), "utf8")
+function parseConfig(data) {
     data = data.replace(/!>>[ \w,.]*\n/g, "")
     var x = {}
     data.split("\n").forEach(i => {
@@ -43,8 +39,13 @@ async function checkConnection(client) {
         o[i[0]] = i[1]
         x[i[0]] = i[1]
     })
+    return x;
+}
+
+async function checkConnection(client) {
+
     try {
-        var response = await request.post(client.config.authURL + "/update", {form: {ID: x.ID, Secret: x.Secret}})
+        var response = await request.post(client.config.authURL + "/update", {form: {ID: client.config.auth.ID, Secret: client.config.auth.Secret}, timeout: 10000})
         console.log(response)
     } catch (e) {
         if (!client.authErrors) {
