@@ -14,13 +14,8 @@ module.exports = (client) => {
         })
     }
 
-    /*
-    client.dataStore.events.forEach((i,n) => {
-    client.on(name, (one, two, three, four, five) => {
-    i.function(one, two, three, four, five)
-    })
-    })
-    */
+
+
     client.on("guildCreate", guild => {
         guild.customConfig = new client.CustomConfig()
         client.customConfig.set(guild.id, guild.customConfig)
