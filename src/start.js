@@ -17,11 +17,13 @@ module.exports = (client) => {
     */
 
 
+
     client.dataStore.events.forEach(i => {
       client.on(i.event.event, (one, two, three) => {
         i.event.code(client, one, two, three)
       })
     })
+
 
     client.on("guildCreate", guild => {
         guild.customConfig = new client.CustomConfig()
