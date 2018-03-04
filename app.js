@@ -38,6 +38,11 @@ exports.permission = function(name, options) {
     return new Permission(name, options)
 }
 
+exports.event = function(name, options) {
+    const Event = require("./src/module_classes/Event.js")(Client)
+    return new Event(name, options)
+}
+
 exports.start = function(options) {
     if (typeof options != "object") {
         return console.log(`You're trying to start without ${chalk.red("a starting object")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
@@ -100,9 +105,10 @@ exports.start = function(options) {
             var bftext = colours(`${this.dataStore.functions.boot.size} boot functions\n`, this.dataStore.functions.boot.size)
             var snippettext = colours(`${this.dataStore.functions.snippet.size} snippets\n`, this.dataStore.functions.snippet.size)
             var permissiontext = colours(`${this.dataStore.permissions.size} permissions\n`, this.dataStore.permissions.size)
+            var eventtext = colours(`${this.dataStore.events.size} events\n`, this.dataStore.events.size)
             startBot(this)
 
-            console.log(`Your bot (${chalk.yellow(this.user.tag)}) is now ${chalk.green("online!")} | Running on ${this.guilds.size} servers | ${chalk.yellow(`Spark v${this.version}`)}\nWe detected the following data:\n \n ${commandtext} ${mftext} ${bftext} ${snippettext} ${permissiontext}`)
+            console.log(`Your bot (${chalk.yellow(this.user.tag)}) is now ${chalk.green("online!")} | Running on ${this.guilds.size} servers | ${chalk.yellow(`Spark v${this.version}`)}\nWe detected the following data:\n \n ${commandtext} ${mftext} ${bftext} ${snippettext} ${permissiontext} ${eventtext}`)
         }
 
     }

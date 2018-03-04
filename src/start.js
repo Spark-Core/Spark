@@ -1,6 +1,7 @@
 var Chalk = require("chalk")
 module.exports = (client) => {
 
+   /*
     function bf() {
         client.dataStore.functions.boot.forEach(i => {
             setTimeout(() => {
@@ -13,19 +14,20 @@ module.exports = (client) => {
             }, i.bf.delay)
         })
     }
-
-    /*
-    client.dataStore.events.forEach((i,n) => {
-    client.on(name, (one, two, three, four, five) => {
-    i.function(one, two, three, four, five)
-    })
-    })
     */
+
+
+    client.dataStore.events.forEach(i => {
+      client.on(i.event.event, (one, two, three) => {
+        i.event.code(client, one, two, three)
+      })
+    })
+
     client.on("guildCreate", guild => {
         guild.customConfig = new client.CustomConfig()
         client.customConfig.set(guild.id, guild.customConfig)
     })
-    bf()
+    // bf()
 
     client.on("message", (message) => {
         client.config.prefix.forEach(async i => {

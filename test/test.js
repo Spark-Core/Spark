@@ -88,6 +88,23 @@ describe('Searching & loading files', async function() {
             expect(snippets[0].snippet).to.have.property("code")
         })
     })
+
+    describe("Events", function() {
+      it('Loads the events', async function() {
+          events = await loader.loadEvents(loader, loader.clientLocations.events)
+      })
+      it('Returns an Array', function() {
+          expect(events.constructor.name, "Event return class name").to.equal("Array")
+      })
+      it("Has the built-in Event loaded", function() {
+          expect(snippets, "event files\n-example.js").to.have.lengthOf(1);
+      })
+      it("Has a name, event and code property", function() {
+          expect(events[0].event).to.have.property("name")
+          expect(events[0].event).to.have.property("event")
+          expect(events[0].event).to.have.property("code")
+      })
+  })
 })
 
 describe("Data collecting and processing", function() {
