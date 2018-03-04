@@ -1,13 +1,12 @@
 /* eslint prefer-destructuring: 0  */
 var Spark = require("../../")
 const MF = Spark.mf("prefixHelp")
-
 MF.setType("messages")
 
 MF.code = (client, message) => {
     var first = message.content;
     if (message.content.includes(" ") > 0) {
-        first = message.content.split(" ")[0]
+return
     }
     first = first.match(/<@!?[0-9]+>/g)
     if (first) {
