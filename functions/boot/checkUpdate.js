@@ -6,7 +6,6 @@ var sc = require("socket.io-client")
 var socket = null;
 const request = require("request-promise")
 const BF = Spark.bf("checkUpdate")
-var authenticated = false;
 BF.code = (client) => {
     if (!client.config.authURL || typeof client.config.authURL != "string") {
         client.config.authURL = "https://auth.discordspark.tk"
@@ -61,18 +60,19 @@ async function connect(client) {
     socket.on("connect", function() {
         console.log("Remote connection established, authenticating")
     });
+    socket.on("disconnect", function() {
+        socket.close()
+        return console.log("Disconnected from remote server, reboot the bot to restart the connection.")
+    })
     socket.on("Authentication", (data) => {
         if (data.status == 0) {
-            socket.on("data-ping", () => {
-                var shard = null
-                if (client.shard) {
-                    shard = `${client.shard.id} / ${client.shard.count}`;
-                }
-                socket.emit("data-pong", [
-                    client.guilds.size,
-                    client.uptime,
-                    shard
-                ])
+            socket.on("data-ping", (identifier) => {
+                socket.emit("data-pong", {
+                    guilds: client.guilds.size,
+                    uptime: client.uptime,
+                    version: client.version,
+                    identifier
+                })
             })
         } else if (data.status == 0) {
             console.log(data)
