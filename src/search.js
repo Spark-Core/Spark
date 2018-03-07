@@ -22,6 +22,7 @@ module.exports.SearchLoader = class SearchLoader {
         this.loadBF = require("./search_files/loadBF.js")
         this.loadSnippets = require("./search_files/loadSnippet.js")
         this.loadPermissions = require("./search_files/loadPermission.js")
+        this.loadEvents = require("./search_files/loadEvent.js")
     }
 
     searchLocations(location) {
@@ -47,7 +48,7 @@ module.exports.SearchLoader = class SearchLoader {
         await this.loadBF(this, locations.bootFunctions)
         await this.loadSnippets(this, locations.snippets)
         await this.loadPermissions(this, locations.permissions)
-        //    this.loadEvents(this, locations.events)
+        await this.loadEvents(this, locations.events)
         return this.dataStore;
     }
 
