@@ -6,7 +6,6 @@ var sc = require("socket.io-client")
 var socket = null;
 const request = require("request-promise")
 const BF = Spark.bf("checkUpdate")
-var authenticated = false;
 BF.code = (client) => {
     if (!client.config.authURL || typeof client.config.authURL != "string") {
         client.config.authURL = "https://auth.discordspark.tk"
