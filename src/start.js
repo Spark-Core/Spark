@@ -33,7 +33,7 @@ module.exports = (client) => {
 
     client.on("message", (message) => {
         client.config.prefix.forEach(async i => {
-            if (message.content.toLowerCase().startsWith(i)) {
+            if (message.content.startsWith(i)) {
                 var command = await isValidCommand(client, message, message.content.toLowerCase().split(" ")[0].replace(i, ""))
                 if (command.value == true) {
                     if (await mf(client, message, command.value)) {executeCommand(client, message, command.name)}
