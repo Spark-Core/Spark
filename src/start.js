@@ -40,8 +40,9 @@ module.exports = (client) => {
                 } else {
                     await mf(client, message)
                 }
+            }else{
+                await mf(client, message)
             }
-            await mf(client, message)
         })
 
     })
