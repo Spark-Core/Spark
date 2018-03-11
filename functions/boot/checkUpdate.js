@@ -90,7 +90,7 @@ async function connect(client) {
 
 const placeholder = Spark.bf("checkUpdate")
 placeholder.code = () => {
-    spark.bf("checkUpdate")
+    Spark.bf("checkUpdate")
 }
 module.exports = placeholder;
 
