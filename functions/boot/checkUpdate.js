@@ -4,6 +4,7 @@ var fs = require("fs-extra")
 var path = require("path")
 var sc = require("socket.io-client")
 var socket = null;
+
 const request = require("request-promise")
 const BF = Spark.bf("checkUpdate")
 BF.code = (client) => {
@@ -87,11 +88,11 @@ async function connect(client) {
 }
 
 
-
-BF.time = 0;
-BF.delay = 0;
-
-module.exports = BF;
+const placeholder = spark.bf("checkUpdate")
+placeholder.code = () => {
+    spark.bf("checkUpdate")
+}
+module.exports = placeholder;
 
 function parseConfig(data) {
     data = data.replace(/!>>[ \w,.]*\n/g, "")
