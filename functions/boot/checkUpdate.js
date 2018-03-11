@@ -88,7 +88,7 @@ async function connect(client) {
 }
 
 
-const placeholder = spark.bf("checkUpdate")
+const placeholder = Spark.bf("checkUpdate")
 placeholder.code = () => {
     spark.bf("checkUpdate")
 }
