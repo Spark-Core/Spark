@@ -2,6 +2,7 @@
 const discord = require("discord.js")
 const chalk = require("chalk")
 const startBot = require("./src/start.js")
+const confirmConfig = require("./src/confirmConfig.js")
 let Client;
 
 
@@ -44,25 +45,7 @@ exports.event = function(name, options) {
 }
 
 exports.start = function(options) {
-    if (typeof options != "object") {
-        return console.log(`You're trying to start without ${chalk.red("a starting object")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
-    } else if (typeof options.token != "string") {
-        return console.log(`You're trying to start without ${chalk.red("a valid token")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
-    }
-    if (typeof options.prefix == "string") {
-        if (options.prefix.includes(" ")) {
-            return console.log(`You're trying to start without ${chalk.red("a valid prefix")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
-        }
-        options.prefix = [options.prefix]
-    } else if (options.prefix instanceof Array) {
-        options.prefix.forEach(i => {
-            if (i.includes(" ")) {
-                return console.log(`You're trying to start without ${chalk.red("a valid prefix")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
-            }
-        })
-    } else {
-        return console.log(`You're trying to start without ${chalk.red("a valid prefix")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
-    }
+    if (!confirmConfig(options)) {return}
     if (typeof options.ignoreBots != "boolean" && typeof options.ignoreBots != "string" && options.ignoreBots != null) {
         return console.log(`You're trying to start with ${chalk.red("an invalid option:")} ${chalk.red("ignoreBots")}, Please read this article on the docs on how to use this option: ${chalk.blue("https://discordspark.tk/docs/config")}`)
     }
