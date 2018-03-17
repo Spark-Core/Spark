@@ -18,9 +18,9 @@ module.exports = (client) => {
 
 
     client.dataStore.events.forEach(i => {
-      client.on(i.event.event, (one, two, three) => {
-        i.event.code(client, one, two, three)
-      })
+        client.on(i.event.event, (one, two, three) => {
+            i.event.code(client, one, two, three)
+        })
     })
 
 
@@ -28,19 +28,19 @@ module.exports = (client) => {
         guild.customConfig = new client.CustomConfig()
         client.customConfig.set(guild.id, guild.customConfig)
     })
-     bf()
+    bf()
 
     client.on("message", (message) => {
         client.config.prefix.forEach(async i => {
             if (message.content.startsWith(i)) {
                 var command = await isValidCommand(client, message, message.content.split(" ")[0].replace(i, "").toLowerCase())
                 if (command.value == true) {
-                    if (await mf(client, message, command.value)) {executeCommand(client, message, command.name)}
+                    if (await observer(client, message, command.value)) {executeCommand(client, message, command.name)}
                 } else {
-                    await mf(client, message)
+                    await observer(client, message)
                 }
-            }else{
-                await mf(client, message)
+            } else {
+                await observer(client, message)
             }
         })
 
@@ -51,7 +51,7 @@ module.exports = (client) => {
 
 }
 
-async function mf(client, message, command) {
+async function observer(client, message, command) {
     var results = null;
     var {ignoreBots} = client.config
     if (message.guild.customConfig.ignoreBots) {
@@ -60,9 +60,9 @@ async function mf(client, message, command) {
     if (command) {
         if (ignoreBots >= 3) {return}
         try {
-            results = await client.dataStore.functions.message.filter(i => {
-                return (i.mf.type == "all" || i.mf.type == "commands")
-            }).map(i => (i.mf.code(client, message)))
+            results = await client.dataStore.functions.observer.filter(i => {
+                return (i.observer.type == "all" || i.observer.type == "commands")
+            }).map(i => (i.observer.code(client, message)))
         } catch (e) {
             console.log(e)
         }
@@ -73,9 +73,9 @@ async function mf(client, message, command) {
     }
     if (ignoreBots == 2 || ignoreBots == 4) {return}
     try {
-        results = await client.dataStore.functions.message.filter(i => {
-            return (i.mf.type == "all" || i.mf.type == "messages")
-        }).map(i => (i.mf.code(client, message)))
+        results = await client.dataStore.functions.observer.filter(i => {
+            return (i.observer.type == "all" || i.observer.type == "messages")
+        }).map(i => (i.observer.code(client, message)))
     } catch (e) {
         console.log(e)
     }

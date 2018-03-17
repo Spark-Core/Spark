@@ -19,9 +19,9 @@ exports.command = function(name, options) {
     return new Command(name, options, Client)
 }
 
-exports.mf = function(name, options) {
-    const MF = require("./src/module_classes/Message_Function.js")(Client)
-    return new MF(name, options)
+exports.observer = function(name, options) {
+    const Observer = require("./src/module_classes/Observer.js")(Client)
+    return new Observer(name, options)
 }
 
 exports.bf = function(name, options) {
@@ -84,7 +84,7 @@ exports.start = function(options) {
                 return chalk.green(text)
             }
             var commandtext = colours(`${this.dataStore.commands.size} commands\n`, this.dataStore.commands.size)
-            var mftext = colours(`${this.dataStore.functions.message.size} message functions\n`, this.dataStore.functions.message.size)
+            var mftext = colours(`${this.dataStore.functions.observer.size} observers\n`, this.dataStore.functions.observer.size)
             var bftext = colours(`${this.dataStore.functions.boot.size} boot functions\n`, this.dataStore.functions.boot.size)
             var snippettext = colours(`${this.dataStore.functions.snippet.size} snippets\n`, this.dataStore.functions.snippet.size)
             var permissiontext = colours(`${this.dataStore.permissions.size} permissions\n`, this.dataStore.permissions.size)

@@ -1,5 +1,5 @@
 module.exports = function(client) {
-    return class MF {
+    return class Observer {
 
         constructor(name, options) {
             this.name = name;
@@ -14,8 +14,8 @@ module.exports = function(client) {
 
         setType(type) {
             if (!type || typeof type != "string" || ![
-                    "messages",
-                    "commands",
+                    "message",
+                    "command",
                     "all"
                 ].includes(type)) {
                 console.error(this.name + " | Error on function setType: | Please use one of these 3 types: \"messages\" \"commands\" \"all\"")

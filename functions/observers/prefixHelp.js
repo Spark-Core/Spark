@@ -1,12 +1,12 @@
 /* eslint prefer-destructuring: 0  */
 var Spark = require("../../")
-const MF = Spark.mf("prefixHelp")
-MF.setType("messages")
+const observer = Spark.observer("prefixHelp")
+observer.setType("message")
 
-MF.code = (client, message) => {
+observer.code = (client, message) => {
     var first = message.content;
     if (message.content.includes(" ") > 0) {
-return
+        return
     }
     first = first.match(/<@!?[0-9]+>/g)
     if (first) {
@@ -17,7 +17,7 @@ return
     return false;
 }
 
-module.exports = MF;
+module.exports = observer;
 
 function prefixHelp(client, message) {
     if (client.customConfig.has(message.guild.id)) {

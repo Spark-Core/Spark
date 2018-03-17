@@ -18,7 +18,7 @@ module.exports.SearchLoader = class SearchLoader {
             this.userLocations = this.searchLocations(dirname(require.main.filename))
         }
         this.loadCommands = require("./search_files/loadCommands.js")
-        this.loadMF = require("./search_files/loadMF.js")
+        this.loadObserver = require("./search_files/loadObserver.js")
         this.loadBF = require("./search_files/loadBF.js")
         this.loadSnippets = require("./search_files/loadSnippet.js")
         this.loadPermissions = require("./search_files/loadPermission.js")
@@ -29,7 +29,7 @@ module.exports.SearchLoader = class SearchLoader {
         return {
             "commands": resolve(location, "commands"),
             "functions": resolve(location, "functions"),
-            "messageFunctions": resolve(location, "functions/messages"),
+            "observers": resolve(location, "functions/observers"),
             "bootFunctions": resolve(location, "functions/boot"),
             "snippets": resolve(location, "functions/snippets"),
             "events": resolve(location, "events"),
@@ -44,7 +44,7 @@ module.exports.SearchLoader = class SearchLoader {
             await this.genFolder(locations.functions)
         }
         this.aliases = new DataStore()
-        await this.loadMF(this, locations.messageFunctions)
+        await this.loadObserver(this, locations.observers)
         await this.loadBF(this, locations.bootFunctions)
         await this.loadSnippets(this, locations.snippets)
         await this.loadPermissions(this, locations.permissions)
@@ -102,8 +102,8 @@ module.exports.SearchLoader = class SearchLoader {
         u.commands.forEach((i, n) => {
             c.commands.set(n, i)
         })
-        u.functions.message.forEach((i, n) => {
-            c.functions.message.set(n, i)
+        u.functions.observer.forEach((i, n) => {
+            c.functions.observer.set(n, i)
         })
         u.functions.boot.forEach((i, n) => {
             c.functions.boot.set(n, i)
