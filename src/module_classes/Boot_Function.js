@@ -28,7 +28,9 @@ module.exports = function(client) {
                 this.delay = nr
             }
         }
-
+        export (module) {
+            module.exports = this;
+        }
 
     }
 }

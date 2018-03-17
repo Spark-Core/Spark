@@ -26,7 +26,9 @@ module.exports = function() {
             }
             this.level = level;
         }
-
-
+        export (module) {
+            module.exports = this;
+        }
     }
+
 }

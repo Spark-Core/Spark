@@ -19,7 +19,9 @@ module.exports = function(client) {
                 this.event = event
             }
         }
-
+        export (module) {
+            module.exports = this;
+        }
 
     }
 }

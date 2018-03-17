@@ -25,7 +25,9 @@ module.exports = function(client) {
 
 
         }
-
+        export (module) {
+            module.exports = this;
+        }
 
     }
 }

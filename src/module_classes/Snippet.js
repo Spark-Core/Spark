@@ -7,6 +7,8 @@ module.exports = function(client) {
             this.options = options
             this.client = client
         }
-
+        export (module) {
+            module.exports = this;
+        }
     }
 }
