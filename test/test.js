@@ -57,15 +57,15 @@ describe('Searching & loading files', async function() {
         })
     })
 
-    describe("Message Functions", function() {
-        it('Loads the message functions', async function() {
-            observer = await loader.loadobserver(loader, loader.clientLocations.observers)
+    describe("Observers", function() {
+        it('Loads the observers', async function() {
+            observer = await loader.loadObserver(loader, loader.clientLocations.observers)
         })
         it('Returns an Array', function() {
-            expect(observer.constructor.name, "MessageFunction return class name").to.equal("Array")
+            expect(observer.constructor.name, "Observer return class name").to.equal("Array")
         })
-        it("Has the built-in message functions loaded", function() {
-            expect(permissions, "message function files\n-example.js").to.have.lengthOf(1);
+        it("Has the built-in observers loaded", function() {
+            expect(permissions, "Observers files\n-example.js").to.have.lengthOf(1);
         })
         it("Has a name and code property", function() {
             expect(observer[0].observer).to.have.property("name")
