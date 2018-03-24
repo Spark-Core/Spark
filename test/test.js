@@ -31,7 +31,7 @@ describe('Searching & loading files', async function() {
             expect(permissions.constructor.name, "Permission return class name").to.equal("Array")
         })
         it("Has the built-in permissions loaded", function() {
-            expect(permissions, "Permission files\n- member.js").to.have.lengthOf(1);
+            expect(permissions, "Permission files\n- member.js\n- owner.js").to.have.lengthOf(2);
 
         })
         it("Has a name, level and code property", function() {
@@ -49,7 +49,7 @@ describe('Searching & loading files', async function() {
             expect(bf.constructor.name, "BootFunction return class name").to.equal("Array")
         })
         it("Has the built-in boot functions loaded", function() {
-            expect(permissions, "boot function files\n-checkUpdate.js").to.have.lengthOf(1);
+            expect(bf, "boot function files\n-checkUpdate.js").to.have.lengthOf(1);
         })
         it("Has a name and code property", function() {
             expect(bf[0].bf).to.have.property("name")
@@ -65,7 +65,7 @@ describe('Searching & loading files', async function() {
             expect(observer.constructor.name, "Observer return class name").to.equal("Array")
         })
         it("Has the built-in observers loaded", function() {
-            expect(permissions, "Observers files\n-example.js").to.have.lengthOf(1);
+            expect(observer, "Observers files\n-example.js").to.have.lengthOf(1);
         })
         it("Has a name and code property", function() {
             expect(observer[0].observer).to.have.property("name")
@@ -97,7 +97,7 @@ describe('Searching & loading files', async function() {
             expect(events.constructor.name, "Event return class name").to.equal("Array")
         })
         it("Has the built-in Event loaded", function() {
-            expect(snippets, "event files\n-example.js").to.have.lengthOf(1);
+            expect(events, "event files\n-example.js").to.have.lengthOf(1);
         })
         it("Has a name, event and code property", function() {
             expect(events[0].event).to.have.property("name")
