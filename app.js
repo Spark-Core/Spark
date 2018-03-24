@@ -5,7 +5,6 @@ const startBot = require("./src/start.js")
 const confirmConfig = require("./src/confirmConfig.js")
 let Client;
 
-
 /*
     All modular classes
 */
@@ -45,7 +44,9 @@ exports.event = function(name, options) {
 }
 
 exports.start = function(options) {
-    if (!confirmConfig(options)) {return}
+    if (!confirmConfig(options)) {
+        return
+    }
     if (typeof options.ignoreBots != "boolean" && typeof options.ignoreBots != "string" && options.ignoreBots != null) {
         return console.log(`You're trying to start with ${chalk.red("an invalid option:")} ${chalk.red("ignoreBots")}, Please read this article on the docs on how to use this option: ${chalk.blue("https://discordspark.tk/docs/config")}`)
     }
@@ -68,14 +69,15 @@ exports.start = function(options) {
             this.CustomConfig = exports.CustomConfig
         }
 
-
         async search() {
             var data = await require("./src/search.js").func(this)
             return data;
         }
         async start() {
             this.dataStore = await this.dataStore;
-            if (this.config.first) {console.log(`Welcome to ${chalk.yellow(`Spark V${this.version}`)}!\nTo see the changelog for this update go to this page:\n${chalk.blue("https://github.com/TobiasFeld22/Spark/releases")}\nTo learn more about using Spark, please visit our docs:\n${chalk.blue("https://discordspark.tk/")}\n-------------------`)}
+            if (this.config.first) {
+                console.log(`Welcome to ${chalk.yellow(`Spark V${this.version}`)}!\nTo see the changelog for this update go to this page:\n${chalk.blue("https://github.com/TobiasFeld22/Spark/releases")}\nTo learn more about using Spark, please visit our docs:\n${chalk.blue("https://discordspark.tk/")}\n-------------------`)
+            }
 
             function colours(text, size) {
                 if (size == 0) {
@@ -101,6 +103,13 @@ exports.start = function(options) {
     });
     Client.config = options
     Client.login(options.token).then(async () => {
+        try {
+            var application = await Client.fetchApplication()
+            Client.config.ownerID = application.owner.id
+        } catch (e) {
+            console.log(e)
+            throw Error("Couldn't fetch application, token may be a invalid / user token. ")
+        }
         Client.guilds.forEach(i => {
             i.customConfig = new exports.CustomConfig(Client, i.id);
             Client.customConfig.set(i.id, i.customConfig)
@@ -108,7 +117,9 @@ exports.start = function(options) {
         Client.dataStore = await Client.search()
         Client.snippets = {
             list: (name) => {
-                if (!name) {return Client.dataStore.functions.snippet.map((i, n) => n)} else if (Client.dataStore.functions.snippet.has(name)) {
+                if (!name) {
+                    return Client.dataStore.functions.snippet.map((i, n) => n)
+                } else if (Client.dataStore.functions.snippet.has(name)) {
                     return Client.dataStore.functions.snippet.get(name)
                 }
                 return null;

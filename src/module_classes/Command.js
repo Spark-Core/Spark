@@ -8,8 +8,16 @@ module.exports = function() {
             this.client = client
             this.aliases = []
             this.level = (options.level || 0)
+            this.disabled = options.disabled
+            if (this.disabled) {
+                this.client.config.disabled.add("commands", this.name)
+            }
+
         }
 
+        disable() {
+            this.client.config.disabled.add("commands", this.name)
+        }
 
         addAlias(alias) {
             if (typeof alias != "string") {

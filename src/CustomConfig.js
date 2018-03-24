@@ -1,9 +1,11 @@
+var DisableCache = require("./DisableCache.js")
 module.exports = class CustomConfig {
 
     constructor(client, id) {
         this.id = id;
         this.client = client;
         this.ignoreBots = null;
+        this.disabled = new DisableCache({})
     }
 
     setPrefix(prefix) {
@@ -48,5 +50,11 @@ module.exports = class CustomConfig {
     clearIgnoreBots() {
         this.ignoreBots = null;
         this.client.emit("cc_update")
+    }
+    disable(type, name) {
+        this.disabled.add(type, name)
+    }
+    enable(type, name) {
+        this.disabled.remove(type, name)
     }
 }

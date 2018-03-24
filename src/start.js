@@ -3,6 +3,7 @@ module.exports = (client) => {
 
     function bf() {
         client.dataStore.functions.boot.forEach(i => {
+            if (client.config.disabled.has("bf", i.bf.name)) {return}
             setTimeout(() => {
                 if (i.bf.time == 0) {
                     i.bf.code(client)
@@ -18,6 +19,7 @@ module.exports = (client) => {
 
 
     client.dataStore.events.forEach(i => {
+        if (client.config.disabled.has("events", i.event.name)) {return}
         client.on(i.event.event, (one, two, three) => {
             i.event.code(client, one, two, three)
         })
@@ -34,6 +36,8 @@ module.exports = (client) => {
         client.config.prefix.forEach(async i => {
             if (message.content.startsWith(i)) {
                 var command = await isValidCommand(client, message, message.content.split(" ")[0].replace(i, "").toLowerCase())
+                if (client.config.disabled.has("commands", command.name)) {return}
+                if (client.customConfig.get(message.guild.id).disabled.has("commands", command.name)) {return}
                 if (command.value == true) {
                     if (await observer(client, message, command.value)) {executeCommand(client, message, command.name)}
                 } else {
@@ -61,8 +65,10 @@ async function observer(client, message, command) {
         if (ignoreBots >= 3) {return}
         try {
             results = await client.dataStore.functions.observer.filter(i => {
-                return (i.observer.type == "all" || i.observer.type == "commands")
-            }).map(i => (i.observer.code(client, message)))
+                    return (i.observer.type == "all" || i.observer.type == "commands")
+                })
+                .filter(i => (client.config.disabled.has("observers", i.observer.name) == false && client.customConfig.get(message.guild.id).disabled.has("observers", i.observer.name)))
+                .map(i => (i.observer.code(client, message)))
         } catch (e) {
             console.log(e)
         }
@@ -74,8 +80,10 @@ async function observer(client, message, command) {
     if (ignoreBots == 2 || ignoreBots == 4) {return}
     try {
         results = await client.dataStore.functions.observer.filter(i => {
-            return (i.observer.type == "all" || i.observer.type == "messages")
-        }).map(i => (i.observer.code(client, message)))
+                return (i.observer.type == "all" || i.observer.type == "messages")
+            })
+            .filter(i => (client.config.disabled.has("observers", i.observer.name) == false && client.customConfig.get(message.guild.id).disabled.has("observers", i.observer.name)))
+            .map(i => (i.observer.code(client, message)))
     } catch (e) {
         console.log(e)
     }
@@ -86,8 +94,9 @@ async function isValidCommand(client, message, commandName) {
     if (client.dataStore.commands.has(commandName)) {
         var {command} = client.dataStore.commands.get(commandName)
         var permissions = client.dataStore.permissions.filter(i => {
-            return i.permission.level == command.level
-        })
+                return i.permission.level == command.level
+            })
+            .filter(i => (client.config.disabled.has("permissions", i.permission.name) == false && client.customConfig.get(message.guild.id).disabled.has("permissions", i.permission.name)))
         if (permissions.size == 0) {return true}
         var results = permissions.map(async i => {
             var {permission} = i

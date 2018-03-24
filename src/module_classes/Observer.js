@@ -9,8 +9,16 @@ module.exports = function(client) {
                 options = {}
             }
             this.type = options.type
+            this.disabled = options.disabled
+            if (this.disabled) {
+                this.client.config.disabled.add("observers", this.name)
+            }
+
         }
 
+        disable() {
+            this.client.config.disabled.add("observers", this.name)
+        }
 
         setType(type) {
             if (!type || typeof type != "string" || ![

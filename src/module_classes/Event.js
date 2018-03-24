@@ -9,8 +9,16 @@ module.exports = function(client) {
                 options = {}
             }
             this.event = options.event
+            this.disabled = options.disabled
+            if (this.disabled) {
+                this.client.config.disabled.add("events", this.name)
+            }
+
         }
 
+        disable() {
+            this.client.config.disabled.add("events", this.name)
+        }
 
         setEvent(event) {
             if (!event || typeof event != "string") {

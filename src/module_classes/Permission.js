@@ -7,6 +7,14 @@ module.exports = function(client) {
             this.options = options
             this.client = client
             this.level = (options.level || 0)
+            this.disabled = options.disabled
+            if (this.disabled) {
+                this.client.config.disabled.add("permissions", this.name)
+            }
+
+        }
+        disable() {
+            this.client.config.disabled.add("permissions", this.name)
         }
         setLevel(level) {
             if (typeof level != "number") {
