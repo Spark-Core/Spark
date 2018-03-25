@@ -19,11 +19,10 @@ Command.code = async (client, message) => {
       embed.setDescription(`Hello, I am ${client.user.tag}. I am owned and maintained by <@${client.config.ownerID}>, created with the Discord.JS framework known as **Spark**.\n\n`+
       "Spark is a powerful modular framework that makes creating Discord bots easy.")
       embed.addField("Prefix(es):", prefixText, true)
-      embed.addField("Spark Version:", Spark.version, true)
       embed.addField("Servers:", client.guilds.size, true)
       embed.addField("Users:", client.users.size, true)
-      embed.addField("Voice Connections:", client.voiceConnections.size, true)
-      embed.addField("Memory Usage:", `${v} MB`, true)
+      embed.addField("Memory Usage:", `${v} MB`, false)
+      embed.addField("Spark Version:", Spark.version, false)
       embed.addField("More Information:", "Feel free to visit our [website](https://discordspark.tk) or our discord [server](https://discord.gg/TezD2Zg) for more information about the Spark Framework.", false)
       embed.setFooter("Made with Spark")
       embed.setTimestamp()
@@ -39,7 +38,6 @@ Command.code = async (client, message) => {
     "__Statistics__\n"+
     `I am currently in \`${client.guilds.size}\` servers.\n`+
     `I am being used by \`${client.users.size}\` users.\n`+
-    `I have \`${client.voiceConnections.size}\` voice connections.\n`+
     `I am using \`${v}\` MB of memory.\n\n`+
     "For more information about the **Spark** framework visit https://discord.gg/TezD2Zg or the website https://discordspark.tk")
 
