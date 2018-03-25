@@ -96,8 +96,8 @@ async function isValidCommand(client, message, commandName) {
         var permissions = client.dataStore.permissions.filter(i => {
                 return i.permission.level == command.level
             })
-            .filter(i => (client.config.disabled.has("permissions", i.permission.name) == false && client.customConfig.get(message.guild.id).disabled.has("permissions", i.permission.name)))
-        if (permissions.size == 0) {return true}
+            .filter(i => (client.config.disabled.has("permissions", i.permission.name) == false && client.customConfig.get(message.guild.id).disabled.has("permissions", i.permission.name) == false))
+        if (permissions.size == 0) {return {value: false, name: commandName}}
         var results = permissions.map(async i => {
             var {permission} = i
             var result = await permission.code(client, message)
