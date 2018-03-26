@@ -14,7 +14,7 @@ describe('Searching & loading files', async function() {
             expect(commands.constructor.name, "Command return class name").to.equal("Array")
         })
         it("Has the built-in commands loaded", function() {
-            expect(commands, "Command files\n- about.js\n- ping.js").to.have.lengthOf(2);
+            expect(commands, "Command files\n- about.js\n- ping.js\n- reload.js\n- reboot.js").to.have.lengthOf(4);
         })
         it("Has a name, level and code property", function() {
             expect(commands[0].command).to.have.property("name")
