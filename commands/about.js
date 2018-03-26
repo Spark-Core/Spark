@@ -2,7 +2,6 @@ var Spark = require("../")
 const Command = Spark.command("about")
 const embed = new Spark.methods.RichEmbed();
 
-Command.addAlias("test-alias")
 Command.setLevel(0)
 
 Command.code = async (client, message) => {
