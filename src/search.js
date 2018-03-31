@@ -19,7 +19,7 @@ module.exports.SearchLoader = class SearchLoader {
         }
         this.loadCommands = require("./search_files/loadCommands.js")
         this.loadObserver = require("./search_files/loadObserver.js")
-        this.loadBF = require("./search_files/loadBF.js")
+        this.loadEngines = require("./search_files/loadEngines.js")
         this.loadSnippets = require("./search_files/loadSnippet.js")
         this.loadPermissions = require("./search_files/loadPermission.js")
         this.loadEvents = require("./search_files/loadEvent.js")
@@ -30,7 +30,7 @@ module.exports.SearchLoader = class SearchLoader {
             "commands": resolve(location, "commands"),
             "functions": resolve(location, "functions"),
             "observers": resolve(location, "functions/observers"),
-            "bootFunctions": resolve(location, "functions/boot"),
+            "engines": resolve(location, "functions/engines"),
             "snippets": resolve(location, "functions/snippets"),
             "events": resolve(location, "events"),
             "permissions": resolve(location, "permissions")
@@ -45,7 +45,7 @@ module.exports.SearchLoader = class SearchLoader {
         }
         this.aliases = new DataStore()
         await this.loadObserver(this, locations.observers)
-        await this.loadBF(this, locations.bootFunctions)
+        await this.loadEngines(this, locations.engines)
         await this.loadSnippets(this, locations.snippets)
         await this.loadPermissions(this, locations.permissions)
         await this.loadEvents(this, locations.events)
@@ -105,8 +105,8 @@ module.exports.SearchLoader = class SearchLoader {
         u.functions.observer.forEach((i, n) => {
             c.functions.observer.set(n, i)
         })
-        u.functions.boot.forEach((i, n) => {
-            c.functions.boot.set(n, i)
+        u.functions.engines.forEach((i, n) => {
+            c.functions.engines.set(n, i)
         })
         u.functions.snippet.forEach((i, n) => {
             c.functions.snippet.set(n, i)
@@ -117,9 +117,9 @@ module.exports.SearchLoader = class SearchLoader {
         u.aliases.forEach((i, n) => {
             c.aliases.set(n, i)
         })
-        // u.events.forEach((i,n) => {
-        //    c.events.set(n, i)
-        // })
+        u.events.forEach((i,n) => {
+          c.events.set(n, i)
+        })
         //
         // for future reference
         return c;

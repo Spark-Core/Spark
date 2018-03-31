@@ -3,7 +3,7 @@ module.exports = class DisableCache {
     constructor(initial) {
         this.commands = [];
         this.observers = [];
-        this.bf = [];
+        this.engines = [];
         this.snippets = [];
         this.permissions = [];
         this.events = [];
@@ -14,8 +14,8 @@ module.exports = class DisableCache {
         if (initial.observers && initial.observers.length > 0) {
             initial.observers.forEach(i => this.add("observers", i))
         }
-        if (initial.bf && initial.bf.length > 0) {
-            initial.bf.forEach(i => this.add("bf", i))
+        if (initial.engines && initial.engines.length > 0) {
+            initial.engines.forEach(i => this.add("engine", i))
         }
         if (initial.events && initial.events.length > 0) {
             initial.events.forEach(i => this.add("events", i))

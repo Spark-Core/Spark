@@ -41,19 +41,19 @@ describe('Searching & loading files', async function() {
         })
     })
 
-    describe("Boot Functions", function() {
-        it('Loads the boot functions', async function() {
-            bf = await loader.loadBF(loader, loader.clientLocations.bootFunctions)
+    describe("Engines", function() {
+        it('Loads the engines', async function() {
+            engine = await loader.loadEngines(loader, loader.clientLocations.engines)
         })
         it('Returns an Array', function() {
-            expect(bf.constructor.name, "BootFunction return class name").to.equal("Array")
+            expect(engine.constructor.name, "Engine return class name").to.equal("Array")
         })
-        it("Has the built-in boot functions loaded", function() {
-            expect(bf, "boot function files\n-checkUpdate.js").to.have.lengthOf(1);
+        it("Has the built-in engines loaded", function() {
+            expect(engine, "engine files\n-checkUpdate.js").to.have.lengthOf(1);
         })
         it("Has a name and code property", function() {
-            expect(bf[0].bf).to.have.property("name")
-            expect(bf[0].bf).to.have.property("code")
+            expect(engine[0].engine).to.have.property("name")
+            expect(engine[0].engine).to.have.property("code")
         })
     })
 

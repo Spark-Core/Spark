@@ -1,5 +1,5 @@
 module.exports = function(client) {
-    return class BF {
+    return class Engine {
         constructor(name, options) {
             this.name = name;
             this.options = options
@@ -11,7 +11,7 @@ module.exports = function(client) {
             this.delay = options.delay
             this.disabled = options.disabled
             if (this.disabled) {
-                this.client.config.disabled.add("bf", this.name)
+                this.client.config.disabled.add("engine", this.name)
             }
         }
 
@@ -33,7 +33,7 @@ module.exports = function(client) {
         }
 
         disable() {
-            this.client.config.disabled.add("bf", this.name)
+            this.client.config.disabled.add("engine", this.name)
         }
 
         export (module) {

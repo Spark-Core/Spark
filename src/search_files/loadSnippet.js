@@ -25,7 +25,7 @@ module.exports = async function(data, location) {
             return;
         }
         if (typeof snippet.code != "function") {
-            console.warn(`${i.location} | Error while loading boot function: \n No code specified. | see https://discordspark.tk/docs/boot_function for more info.`)
+            console.warn(`${i.location} | Error while loading snippet: \n No code specified. | see https://discordspark.tk/docs/snippets for more info.`)
             i = null;
         }
 

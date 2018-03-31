@@ -1,21 +1,21 @@
 var Chalk = require("chalk")
 module.exports = (client) => {
 
-    function bf() {
-        client.dataStore.functions.boot.forEach(i => {
-            if (client.config.disabled.has("bf", i.bf.name)) {
+    function engine() {
+        client.dataStore.functions.engines.forEach(i => {
+            if (client.config.disabled.has("engine", i.engine.name)) {
                 return
             }
             setTimeout(() => {
-                if (i.bf.time == 0) {
-                    i.bf.code(client)
+                if (i.engine.time == 0) {
+                    i.engine.code(client)
                 } else {
-                    i.bf.code(client)
+                    i.engine.code(client)
                     setInterval(() => {
-                        i.bf.code(client)
-                    }, i.bf.time)
+                        i.engine.code(client)
+                    }, i.engine.time)
                 }
-            }, i.bf.delay)
+            }, i.engine.delay)
         })
     }
 
@@ -36,7 +36,7 @@ module.exports = (client) => {
         guild.customConfig = new client.CustomConfig()
         client.customConfig.set(guild.id, guild.customConfig)
     })
-    bf()
+    engine()
 
     client.on("message", (message) => {
         client.config.prefix.forEach(async i => {

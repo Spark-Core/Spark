@@ -23,9 +23,9 @@ exports.observer = function (name, options) {
     return new Observer(name, options)
 }
 
-exports.bf = function (name, options) {
-    const BF = require("./src/module_classes/Boot_Function.js")(Client)
-    return new BF(name, options)
+exports.engine = function (name, options) {
+    const Engine = require("./src/module_classes/Engine.js")(Client)
+    return new Engine(name, options)
 }
 
 exports.snippet = function (name, options) {
@@ -86,14 +86,14 @@ exports.start = function (options) {
                 return chalk.green(text)
             }
             var commandtext = colours(`${this.dataStore.commands.size} commands\n`, this.dataStore.commands.size)
-            var mftext = colours(`${this.dataStore.functions.observer.size} observers\n`, this.dataStore.functions.observer.size)
-            var bftext = colours(`${this.dataStore.functions.boot.size} boot functions\n`, this.dataStore.functions.boot.size)
+            var observertext = colours(`${this.dataStore.functions.observer.size} observers\n`, this.dataStore.functions.observer.size)
+            var enginetext = colours(`${this.dataStore.functions.engines.size} engines\n`, this.dataStore.functions.engines.size)
             var snippettext = colours(`${this.dataStore.functions.snippet.size} snippets\n`, this.dataStore.functions.snippet.size)
             var permissiontext = colours(`${this.dataStore.permissions.size} permissions\n`, this.dataStore.permissions.size)
             var eventtext = colours(`${this.dataStore.events.size} events\n`, this.dataStore.events.size)
             startBot(this)
 
-            console.log(`Your bot (${chalk.yellow(this.user.tag)}) is now ${chalk.green("online!")} | Running on ${this.guilds.size} servers | ${chalk.yellow(`Spark v${this.version}`)}\nWe detected the following data:\n \n ${commandtext} ${mftext} ${bftext} ${snippettext} ${permissiontext} ${eventtext}`)
+            console.log(`Your bot (${chalk.yellow(this.user.tag)}) is now ${chalk.green("online!")} | Running on ${this.guilds.size} servers | ${chalk.yellow(`Spark v${this.version}`)}\nWe detected the following data:\n \n ${commandtext} ${observertext} ${enginetext} ${snippettext} ${permissiontext} ${eventtext}`)
         }
 
     }

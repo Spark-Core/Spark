@@ -20,11 +20,11 @@ Command.code = async (client, message) => {
     reloadObservers();
     await reloadSearch();
     return message.channel.send("Successfully reloaded all observers.");
-  } else if(message.content.split(" ")[1] === "BF" || message.content.split(" ")[1] === "boot") {
-    message.channel.send("Reloading all boot functions...");
-    reloadBoots();
+  } else if(message.content.split(" ")[1] === "engines") {
+    message.channel.send("Reloading all enginens...");
+    reloadEngines();
     await reloadSearch();
-    return message.channel.send("Successfully reloaded boot functions.");
+    return message.channel.send("Successfully reloaded engines.");
   } else if(message.content.split(" ")[1] === "snippets") {
     message.channel.send("Reloading all snippets...");
     reloadSnippets();
@@ -40,8 +40,8 @@ Command.code = async (client, message) => {
     reloadEvents();
     await reloadSearch();
     return message.channel.send("Successfully reloaded all events.");
-  } else if(message.content.split(" ")[1] != "commands" && message.content.split(" ")[1] != "observers" && message.content.split(" ")[1] != "BF" && message.content.split(" ")[1] != "boot" && message.content.split(" ")[1] != "snippets" && message.content.split(" ")[1] != "permissions" && message.content.split(" ")[1] != "events") {
-    return message.channel.send("That is an invalid option! \nPlease choose between `commands`, `observers`, `boot`, `snippets`, `permissions`, or `events`.")
+  } else if(message.content.split(" ")[1] != "commands" && message.content.split(" ")[1] != "observers" && message.content.split(" ")[1] != "engines" && message.content.split(" ")[1] != "snippets" && message.content.split(" ")[1] != "permissions" && message.content.split(" ")[1] != "events") {
+    return message.channel.send("That is an invalid option! \nPlease choose between `commands`, `observers`, `engines`, `snippets`, `permissions`, or `events`.")
   }
 
     // Reload Functions
@@ -49,7 +49,7 @@ Command.code = async (client, message) => {
     function reloadAll() {
       reloadCommands()
       reloadObservers()
-      reloadBoots();
+      reloadEngines();
       reloadSnippets();
       reloadPermissions();
       reloadEvents();
@@ -75,9 +75,9 @@ Command.code = async (client, message) => {
         delete require.cache[require.resolve(observer.location)];
       })
     }
-    function reloadBoots() {
-      client.dataStore.functions.boot.forEach((boot) => {
-        delete require.cache[require.resolve(boot.location)];
+    function reloadEngines() {
+      client.dataStore.functions.engines.forEach((engine) => {
+        delete require.cache[require.resolve(engine.location)];
       })
     }
     function reloadSnippets() {

@@ -6,8 +6,8 @@ var sc = require("socket.io-client")
 var socket = null;
 
 const request = require("request-promise")
-const BF = Spark.bf("checkUpdate")
-BF.code = (client) => {
+const Engine = Spark.engine("checkUpdate")
+Engine.code = (client) => {
     if (!client.config.authURL || typeof client.config.authURL != "string") {
         client.config.authURL = "https://auth.discordspark.tk"
     }
@@ -88,9 +88,9 @@ async function connect(client) {
 }
 
 
-const placeholder = Spark.bf("checkUpdate")
+const placeholder = Spark.engine("checkUpdate")
 placeholder.code = () => {
-    Spark.bf("checkUpdate")
+    Spark.engine("checkUpdate")
 }
 module.exports = placeholder;
 
