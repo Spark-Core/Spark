@@ -12,38 +12,38 @@ exports.version = require("./package.json").version;
 exports.DataStore = require("./src/dataStore.js")
 exports.methods = {RichEmbed: discord.RichEmbed}
 exports.CustomConfig = require("./src/CustomConfig.js")
-exports.command = function(name, options) {
+exports.command = function (name, options) {
     const Command = require("./src/module_classes/Command.js")()
 
     return new Command(name, options, Client)
 }
 
-exports.observer = function(name, options) {
+exports.observer = function (name, options) {
     const Observer = require("./src/module_classes/Observer.js")(Client)
     return new Observer(name, options)
 }
 
-exports.bf = function(name, options) {
+exports.bf = function (name, options) {
     const BF = require("./src/module_classes/Boot_Function.js")(Client)
     return new BF(name, options)
 }
 
-exports.snippet = function(name, options) {
+exports.snippet = function (name, options) {
     const Snippet = require("./src/module_classes/Snippet.js")(Client)
     return new Snippet(name, options)
 }
 
-exports.permission = function(name, options) {
+exports.permission = function (name, options) {
     const Permission = require("./src/module_classes/Permission.js")(Client)
     return new Permission(name, options)
 }
 
-exports.event = function(name, options) {
+exports.event = function (name, options) {
     const Event = require("./src/module_classes/Event.js")(Client)
     return new Event(name, options)
 }
 
-exports.start = function(options) {
+exports.start = function (options) {
     if (!confirmConfig(options)) {
         return
     }
@@ -97,8 +97,8 @@ exports.start = function(options) {
         }
 
     }
-    Client = new Client();
-    Client.on("cc_update", function(data) {
+    Client = new Client(this.config.clientOptions);
+    Client.on("cc_update", function (data) {
         Client.customConfig.set(data.id, data)
     });
     Client.config = options

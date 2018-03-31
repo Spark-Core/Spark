@@ -27,5 +27,8 @@ module.exports = (options) => {
     } else {
         return console.log(`You're trying to start without ${chalk.red("a valid prefix")}, please read this article on our docs on how to setup your bot: ${chalk.blue("https://discordspark.tk/getting-started")}`)
     }
+    if (typeof options.clientOptions != "object") {
+        options.clientOptions = {}
+    }
     return true;
 }
