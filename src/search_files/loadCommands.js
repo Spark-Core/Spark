@@ -1,6 +1,8 @@
 const DataStore = require("./../dataStore.js")
 module.exports = async function(data, location) {
-    if (!data.dataStore) {data.dataStore = {}}
+    if (!data.dataStore) {
+        data.dataStore = {}
+    }
     data.dataStore.commands = new DataStore();
     data.dataStore.aliases = new DataStore();
     var tempcommands = await data.searchInDirectories(location);
@@ -8,7 +10,10 @@ module.exports = async function(data, location) {
     tempcommands.forEach(i => {
         try {
             var temp = require(i)
-            commands.push({command: temp, location: i})
+            commands.push({
+                command: temp,
+                location: i
+            })
         } catch (e) {
             console.error(`${i} | Error while loading command: \n ${e}`)
         }
@@ -41,5 +46,5 @@ module.exports = async function(data, location) {
             data.dataStore.commands.set(i.command.name.toLowerCase(), i)
         }
     })
-    return commands
+    return commands;
 }
