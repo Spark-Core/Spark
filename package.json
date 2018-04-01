@@ -1,7 +1,7 @@
 {
   "name": "sparkbots",
   "version": "0.1.0",
-  "description": "An easy to use discord bot, which uses small modules for getting commands and messages. ",
+  "description": "Spark is a powerful modular framework that makes creating Discord bots easy.",
   "main": "app.js",
   "dependencies": {
     "chalk": "^2.3.0",
