@@ -15,7 +15,7 @@ module.exports = class DisableCache {
             initial.observers.forEach(i => this.add("observers", i))
         }
         if (initial.engines && initial.engines.length > 0) {
-            initial.engines.forEach(i => this.add("engine", i))
+            initial.engines.forEach(i => this.add("engines", i))
         }
         if (initial.events && initial.events.length > 0) {
             initial.events.forEach(i => this.add("events", i))

@@ -33,7 +33,7 @@ module.exports = function(client) {
         }
 
         disable() {
-            this.client.config.disabled.add("engine", this.name)
+            this.client.config.disabled.add("engines", this.name)
         }
 
         export (module) {
