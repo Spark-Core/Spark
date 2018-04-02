@@ -3,7 +3,7 @@ module.exports = (client) => {
 
     function engine() {
         client.dataStore.functions.engines.forEach(i => {
-            if (client.config.disabled.has("engine", i.engine.name)) {
+            if (client.config.disabled.has("engines", i.engine.name)) {
                 return
             }
             setTimeout(() => {
@@ -18,9 +18,6 @@ module.exports = (client) => {
             }, i.engine.delay)
         })
     }
-
-
-
 
     client.dataStore.events.forEach(i => {
         if (client.config.disabled.has("events", i.event.name)) {

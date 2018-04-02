@@ -61,8 +61,8 @@ exports.start = function (options) {
     }
 
     Client = class Client extends discord.Client {
-        constructor() {
-            super()
+        constructor(config) {
+            super(config)
             this.version = require("./package.json").version
             this.config = {}
             this.customConfig = new exports.DataStore()
@@ -97,7 +97,7 @@ exports.start = function (options) {
         }
 
     }
-    Client = new Client(this.config.clientOptions);
+    Client = new Client(options.clientOptions);
     Client.on("cc_update", function (data) {
         Client.customConfig.set(data.id, data)
     });
