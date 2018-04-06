@@ -1,10 +1,16 @@
 const Spark = require("../")
-const { SearchLoader } = require("../src/search.js")
+const {
+    SearchLoader
+} = require("../src/search.js")
 const DataStore = require("../src/dataStore.js")
-const { expect } = require("chai")
+const {
+    expect
+} = require("chai")
 
 describe('Searching & loading files', async function() {
-    let loader = new SearchLoader({ options: {} })
+    let loader = new SearchLoader({
+        options: {}
+    })
     let commands;
     describe("Commands", function() {
         it('Loads the commands', async function() {
@@ -49,7 +55,7 @@ describe('Searching & loading files', async function() {
             expect(engine.constructor.name, "Engine return class name").to.equal("Array")
         })
         it("Has the built-in engines loaded", function() {
-            expect(engine, "engine files\n-checkUpdate.js").to.have.lengthOf(1);
+            expect(engine, "engine files\n-checkUpdate.js").to.have.lengthOf(2);
         })
         it("Has a name and code property", function() {
             expect(engine[0].engine).to.have.property("name")
@@ -110,7 +116,16 @@ describe('Searching & loading files', async function() {
 describe("Data collecting and processing", function() {
     describe("DataStore", function() {
 
-        var data = [{ key: "1", value: 1 }, { key: "2", value: 2 }, { key: "3", value: 3 }]
+        var data = [{
+            key: "1",
+            value: 1
+        }, {
+            key: "2",
+            value: 2
+        }, {
+            key: "3",
+            value: 3
+        }]
         var datastore = new DataStore();
         it('Creates and adds data to the dataStore', function() {
             data.forEach(function(i) {
