@@ -20,7 +20,7 @@ describe('Searching & loading files', async function() {
             expect(commands.constructor.name, "Command return class name").to.equal("Array")
         })
         it("Has the built-in commands loaded", function() {
-            expect(commands, "Command files\n- about.js\n- ping.js\n- reload.js\n- reboot.js").to.have.lengthOf(4);
+            expect(commands, "Command files\n- about.js\n- ping.js\n- reload.js\n- reboot.js\n- help.js").to.have.lengthOf.above(1);
         })
         it("Has a name, level and code property", function() {
             expect(commands[0].command).to.have.property("name")
@@ -37,8 +37,7 @@ describe('Searching & loading files', async function() {
             expect(permissions.constructor.name, "Permission return class name").to.equal("Array")
         })
         it("Has the built-in permissions loaded", function() {
-            expect(permissions, "Permission files\n- member.js\n- owner.js").to.have.lengthOf(2);
-
+            expect(permissions, "Permission files\n- member.js\n- owner.js").to.have.lengthOf.above(1);
         })
         it("Has a name, level and code property", function() {
             expect(permissions[0].permission).to.have.property("name")
@@ -55,7 +54,7 @@ describe('Searching & loading files', async function() {
             expect(engine.constructor.name, "Engine return class name").to.equal("Array")
         })
         it("Has the built-in engines loaded", function() {
-            expect(engine, "engine files\n-checkUpdate.js").to.have.lengthOf(2);
+            expect(engine, "engine files\n-checkUpdate.js").to.have.lengthOf.above(1);
         })
         it("Has a name and code property", function() {
             expect(engine[0].engine).to.have.property("name")
@@ -71,7 +70,7 @@ describe('Searching & loading files', async function() {
             expect(observer.constructor.name, "Observer return class name").to.equal("Array")
         })
         it("Has the built-in observers loaded", function() {
-            expect(observer, "Observers files\n-example.js").to.have.lengthOf(1);
+            expect(observer, "Observers files\n-example.js").to.have.lengthOf.above(1);
         })
         it("Has a name and code property", function() {
             expect(observer[0].observer).to.have.property("name")
@@ -87,7 +86,7 @@ describe('Searching & loading files', async function() {
             expect(snippets.constructor.name, "Snippet return class name").to.equal("Array")
         })
         it("Has the built-in Snippet loaded", function() {
-            expect(snippets, "snippet files\n-example.js").to.have.lengthOf(1);
+            expect(snippets, "snippet files\n-example.js").to.have.lengthOf.above(1);
         })
         it("Has a name and code property", function() {
             expect(snippets[0].snippet).to.have.property("name")
@@ -103,7 +102,7 @@ describe('Searching & loading files', async function() {
             expect(events.constructor.name, "Event return class name").to.equal("Array")
         })
         it("Has the built-in Event loaded", function() {
-            expect(events, "event files\n-example.js").to.have.lengthOf(1);
+            expect(events, "event files\n-example.js").to.have.lengthOf.above(1);
         })
         it("Has a name, event and code property", function() {
             expect(events[0].event).to.have.property("name")
