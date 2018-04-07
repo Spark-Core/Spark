@@ -11,6 +11,7 @@ module.exports = function() {
           this.aliases = []
           this.level = (options.level || 0)
           this.dms = false
+          this.description = "No Description Provided"
           this.disabled = options.disabled
           if (this.disabled) {
               this.client.config.disabled.add("commands", this.name)
@@ -47,6 +48,13 @@ module.exports = function() {
               return console.log("To set allowDms, use a boolean")
           }
           this.dms = allow;
+      }
+
+      setDescription(description) {
+        if (typeof description != "string") {
+          return console.log("To set a description, use a string")
+        }
+        this.description = description;
       }
 
       export (module) {

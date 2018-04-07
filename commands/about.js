@@ -3,6 +3,7 @@ const Command = Spark.command("about")
 const embed = new Spark.methods.RichEmbed();
 
 Command.setLevel(0)
+Command.setDescription("Get information about this bot.")
 
 Command.code = async (client, message) => {
 

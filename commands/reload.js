@@ -2,6 +2,7 @@ var Spark = require("../")
 const Command = Spark.command("reload")
 
 Command.setLevel(10)
+Command.setDescription("Reload modules in your bot without restarting it.")
 
 Command.code = async (client, message) => {
 
