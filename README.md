@@ -10,10 +10,10 @@
 [![Build Status rewrite](https://api.travis-ci.org/TobiasFeld22/Spark.svg)](https://travis-ci.org/TobiasFeld22/Spark)<br>
 
 
-###### About spark.
+##### About Spark.
 Spark is a framework created so everyone can easily make powerful modular bots. 
 Spark handles the heavy work in the background so you can work on your own commands and data.
-We promote sharing modules you have made so other people can use these to learn and create their own servers.
+We promote sharing modules you have made so other people can use these to learn and create their own bots.
 
 We are always into people wanting to help out or having some fun, which can be done in our Discord server: https://discord.gg/TezD2Zg
 
