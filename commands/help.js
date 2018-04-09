@@ -47,7 +47,7 @@ Command.code = async (client, message) => {
                 return embed.addField("• " + command.name, command.description, false)
             })
             embed.setColor(client.config.embedColor || 0xffe13f)
-            embed.setFooter(data.commands.size + " commands loading")
+            embed.setFooter("You can use " + data.size + " commands.")
             return message.channel.send("", {embed});
         }
         var text = `**${client.user.username} help information**\nType \`${client.config.prefix[0]}help command-name\` to get more information.\n\n`
