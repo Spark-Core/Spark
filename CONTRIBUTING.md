@@ -5,7 +5,8 @@ We want to make it easy for you to help with developing, we just want to make su
 1. All code is examined using eslint (`npm install eslint && eslint .`), using our configuration file included inside of the repository.
 2. Malicious code is not allowed, deliberately adding bugs or causing (parts of) the framework to crash.
 3. All code submitted must be "beautified" before posting, if you want to keep it simple, just use [this one](http://jsbeautifier.org)
-4. Make pull requests to the Updates branch. No pull requests should be made for the master branch unless it's a major release.
+4. Never submit a pull request to the master branch. This is reserved for new updates.
+5. Please test your code before sending it off and trying to pr, use `npm test` and it will try to test with Eslint.
 
 ## Submitting a new issue
 

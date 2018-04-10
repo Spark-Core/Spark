@@ -1,146 +1,137 @@
-/* eslint no-console: 0 */
-/* eslint max-params: 0 */
-/* eslint func-style: 0 */
-const Discord = require("discord.js");
-const client = new Discord.Client();
-const setup = require("./setup.js");
-var util = require("./src/util.js");
-var chalk = require("chalk");
-client.developer = false;
-module.exports = {};
-module.exports.version = require("./package.json").version;
-module.exports.start = function(config) {
-    if (config.developer) {
-        client.developer = config.developer
-    }
-    if (config.ignoreBots == null) {
-        config.ignoreBots = false
-    } else if (![
-            true,
-            "command",
-            "message"
-        ].includes(config.ignoreBots)) {
-        config.ignoreBots = false;
-        console.log(`[${chalk.red("Config error")}] ${chalk.blue("ignoreBots")} has an invalid value. Must be one of these: ${chalk.blue("true")} , ${chalk.blue("\"command\"")}, ${chalk.blue("\"message\"")}`)
-    }
-    console.log(chalk.yellow("Booting Spark"))
-    setup(config, require("path").dirname(require.main.filename)).then((data) => {
-        client.commanddata = data.commands;
-        client.permissions = data.permissions
-        client.events = data.events;
-        client.functions = data.functions
-        client.functions.types = {
-            messages: [],
-            commands: []
-        }
-        client.customConfig = new Map()
-        client.addCustom = client.addCustomConfig = (serverid, data) => {
-            if (!serverid || typeof serverid != "string" || isNaN(serverid)) {
-                return "Invalid first argument, expecting a discord guild id."
-            }
-            if (typeof data == "object") {
-                client.customConfig.set(serverid, data)
-                return "Updated config for this guild."
-            } else if (data == null) {
-                client.customConfig.delete(serverid)
-                return "Deleted config if one was available for this guild"
-            }
-            return "Invalid second argument, expecting an object."
+/* eslint init-declarations: 0 */
+const discord = require("discord.js")
+const chalk = require("chalk")
+const startBot = require("./src/start.js")
+const confirmConfig = require("./src/confirmConfig.js")
+let Client;
 
-        }
-        client.data = {};
-        client.data.version = module.exports.version;
-        client.data.util = util
-        client.snippets = data.functions.snippets.snippets
-        client.functions.messages.messagefuncs.forEach(i => {
-            i.type = i.type.map(i => (i.toLowerCase()))
-            if (i.type == "all" && i.type.length === 1) {
-                client.functions.types.commands.push(i.name);
-                client.functions.types.messages.push(i.name);
-            } else if (i.type == "messages") {
-                client.functions.types.messages.push(i.name);
-            } else if (i.type == "commands") {
-                client.functions.types.commands.push(i.name);
-            }
-        })
-        client.config = config;
-        start(client, client.config)
-    }).catch((err) => {
-        if (client.developer === false) {
-            return console.error("An error occurred while loading commands.", err)
-        }
-        if (err.stack){
-            console.log(err, err.stack)
-        }else{
-            console.log(err)
-        }
-    })
+/*
+    All modular classes
+*/
+exports.version = require("./package.json").version;
+exports.DataStore = require("./src/dataStore.js")
+exports.methods = {RichEmbed: discord.RichEmbed}
+exports.CustomConfig = require("./src/CustomConfig.js")
+exports.command = function(name, options) {
+    const Command = require("./src/module_classes/Command.js")()
+
+    return new Command(name, options, Client)
 }
 
-function start(client, config) {
-    var startedAt = new Date();
-    client.login(config.token)
-    client.on("disconnect", (x) => {
-        if (x.code === 4004) {
-            if (startedAt.getTime() + 10000 > new Date().getTime()) {
-                return console.error("Discord stated that your bot token was incorrect, please copy the token again in config.json and make sure it's correct.")
+exports.observer = function(name, options) {
+    const Observer = require("./src/module_classes/Observer.js")(Client)
+    return new Observer(name, options)
+}
+
+exports.engine = function(name, options) {
+    const Engine = require("./src/module_classes/Engine.js")(Client)
+    return new Engine(name, options)
+}
+
+exports.snippet = function(name, options) {
+    const Snippet = require("./src/module_classes/Snippet.js")(Client)
+    return new Snippet(name, options)
+}
+
+exports.permission = function(name, options) {
+    const Permission = require("./src/module_classes/Permission.js")(Client)
+    return new Permission(name, options)
+}
+
+exports.event = function(name, options) {
+    const Event = require("./src/module_classes/Event.js")(Client)
+    return new Event(name, options)
+}
+
+exports.start = function(options) {
+    if (!confirmConfig(options)) {
+        return
+    }
+    if (typeof options.ignoreBots != "boolean" && typeof options.ignoreBots != "string" && options.ignoreBots != null) {
+        return console.log(`You're trying to start with ${chalk.red("an invalid option:")} ${chalk.red("ignoreBots")}, Please read this article on the docs on how to use this option: ${chalk.blue("https://discordspark.com/documentation/config")}`)
+    }
+    if (options.ignoreBots == true) {
+        options.ignoreBots = 4;
+    } else if (options.ignoreBots == false) {
+        options.ignoreBots = null
+    } else if (options.ignoreBots == "message") {
+        options.ignoreBots = 1
+    } else if (options.ignoreBots == "command") {
+        options.ignoreBots = 2
+    }
+
+    Client = class Client extends discord.Client {
+        constructor(config) {
+            super(config)
+            this.version = require("./package.json").version
+            this.config = {}
+            this.customConfig = new exports.DataStore()
+            this.CustomConfig = exports.CustomConfig
+        }
+
+        async search() {
+            var data = await require("./src/search.js").func(this)
+            return data;
+        }
+        async start() {
+            this.dataStore = await this.dataStore;
+            if (this.config.first) {
+                console.log(`Welcome to ${chalk.yellow(`Spark V${this.version}`)}!\nTo see the changelog for this update go to this page:\n${chalk.blue("https://github.com/TobiasFeld22/Spark/releases")}\nTo learn more about using Spark, please visit our docs:\n${chalk.blue("https://discordspark.com/")}\n-------------------`)
+            }
+
+            function colours(text, size) {
+                if (size == 0) {
+                    return chalk.red(text)
+                }
+                return chalk.green(text)
+            }
+            var commandtext = colours(`${this.dataStore.commands.size} commands\n`, this.dataStore.commands.size)
+            var observertext = colours(`${this.dataStore.functions.observer.size} observers\n`, this.dataStore.functions.observer.size)
+            var enginetext = colours(`${this.dataStore.functions.engines.size} engines\n`, this.dataStore.functions.engines.size)
+            var snippettext = colours(`${this.dataStore.functions.snippet.size} snippets\n`, this.dataStore.functions.snippet.size)
+            var permissiontext = colours(`${this.dataStore.permissions.size} permissions\n`, this.dataStore.permissions.size)
+            var eventtext = colours(`${this.dataStore.events.size} events\n`, this.dataStore.events.size)
+            startBot(this)
+
+            console.log(`Your bot (${chalk.yellow(this.user.tag)}) is now ${chalk.green("online!")} | Running on ${this.guilds.size} servers | ${chalk.yellow(`Spark v${this.version}`)}\nWe detected the following data:\n \n ${commandtext} ${observertext} ${enginetext} ${snippettext} ${permissiontext} ${eventtext}`)
+        }
+
+    }
+    Client = new Client(options.clientOptions);
+    Client.on("cc_update", function(data) {
+        Client.customConfig.set(data.id, data)
+    });
+    Client.config = options
+    Client.login(options.token).then(async () => {
+        try {
+            var application = await Client.fetchApplication()
+            Client.config.ownerID = application.owner.id
+        } catch (e) {
+            console.log(e)
+            throw Error("Couldn't fetch application, token may be a invalid / user token. ")
+        }
+        Client.guilds.forEach(i => {
+            i.customConfig = new exports.CustomConfig(Client, i.id);
+            Client.customConfig.set(i.id, i.customConfig)
+        })
+        Client.dataStore = await Client.search()
+        Client.snippets = {
+            list: (name) => {
+                if (!name) {
+                    return Client.dataStore.functions.snippet.map((i, n) => n)
+                } else if (Client.dataStore.functions.snippet.has(name)) {
+                    return Client.dataStore.functions.snippet.get(name)
+                }
+                return null;
             }
         }
+        Client.dataStore.functions.snippet.forEach((i, n) => {
+            Client.snippets[n] = i.snippet.code
+        })
+        Client.start(Client)
+
+    }).catch(err => {
+        return console.error("An error occured while trying to login, check your token.", err)
     })
-    client.on("ready", () => {
-        if (client.user.bot == false) {
-            return console.warn("This wrapper doesn't support selfbots.")
-        }
-        client.fetchApplication().then((application) => {
-            if (application.owner == null) {
-                if (client.config.owner_id == null) {
-                    return console.error("Can't fetch the owner's id, please follow instructions here <page_link>.")
-                } else if (client.users.get(client.config.owner_id) == undefined) {
-                    return console.error("The bot can't find the owner_id set up inside your file, \nThis could be because it's not valid, or because you are not in a server with it, please invite it to a server where you are on.")
-                }
-            } else {
-                client.config.owner_id = application.owner.id
-            }
-        }).catch((err) => {
-            if (client.developer) {
-                console.warn("Can't fetch application, error: \n", err)
-            } else if (client.config.owner_id == null) {
-                return console.error("Can't fetch the owner's id, please follow instructions here <page_link>.")
-            } else if (client.users.get(client.config.owner_id) == undefined) {
-                return console.error("The bot can't find the owner_id set up inside your file, \nThis could be because it's not valid, or because you are not in a server with it, please invite it to a server where you are on.")
-            }
-        })
-        client.functions.boot.bootfuncs.forEach((data) => {
-            function returnfunction() {
-                return data.function(client)
-            }
-            setTimeout(function() {
-                if (data.time > 0) {
-                    setInterval(returnfunction, data.time)
-                }
-                return returnfunction()
-            }, data.delay);
-        })
-        console.log(chalk.green(client.commanddata.commands.size) + " commands | " + chalk.green(client.commanddata.aliases.size) + " aliases, bot online")
-        if (client.config.firstTime) {
-            console.log(`Welcome to Spark! You are running Spark version ${client.data.version}\n\nTo add new commands, type "${config.prefix}createcommand <name> <alias1> <alias2> <alias3>" to generate a new template!`)
-        }
-        client.events.events.forEach(i => {
-            client.on(i.event, (one, two, three, four, five) => {
-                try {
-                    i.function(client, one, two, three, four, five)
-                } catch (e) {
-                    console.log("An error occurred in the event \"" + chalk.red(i.event) + "\"")
-                    if (client.developer) {
-                        console.warn(e)
-                    }
-                }
-            })
-        })
-        client.events.events.forEach(i => {
-            if (i.event === "ready") {
-                i.function(client)
-            }
-        })
-    })
+
 }

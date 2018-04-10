@@ -1,16 +1,14 @@
-exports.name = "ping"
-exports.level = 0;
+var Spark = require("../")
+const Command = Spark.command("ping")
 
-// Don't use this for regular commands.
-exports.system = true
-// Don't use this for regular commands.
+Command.addAlias("test-alias")
+Command.setLevel(0)
+Command.allowDms(true)
+Command.setDescription("Test the latency between Discord's servers and the bot.")
 
-exports.ignoredChannels = [];
+Command.code = async (client, message) => {
+    var result = await message.channel.send("Ping!")
+    result.edit(`Pong! | Took **${result.createdTimestamp - message.createdTimestamp}**ms.`)
 
-exports.command = function(client, message) {
-    var start = new Date().getTime()
-    message.channel.send("Pinging...").then((message) => {
-        var end = new Date().getTime()
-        message.edit("Pong! | Took **" + (end - start) + "**ms");
-    })
 }
+module.exports = Command;
