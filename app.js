@@ -48,7 +48,7 @@ exports.start = function (options) {
         return
     }
     if (typeof options.ignoreBots != "boolean" && typeof options.ignoreBots != "string" && options.ignoreBots != null) {
-        return console.log(`You're trying to start with ${chalk.red("an invalid option:")} ${chalk.red("ignoreBots")}, Please read this article on the docs on how to use this option: ${chalk.blue("https://discordspark.tk/docs/config")}`)
+        return console.log(`You're trying to start with ${chalk.red("an invalid option:")} ${chalk.red("ignoreBots")}, Please read this article on the docs on how to use this option: ${chalk.blue("https://discordspark.com/documentation/config")}`)
     }
     if (options.ignoreBots == true) {
         options.ignoreBots = 4;
@@ -76,7 +76,7 @@ exports.start = function (options) {
         async start() {
             this.dataStore = await this.dataStore;
             if (this.config.first) {
-                console.log(`Welcome to ${chalk.yellow(`Spark V${this.version}`)}!\nTo see the changelog for this update go to this page:\n${chalk.blue("https://github.com/TobiasFeld22/Spark/releases")}\nTo learn more about using Spark, please visit our docs:\n${chalk.blue("https://discordspark.tk/")}\n-------------------`)
+                console.log(`Welcome to ${chalk.yellow(`Spark V${this.version}`)}!\nTo see the changelog for this update go to this page:\n${chalk.blue("https://github.com/TobiasFeld22/Spark/releases")}\nTo learn more about using Spark, please visit our docs:\n${chalk.blue("https://discordspark.com/")}\n-------------------`)
             }
 
             function colours(text, size) {

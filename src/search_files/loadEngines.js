@@ -19,7 +19,7 @@ module.exports = async function(data, location) {
     engines.forEach(i => {
         var {engine} = i
         if (engine.constructor.name !== "Engine") {
-            console.warn(`${i.location} | Error while loading engine: \n File is not an engine class | See https://discordspark.tk/docs/engine for more info.`)
+            console.warn(`${i.location} | Error while loading engine: \n File is not an engine class | See https://discordspark.com/documentation/engines for more info.`)
             i = null;
             return;
         }
@@ -30,7 +30,7 @@ module.exports = async function(data, location) {
             engine.delay = 0
         }
         if (typeof engine.code != "function") {
-            console.warn(`${i.location} | Error while loading engine: \n No code specified. | see https://discordspark.tk/docs/engine for more info.`)
+            console.warn(`${i.location} | Error while loading engine: \n No code specified. | see https://discordspark.com/documentation/engines for more info.`)
             i = null;
             // add return if more checks are added.
         }

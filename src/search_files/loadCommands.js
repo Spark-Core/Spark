@@ -22,7 +22,7 @@ module.exports = async function(data, location) {
     commands = commands.filter(i => {
         var {command} = i
         if (command.constructor.name !== "Command") {
-            console.warn(`${i.location} | Error while loading command: \n File is not a Command class | See https://discordspark.tk/docs/commands for more info.`)
+            console.warn(`${i.location} | Error while loading command: \n File is not a Command class | See https://discordspark.com/documentation/commands for more info.`)
             return false;
         }
         if (command.aliases.length > 0) {
@@ -33,7 +33,7 @@ module.exports = async function(data, location) {
             })
         }
         if (typeof command.code != "function") {
-            console.warn(`${i.location} | Error while loading command: \n No code specified. | see https://discordspark.tk/docs/commands for more info.`)
+            console.warn(`${i.location} | Error while loading command: \n No code specified. | see https://discordspark.com/documentation/commands for more info.`)
             return false;
         }
         return true;

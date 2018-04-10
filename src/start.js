@@ -133,7 +133,7 @@ async function isValidCommand(client, message, commandName) {
             var {permission} = i
             var result = await permission.code(client, message)
             if (typeof result != "boolean") {
-                console.log(Chalk.red("Error | ") + "Permission " + Chalk.yellow(permission.name) + " is not returning the correct value, please read " + Chalk.blue("https://discordspark.tk/docs/permissions") + " for more information.")
+                console.log(Chalk.red("Error | ") + "Permission " + Chalk.yellow(permission.name) + " is not returning the correct value, please read " + Chalk.blue("https://discordspark.com/docs/permissions") + " for more information.")
                 return {
                     value: true,
                     name: commandName

@@ -20,7 +20,7 @@ module.exports = async function(data, location) {
     observer.forEach(i => {
         var {observer} = i
         if (observer.constructor.name !== "Observer") {
-            console.warn(`${i.location} | Error while loading observer: \n File is not an Observer class | See https://discordspark.tk/docs/observer for more info.`)
+            console.warn(`${i.location} | Error while loading observer: \n File is not an Observer class | See https://discordspark.com/documentation/observers for more info.`)
             i = null;
             return;
         }
@@ -32,7 +32,7 @@ module.exports = async function(data, location) {
             observer.type = "all"
         }
         if (typeof observer.code != "function") {
-            console.warn(`${i.location} | Error while loading observer: \n No code specified. | see https://discordspark.tk/docs/observer for more info.`)
+            console.warn(`${i.location} | Error while loading observer: \n No code specified. | see https://discordspark.com/documentation/observers for more info.`)
             i = null;
             // add return if more checks are added.
         }

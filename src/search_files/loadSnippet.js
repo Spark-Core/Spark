@@ -20,12 +20,12 @@ module.exports = async function(data, location) {
     snippets.forEach(i => {
         var {snippet} = i
         if (snippet.constructor.name !== "Snippet") {
-            console.warn(`${i.location} | Error while loading snippet: \n File is not a snippet class | See https://discordspark.tk/docs/snippets for more info.`)
+            console.warn(`${i.location} | Error while loading snippet: \n File is not a snippet class | See https://discordspark.com/documentation/snippets for more info.`)
             i = null;
             return;
         }
         if (typeof snippet.code != "function") {
-            console.warn(`${i.location} | Error while loading snippet: \n No code specified. | see https://discordspark.tk/docs/snippets for more info.`)
+            console.warn(`${i.location} | Error while loading snippet: \n No code specified. | see https://discordspark.com/documentation/snippets for more info.`)
             i = null;
         }
 
