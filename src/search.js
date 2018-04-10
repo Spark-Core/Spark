@@ -2,7 +2,10 @@
 /* eslint no-console: 0 */
 /* eslint class-methods-use-this: 0 */
 
-const {resolve, dirname} = require("path");
+const {
+    resolve,
+    dirname
+} = require("path");
 const fs = require("fs-extra")
 const DataStore = require("./dataStore.js")
 module.exports = {}
@@ -98,7 +101,9 @@ module.exports.SearchLoader = class SearchLoader {
     }
 
     merge(c, u) {
-        if (!u) {return c}
+        if (!u) {
+            return c
+        }
         u.commands.forEach((i, n) => {
             c.commands.set(n, i)
         })
@@ -117,11 +122,9 @@ module.exports.SearchLoader = class SearchLoader {
         u.aliases.forEach((i, n) => {
             c.aliases.set(n, i)
         })
-        u.events.forEach((i,n) => {
-          c.events.set(n, i)
+        u.events.forEach((i, n) => {
+            c.events.set(n, i)
         })
-        //
-        // for future reference
         return c;
     }
 
