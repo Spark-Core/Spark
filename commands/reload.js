@@ -1,3 +1,4 @@
+/* eslint prefer-destructuring: 0 */
 var Spark = require("../")
 const Command = Spark.command("reload")
 
@@ -5,44 +6,55 @@ Command.setLevel(10)
 Command.setDescription("Reload modules in your bot without restarting it.")
 
 Command.code = async (client, message) => {
-
-    if (!message.content.split(" ")[1]) {
-        message.channel.send("Reloading all files...");
+    var edit = null;
+    var arg = message.content.split(" ")[1]
+    if (arg) {
+        arg = arg.toLowerCase()
+    }
+    if (!arg || arg == "all") {
+        edit = await message.channel.send("Reloading all files...");
         reloadAll();
         await reloadSearch();
-        return message.channel.send("Successfully reloaded all files.");
-    } else if (message.content.split(" ")[1] === "commands") {
-        message.channel.send("Reloading all commands...");
+        return edit.edit("Successfully reloaded all files.");
+    } else if (arg === "commands") {
+        edit = await message.channel.send("Reloading all commands...");
         reloadCommands();
         await reloadSearch();
-        return message.channel.send("Successfully reloaded all commands.");
-    } else if (message.content.split(" ")[1] === "observers") {
-        message.channel.send("Reloading all observers...");
+        return edit.edit("Successfully reloaded all commands.");
+    } else if (arg === "observers") {
+        edit = await message.channel.send("Reloading all observers...");
         reloadObservers();
         await reloadSearch();
-        return message.channel.send("Successfully reloaded all observers.");
-    } else if (message.content.split(" ")[1] === "engines") {
-        message.channel.send("Reloading all engines...");
+        return edit.edit("Successfully reloaded all observers.");
+    } else if (arg === "engines") {
+        edit = await message.channel.send("Reloading all engines...");
         reloadEngines();
         await reloadSearch();
-        return message.channel.send("Successfully reloaded engines.");
-    } else if (message.content.split(" ")[1] === "snippets") {
-        message.channel.send("Reloading all snippets...");
+        return edit.edit("Successfully reloaded engines.");
+    } else if (arg === "snippets") {
+        edit = await message.channel.send("Reloading all snippets...");
         reloadSnippets();
         await reloadSearch();
-        return message.channel.send("Successfully reloaded all snippets.");
-    } else if (message.content.split(" ")[1] === "permissions") {
-        message.channel.send("Reloading all permission files...");
+        return edit.edit("Successfully reloaded all snippets.");
+    } else if (arg === "permissions") {
+        edit = await message.channel.send("Reloading all permission files...");
         reloadPermissions();
         await reloadSearch();
-        return message.channel.send("Successfully reloaded all permission files.");
-    } else if (message.content.split(" ")[1] === "events") {
-        message.channel.send("Reloading all events...");
+        return edit.edit("Successfully reloaded all permission files.");
+    } else if (arg === "events") {
+        edit = await message.channel.send("Reloading all events...");
         reloadEvents();
         await reloadSearch();
-        return message.channel.send("Successfully reloaded all events.");
-    } else if (message.content.split(" ")[1] != "commands" && message.content.split(" ")[1] != "observers" && message.content.split(" ")[1] != "engines" && message.content.split(" ")[1] != "snippets" && message.content.split(" ")[1] != "permissions" && message.content.split(" ")[1] != "events") {
-        return message.channel.send("That is an invalid option! \nPlease choose between `commands`, `observers`, `engines`, `snippets`, `permissions`, or `events`.")
+        return edit.edit("Successfully reloaded all events.");
+    } else if (![
+            "commands",
+            "observers",
+            "engines",
+            "snippets",
+            "permissions",
+            "events"
+        ].includes(arg)) {
+        return message.channel.send("Please enter a valid option! \nChoose between `commands`, `observers`, `engines`, `snippets`, `permissions`, or `events`.")
     }
 
     // Reload Functions
