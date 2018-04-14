@@ -1,13 +1,23 @@
 language: node_js
 node_js:
+  - "7"
   - "8"
+  - "9"
+
 install: npm install
+
 jobs:
   include:
     - stage: ESLint
+      node_js: "8"
       script: npm test
     - stage: Mocha
+      node_js: "8"
       script: npm run mocha-test
+
+matrix:
+  allow_failures:
+  - node_js: "7"
 
 notifications:
   webhooks:

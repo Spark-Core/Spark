@@ -3,7 +3,12 @@ const discord = require("discord.js")
 const chalk = require("chalk")
 const startBot = require("./src/start.js")
 const confirmConfig = require("./src/confirmConfig.js")
+const semver = require("semver")
 let Client;
+if (semver.lt(process.version, "8.0.0")) {
+    var err = "Your node.js version isn't high enough (" + chalk.red(process.version) + " < " + chalk.green("8.0.0+") + ")\nInstall a higher version of " + chalk.yellow("node.js") + " by going to " + chalk.blue("https://nodejs.org/en/download") + "\n---\nDownload node.js version " + chalk.green("8") + " or higher.\n\nIf you want more information go to \n" + chalk.blue("https://discordspark.com/errors/outdated_nodejs") + "\n\n"
+    throw new Error(err)
+}
 
 /*
     All modular classes
@@ -44,6 +49,7 @@ exports.event = function(name, options) {
 }
 
 exports.start = function(options) {
+
     if (!confirmConfig(options)) {
         return
     }
