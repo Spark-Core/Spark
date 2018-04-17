@@ -2,8 +2,7 @@
 ## Spark is a powerful modular framework that makes creating Discord bots easy
 
 [![Discord](https://discordapp.com/api/guilds/248505281741455360/embed.png)](https://discord.gg/TezD2Zg)
-[![Greenkeeper badge](https://badges.greenkeeper.io/Sparkbots/Spark.svg)](https://greenkeeper.io/)
-[![npm](https://img.shields.io/npm/v/sparkbots.svg)](https://npmjs/sparkbots)
+[![npm](https://api.discordspark.com/badge/npm)](https://npmjs/sparkbots)
 [![Build Status](https://api.travis-ci.org/Sparkbots/Spark.svg?branch=Stable)](https://travis-ci.org/TobiasFeld22/Spark) <br>
 
 
