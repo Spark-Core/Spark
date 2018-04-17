@@ -1,5 +1,5 @@
 var DisableCache = require("./DisableCache.js")
-module.exports = class CustomConfig {
+class CustomConfig {
 
     constructor(client, id) {
         this.id = id;
@@ -10,7 +10,8 @@ module.exports = class CustomConfig {
 
     setPrefix(prefix) {
         if (typeof prefix == "string") {
-            this.prefix = [prefix];
+            this.prefix = [];
+            this.prefix.push(prefix)
             this.client.emit("cc_update", this)
             return "success"
         } else if (typeof prefix == "object" && prefix.constructor.name == "Array") {
@@ -60,3 +61,4 @@ module.exports = class CustomConfig {
         this.disabled.remove(type, name)
     }
 }
+module.exports = CustomConfig
