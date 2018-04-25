@@ -26,9 +26,12 @@ Engine.code = async (client) => {
                 if (client.config.ignoreUpdate instanceof Array && client.config.ignoreUpdate.includes(version.version) == true) {
                     return
                 }
+                if (client.config.ignoreUpdate == true) {
+                    return
+                }
             }
             console.log(`${chalk.yellow("Spark")} update ${chalk.yellow(version.version)} has been released!\n\nTo update, type the following command: ${chalk.blue(command)}\nIn your bot's directory.\n\nTo read about what has been changed go to https://discordspark.com/releases \n\nWant to ignore this message?\nAdd ${chalk.red(`ignoreUpdate: ["${version.version}"]`)} to your start file.`)
-            if (!discordStatus) {
+            if (discordStatus) {
                 var owner = await client.fetchUser(client.config.ownerID);
                 owner.send(`Spark update **${version.version}** has been released!\n\nTo update, type the following command: **${command}**\nIn your bot's directory.\n\nTo read about what has been changed go to https://discordspark.com/releases \n\nWant to ignore this message?\nAdd this to your start file: \`\`\`json\nignoreUpdate: ["${version.version}"]\n\`\`\``)
             }

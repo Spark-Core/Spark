@@ -36,7 +36,11 @@ module.exports = (client) => {
     engine()
 
     client.on("message", (message) => {
-        client.config.prefix.forEach(async i => {
+        var p = client.config.prefix
+        if (message.channel.type == "text" && client.customConfig.has(message.guild.id) && client.customConfig.get(message.guild.id).prefix) {
+            p = client.customConfig.get(message.guild.id).prefix
+        }
+        p.forEach(async i => {
             if (message.content.startsWith(i)) {
                 var command = await isValidCommand(client, message, message.content.split(" ")[0].replace(i, "").toLowerCase())
                 if (client.config.disabled.has("commands", command.name)) {
@@ -167,7 +171,10 @@ async function isValidCommand(client, message, commandName) {
 }
 
 function executeCommand(client, message, commandName) {
-    var {command, location} = client.dataStore.commands.get(commandName)
+    var {
+        command,
+        location
+    } = client.dataStore.commands.get(commandName)
     try {
         if (message.channel.type == "dm" && command.dms) {
             command.code(client, message)

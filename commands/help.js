@@ -1,3 +1,4 @@
+/* eslint prefer-destructuring: 0 */
 var Spark = require("../")
 const Command = Spark.command("help")
 
@@ -42,12 +43,23 @@ Command.code = async (client, message) => {
         if (message.channel.permissionsFor(message.guild.members.get(client.user.id)).serialize().EMBED_LINKS) {
             embed.setTitle(`${client.user.username} help information`)
             embed.setDescription(`Type ${client.config.prefix[0]}help command-name to get more information.`)
+            data = Array.from(data)
+            var n = 0
+            if (!isNaN(message.content.split(" ")[1])) {
+                if (parseInt(message.content.split(" ")[1]) <= 0 || (parseInt(message.content.split(" ")[1]) - 1) * 25 > data.length) {
+                    n = (parseInt(message.content.split(" ")[1]) - 1) * 25;
+                }
+            }
+            data = data.slice(n, 25)
             data.forEach((entry) => {
-                var {command} = entry;
+                var {command} = entry[1];
+
                 return embed.addField("• " + command.name, command.description, false)
             })
             embed.setColor(client.config.embedColor || 0xffe13f)
-            embed.setFooter("You can use " + data.size + " commands.")
+            embed.setFooter("You can use " + data.length + " commands.")
+
+
             return message.channel.send("", {embed});
         }
         var text = `**${client.user.username} help information**\nType \`${client.config.prefix[0]}help command-name\` to get more information.\n\n`
