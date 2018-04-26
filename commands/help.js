@@ -43,21 +43,26 @@ Command.code = async (client, message) => {
         if (message.channel.permissionsFor(message.guild.members.get(client.user.id)).serialize().EMBED_LINKS) {
             embed.setTitle(`${client.user.username} help information`)
             embed.setDescription(`Type ${client.config.prefix[0]}help command-name to get more information.`)
+            var oldData = data;
             data = Array.from(data)
             var n = 0
             if (!isNaN(message.content.split(" ")[1])) {
-                if (parseInt(message.content.split(" ")[1]) <= 0 || (parseInt(message.content.split(" ")[1]) - 1) * 25 > data.length) {
+                if (parseInt(message.content.split(" ")[1]) >= 0 || (parseInt(message.content.split(" ")[1]) - 1) * 25 < data.length) {
                     n = (parseInt(message.content.split(" ")[1]) - 1) * 25;
                 }
             }
-            data = data.slice(n, 25)
+            data = data.splice(n, 25)
             data.forEach((entry) => {
                 var {command} = entry[1];
 
                 return embed.addField("• " + command.name, command.description, false)
             })
             embed.setColor(client.config.embedColor || 0xffe13f)
-            embed.setFooter("You can use " + data.length + " commands.")
+            var footer = "You can use " + oldData.size + " commands."
+            if (oldData.size > 25) {
+                footer = footer + " - do help < number > to see the next page"
+            }
+            embed.setFooter(footer)
 
 
             return message.channel.send("", {embed});
