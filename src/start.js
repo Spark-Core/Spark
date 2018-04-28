@@ -1,6 +1,5 @@
 var Chalk = require("chalk")
 module.exports = (client) => {
-
     function engine() {
         client.dataStore.functions.engines.forEach(i => {
             if (client.config.disabled.has("engines", i.engine.name)) {
@@ -64,10 +63,6 @@ module.exports = (client) => {
         })
 
     })
-
-
-
-
 }
 
 async function observer(client, message, command) {
