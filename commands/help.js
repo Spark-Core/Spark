@@ -18,6 +18,11 @@ Command.code = async (client, message) => {
             embed.addField("Name", command.name)
             embed.addField("Level required", command.level)
             embed.addField("Description", command.description)
+            command.helpFields.forEach(i => {
+                if (embed.fields.length < 25) {
+                    embed.addField(i.title, i.desc, i.inline)
+                }
+            })
             if (data.has(command.name.toLowerCase())) {
                 embed.setFooter("You have the permission to use this command.", message.author.avatarURL)
             } else {
@@ -26,11 +31,16 @@ Command.code = async (client, message) => {
             embed.setColor(client.config.embedColor || 0xffe13f)
             message.channel.send("", {embed})
         } else {
-            var text = `**${command.name} command information**\n\n• **Name:**\n   ${command.name}\n\n• **Level required:**\n   ${command.level}\n\n• **Description:**\n   ${command.description}\n\n\n`
+            var text = `**${command.name} command information**\n\n• **Name:**\n   ${command.name}\n\n• **Level required:**\n   ${command.level}\n\n• **Description:**\n   ${command.description}\n\n`
+            command.helpFields.forEach(i => {
+                if (text.length < 1950) {
+                    text = text + `• **${i.title}:**\n   ${i.desc}\n\n`
+                }
+            })
             if (data.has(command.name.toLowerCase())) {
-                text = text + "You have the permission to use this command."
+                text = text + "\nYou have the permission to use this command."
             } else {
-                text = text + "You don't have the permission to use this command."
+                text = text + "\nYou don't have the permission to use this command."
             }
             message.channel.send(text)
         }
