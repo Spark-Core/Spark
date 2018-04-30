@@ -39,7 +39,8 @@ module.exports = (client) => {
         if (message.channel.type == "text" && client.customConfig.has(message.guild.id) && client.customConfig.get(message.guild.id).prefix) {
             p = client.customConfig.get(message.guild.id).prefix
         }
-        p.forEach(async i => {
+        var prefixMatched = false;
+        p.forEach(async (i, n) => {
             if (message.content.startsWith(i)) {
                 var command = await isValidCommand(client, message, message.content.split(" ")[0].replace(i, "").toLowerCase())
                 if (client.config.disabled.has("commands", command.name)) {
@@ -51,14 +52,14 @@ module.exports = (client) => {
                     }
                 }
                 if (command.value == true) {
+                    prefixMatched = true
                     if (await observer(client, message, command.value)) {
                         executeCommand(client, message, command.name)
                     }
-                } else {
+                }
+                if ((n + 1) == p.length && prefixMatched == false) {
                     await observer(client, message)
                 }
-            } else {
-                await observer(client, message)
             }
         })
 
