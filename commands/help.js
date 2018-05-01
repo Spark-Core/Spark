@@ -18,6 +18,11 @@ Command.code = async (client, message) => {
             embed.addField("Name", command.name)
             embed.addField("Level required", command.level)
             embed.addField("Description", command.description)
+            command.helpFields.forEach(i => {
+                if (embed.fields.length < 25) {
+                    embed.addField(i.title, i.desc, i.inline)
+                }
+            })
             if (data.has(command.name.toLowerCase())) {
                 embed.setFooter("You have the permission to use this command.", message.author.avatarURL)
             } else {
@@ -26,11 +31,16 @@ Command.code = async (client, message) => {
             embed.setColor(client.config.embedColor || 0xffe13f)
             message.channel.send("", {embed})
         } else {
-            var text = `**${command.name} command information**\n\n• **Name:**\n   ${command.name}\n\n• **Level required:**\n   ${command.level}\n\n• **Description:**\n   ${command.description}\n\n\n`
+            var text = `**${command.name} command information**\n\n• **Name:**\n   ${command.name}\n\n• **Level required:**\n   ${command.level}\n\n• **Description:**\n   ${command.description}\n\n`
+            command.helpFields.forEach(i => {
+                if (text.length < 1950) {
+                    text = text + `• **${i.title}:**\n   ${i.desc}\n\n`
+                }
+            })
             if (data.has(command.name.toLowerCase())) {
-                text = text + "You have the permission to use this command."
+                text = text + "\nYou have the permission to use this command."
             } else {
-                text = text + "You don't have the permission to use this command."
+                text = text + "\nYou don't have the permission to use this command."
             }
             message.channel.send(text)
         }
@@ -43,21 +53,26 @@ Command.code = async (client, message) => {
         if (message.channel.permissionsFor(message.guild.members.get(client.user.id)).serialize().EMBED_LINKS) {
             embed.setTitle(`${client.user.username} help information`)
             embed.setDescription(`Type ${client.config.prefix[0]}help command-name to get more information.`)
+            var oldData = data;
             data = Array.from(data)
             var n = 0
             if (!isNaN(message.content.split(" ")[1])) {
-                if (parseInt(message.content.split(" ")[1]) <= 0 || (parseInt(message.content.split(" ")[1]) - 1) * 25 > data.length) {
+                if (parseInt(message.content.split(" ")[1]) >= 0 || (parseInt(message.content.split(" ")[1]) - 1) * 25 < data.length) {
                     n = (parseInt(message.content.split(" ")[1]) - 1) * 25;
                 }
             }
-            data = data.slice(n, 25)
+            data = data.splice(n, 25)
             data.forEach((entry) => {
                 var {command} = entry[1];
 
                 return embed.addField("• " + command.name, command.description, false)
             })
             embed.setColor(client.config.embedColor || 0xffe13f)
-            embed.setFooter("You can use " + data.length + " commands.")
+            var footer = "You can use " + oldData.size + " commands."
+            if (oldData.size > 25) {
+                footer = footer + " - do help < number > to see the next page"
+            }
+            embed.setFooter(footer)
 
 
             return message.channel.send("", {embed});
