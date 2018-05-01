@@ -6,7 +6,7 @@
   "dependencies": {
     "chalk": "^2.3.0",
     "discord.js": "11.3.2",
-    "fs-extra": "^5.0.0",
+    "fs-extra": "^6.0.0",
     "request": "latest",
     "request-promise": "^4.2.2",
     "socket.io-client": "^2.0.4"
