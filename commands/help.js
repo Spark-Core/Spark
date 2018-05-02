@@ -14,7 +14,7 @@ Command.code = async (client, message) => {
         var {command} = client.dataStore.commands.get(message.content.split(" ")[1].toLowerCase())
         var data = await getData()
         if (message.channel.permissionsFor(message.guild.members.get(client.user.id)).serialize().EMBED_LINKS) {
-            embed.setTitle(command.name + " command information")
+            embed.setTitle(cap(command.name) + " command information")
             embed.addField("Name", command.name)
             embed.addField("Level required", command.level)
             embed.addField("Description", command.description)
@@ -111,7 +111,9 @@ Command.code = async (client, message) => {
             return levels.get(i.command.level) == false
         })
     }
+}
 
-
+function cap(string) {
+    return string.charAt(0).toUpperCase() + string.toLowerCase().slice(1);
 }
 module.exports = Command;
