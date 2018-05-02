@@ -30,10 +30,13 @@ Engine.code = async (client) => {
                     return
                 }
             }
-            console.log(`${chalk.yellow("Spark")} update ${chalk.yellow(version.version)} has been released!\n\nTo update, type the following command: ${chalk.blue(command)}\nIn your bot's directory.\n\nTo read about what has been changed go to https://discordspark.com/releases \n\nWant to ignore this message?\nAdd ${chalk.red(`ignoreUpdate: ["${version.version}"]`)} to your start file.`)
+
             if (discordStatus) {
+                console.log(`${chalk.yellow("Spark")} update ${chalk.yellow(version.version)} has been released!\n\nTo update, type the following command: ${chalk.blue(command)}\nIn your bot's directory.\n\nTo read about what has been changed go to https://discordspark.com/releases \n\nWant to ignore this message?\nAdd ${chalk.red(`ignoreUpdate: ["${version.version}"]`)} to your start file.`)
                 var owner = await client.fetchUser(client.config.ownerID);
                 owner.send(`Spark update **${version.version}** has been released!\n\nTo update, type the following command: **${command}**\nIn your bot's directory.\n\nTo read about what has been changed go to https://discordspark.com/releases \n\nWant to ignore this message?\nAdd this to your start file: \`\`\`json\nignoreUpdate: ["${version.version}"]\n\`\`\``)
+            } else {
+                console.log("You're running this bot on an unreleased version. (" + chalk.red(Spark.version) + ") compatibility and support may not be up to date with what you expect.\nIf you don't know what this means please stop the bot, and type: " + chalk.blue("npm install sparkbots") + " To get back to a stable release.")
             }
         }
     } catch (e) {
