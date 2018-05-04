@@ -90,10 +90,15 @@ async function observer(client, message, command) {
         } catch (e) {
             console.log(e)
         }
-        if (results.includes(true)) {
-            return false;
+        try {
+            if (results.includes(true)) {
+                return false;
+            }
+            return true;
+        } catch (e) {
+            console.log(e)
+            return false
         }
-        return true;
     }
     if (ignoreBots == 2 || ignoreBots == 4) {
         return
