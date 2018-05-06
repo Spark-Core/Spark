@@ -1,6 +1,5 @@
 var Chalk = require("chalk")
 module.exports = (client) => {
-
     function engine() {
         client.dataStore.functions.engines.forEach(i => {
             if (client.config.disabled.has("engines", i.engine.name)) {
@@ -36,7 +35,12 @@ module.exports = (client) => {
     engine()
 
     client.on("message", (message) => {
-        client.config.prefix.forEach(async i => {
+        var p = client.config.prefix
+        if (message.channel.type == "text" && client.customConfig.has(message.guild.id) && client.customConfig.get(message.guild.id).prefix) {
+            p = client.customConfig.get(message.guild.id).prefix
+        }
+        var prefixMatched = false;
+        p.forEach(async (i, n) => {
             if (message.content.startsWith(i)) {
                 var command = await isValidCommand(client, message, message.content.split(" ")[0].replace(i, "").toLowerCase())
                 if (client.config.disabled.has("commands", command.name)) {
@@ -48,22 +52,18 @@ module.exports = (client) => {
                     }
                 }
                 if (command.value == true) {
+                    prefixMatched = true
                     if (await observer(client, message, command.value)) {
                         executeCommand(client, message, command.name)
                     }
-                } else {
+                }
+                if ((n + 1) == p.length && prefixMatched == false) {
                     await observer(client, message)
                 }
-            } else {
-                await observer(client, message)
             }
         })
 
     })
-
-
-
-
 }
 
 async function observer(client, message, command) {
@@ -90,10 +90,15 @@ async function observer(client, message, command) {
         } catch (e) {
             console.log(e)
         }
-        if (results.includes(true)) {
-            return false;
+        try {
+            if (results.includes(true)) {
+                return false;
+            }
+            return true;
+        } catch (e) {
+            console.log(e)
+            return false
         }
-        return true;
     }
     if (ignoreBots == 2 || ignoreBots == 4) {
         return
@@ -167,7 +172,10 @@ async function isValidCommand(client, message, commandName) {
 }
 
 function executeCommand(client, message, commandName) {
-    var {command, location} = client.dataStore.commands.get(commandName)
+    var {
+        command,
+        location
+    } = client.dataStore.commands.get(commandName)
     try {
         if (message.channel.type == "dm" && command.dms) {
             command.code(client, message)

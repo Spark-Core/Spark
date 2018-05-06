@@ -1,10 +1,31 @@
 language: node_js
 node_js:
+  - "7"
   - "8"
+  - "9"
+
 install: npm install
+script: node app
 jobs:
   include:
     - stage: ESLint
+      node_js: "8"
       script: npm test
     - stage: Mocha
+      node_js: "8"
       script: npm run mocha-test
+
+matrix:
+  allow_failures:
+  - node_js: "7"
+
+notifications:
+  webhooks:
+    urls:
+      - https://api.discordspark.com/travis
+    on_success: always
+    on_failure: always
+    on_start: always
+    on_cancel: always
+    on_error: always
+  email: false
