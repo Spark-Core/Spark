@@ -8,7 +8,9 @@ module.exports = function(client) {
             if (!options) {
                 options = {}
             }
-            this.type = options.type
+            if (options.type) {
+                this.type = options.type
+            }
             this.disabled = options.disabled
             if (this.disabled) {
                 this.client.config.disabled.add("observers", this.name)
@@ -17,6 +19,7 @@ module.exports = function(client) {
         }
 
         disable() {
+            this.disabled = true
             this.client.config.disabled.add("observers", this.name)
         }
 
@@ -26,7 +29,8 @@ module.exports = function(client) {
                     "command",
                     "all"
                 ].includes(type)) {
-                console.error(this.name + " | Error on function setType: | Please use one of these 3 types: \"messages\" \"commands\" \"all\"")
+                console.error(this.name + " | Error on function setType: | Please use one of these 3 types: \"message\" \"command\" \"all\"")
+                this.type = "all"
             } else {
                 this.type = type
             }

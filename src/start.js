@@ -57,12 +57,11 @@ module.exports = (client) => {
                         executeCommand(client, message, command.name)
                     }
                 }
-                if ((n + 1) == p.length && prefixMatched == false) {
-                    await observer(client, message)
-                }
+
+            } else if ((n + 1) == p.length && prefixMatched == false) {
+                await observer(client, message)
             }
         })
-
     })
 }
 
@@ -75,12 +74,12 @@ async function observer(client, message, command) {
         }
     }
     if (command) {
-        if (ignoreBots >= 3) {
+        if (ignoreBots >= 3 && message.author.bot == true) {
             return
         }
         try {
             results = await client.dataStore.functions.observer.filter(i => {
-                    return (i.observer.type == "all" || i.observer.type == "commands")
+                    return (i.observer.type == "all" || i.observer.type == "command")
                 })
                 .filter(i => (client.config.disabled.has("observers", i.observer.name) == false))
             if (message.channel.type == "text") {
@@ -99,23 +98,26 @@ async function observer(client, message, command) {
             console.log(e)
             return false
         }
-    }
-    if (ignoreBots == 2 || ignoreBots == 4) {
-        return
-    }
-    try {
-        results = await client.dataStore.functions.observer.filter(i => {
-                return (i.observer.type == "all" || i.observer.type == "commands")
-            })
-            .filter(i => (client.config.disabled.has("observers", i.observer.name) == false))
-        if (message.channel.type == "text") {
-            results = results.filter(i => client.customConfig.get(message.guild.id).disabled.has("observers", i.observer.name) == false)
+    } else {
+        if (ignoreBots == 2 || ignoreBots == 4) {
+            if (message.author.bot == true) {
+                return
+            }
         }
-        results = results.map(i => (i.observer.code(client, message)))
-    } catch (e) {
-        console.log(e)
-    }
+        try {
+            results = await client.dataStore.functions.observer.filter(i => {
+                    return (i.observer.type == "all" || i.observer.type == "message")
+                })
+                .filter(i => (client.config.disabled.has("observers", i.observer.name) == false))
+            if (message.channel.type == "text") {
+                results = results.filter(i => client.customConfig.get(message.guild.id).disabled.has("observers", i.observer.name) == false)
+            }
 
+            results = results.map(i => (i.observer.code(client, message)))
+        } catch (e) {
+            console.log(e)
+        }
+    }
 }
 
 async function isValidCommand(client, message, commandName) {
