@@ -39,6 +39,9 @@ module.exports = (client) => {
         if (message.channel.type == "text" && client.customConfig.has(message.guild.id) && client.customConfig.get(message.guild.id).prefix) {
             p = client.customConfig.get(message.guild.id).prefix
         }
+        if (typeof p == "string") {
+            p = [p]
+        }
         var prefixMatched = false;
         p.forEach(async (i, n) => {
             if (message.content.startsWith(i)) {
