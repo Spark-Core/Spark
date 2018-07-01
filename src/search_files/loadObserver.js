@@ -1,6 +1,8 @@
 const DataStore = require("./../dataStore.js")
 module.exports = async function(data, location) {
-    if (!data.dataStore) {data.dataStore = {}}
+    if (!data.dataStore) {
+        data.dataStore = {}
+    }
     if (!data.dataStore.functions) {
         data.dataStore.functions = {};
     }
@@ -10,7 +12,10 @@ module.exports = async function(data, location) {
     temp.forEach(i => {
         try {
             var temp = require(i)
-            observer.push({observer: temp, location: i})
+            observer.push({
+                observer: temp,
+                location: i
+            })
         } catch (e) {
             console.error(`${i} | Error while loading observer: \n ${e}`)
         }
@@ -25,8 +30,8 @@ module.exports = async function(data, location) {
             return;
         }
         if (typeof observer.type != "string" || ![
-                "messages",
-                "commands",
+                "message",
+                "command",
                 "all"
             ].includes(observer.type)) {
             observer.type = "all"
