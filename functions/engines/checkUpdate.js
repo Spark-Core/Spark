@@ -1,11 +1,11 @@
-var Spark = require("../../")
+const Spark = require("../../")
 const request = require("request-promise")
 const chalk = require("chalk")
 const Engine = Spark.engine("checkUpdate")
 Engine.setTime(43200000)
 Engine.code = async (client) => {
     try {
-        var versions = await request({
+        const versions = await request({
             method: "GET",
             uri: "https://api.discordspark.com/versions",
             qs: {
@@ -14,14 +14,14 @@ Engine.code = async (client) => {
             },
             json: true
         })
-        var version = versions.stable;
-        var discordStatus = versions.discord;
-        var command = "npm install sparkbots"
+        let version = versions.stable;
+        const discordStatus = versions.discord;
+        let command = "npm install sparkbots"
         if (client.version.includes("beta")) {
             version = versions.beta
             command = "npm install sparkbots@beta"
         }
-        var data = {
+        const data = {
             version,
             command
         }
@@ -57,9 +57,9 @@ async function checkOwner(client, data) {
     if ((new Date(data.version.release_date).getTime() + 999943200000) > new Date().getTime()) {
         client.config.updateErrors = true
         try {
-            var owner = await client.fetchUser(client.config.ownerID);
-            var channel = await owner.createDM()
-            var messages = await channel.fetchMessages({limit: 10})
+            const owner = await client.fetchUser(client.config.ownerID);
+            const channel = await owner.createDM()
+            let messages = await channel.fetchMessages({limit: 10})
             messages = messages.filter(i => {
                 return i.content.includes(`["${data.version.version}"]`)
             })

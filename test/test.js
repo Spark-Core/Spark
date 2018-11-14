@@ -115,7 +115,7 @@ describe('Searching & loading files', async function() {
 describe("Data collecting and processing", function() {
     describe("DataStore", function() {
 
-        var data = [{
+        let data = [{
             key: "1",
             value: 1
         }, {
@@ -125,7 +125,7 @@ describe("Data collecting and processing", function() {
             key: "3",
             value: 3
         }]
-        var datastore = new DataStore();
+        let datastore = new DataStore();
         it('Creates and adds data to the dataStore', function() {
             data.forEach(function(i) {
                 datastore.set(i.key, i.value)

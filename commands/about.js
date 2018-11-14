@@ -1,4 +1,4 @@
-var Spark = require("../")
+const Spark = require("../")
 const Command = Spark.command("about")
 
 Command.setLevel(0)
@@ -6,10 +6,10 @@ Command.setDescription("Get information about this bot.")
 
 Command.code = async (client, message) => {
 
-    var v = process.memoryUsage().heapUsed
+    let v = process.memoryUsage().heapUsed
     v = (v / 1024 / 1024).toFixed(3);
 
-    var prefixText = prefixList().map(i => i).join(", ")
+    let prefixText = prefixList().map(i => i).join(", ")
     if (prefixList().length > 1) {
         prefixText = prefixList().map(i => ("`" + i + "`")).join(", ")
     }
@@ -29,7 +29,7 @@ Command.code = async (client, message) => {
         embed.setColor(0xe1e818)
         return message.channel.send("", {embed})
     }
-    var owner = await client.fetchUser(client.config.ownerID);
+    const owner = await client.fetchUser(client.config.ownerID);
     message.channel.send(`Hello, I am ${client.user.tag}. I am owned and maintained by ${owner.tag}, created with the Discord.JS framework known as **Spark**.\n\n` +
         "Spark is a powerful modular framework that makes creating Discord bots easy.\n\n" +
         `My prefix(es) are: ${prefixText}.\n` +

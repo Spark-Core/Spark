@@ -1,4 +1,4 @@
-var Chalk = require("chalk")
+const Chalk = require("chalk")
 module.exports = (client) => {
     function engine() {
         client.dataStore.functions.engines.forEach(i => {
@@ -35,17 +35,17 @@ module.exports = (client) => {
     engine()
 
     client.on("message", (message) => {
-        var p = client.config.prefix
+        let p = client.config.prefix
         if (message.channel.type == "text" && client.customConfig.has(message.guild.id) && client.customConfig.get(message.guild.id).prefix) {
             p = client.customConfig.get(message.guild.id).prefix
         }
         if (typeof p == "string") {
             p = [p]
         }
-        var prefixMatched = false;
+        let prefixMatched = false;
         p.forEach(async (i, n) => {
             if (message.content.startsWith(i)) {
-                var command = await isValidCommand(client, message, message.content.split(" ")[0].replace(i, "").toLowerCase())
+                const command = await isValidCommand(client, message, message.content.split(" ")[0].replace(i, "").toLowerCase())
                 if (client.config.disabled.has("commands", command.name)) {
                     return
                 }
@@ -69,8 +69,8 @@ module.exports = (client) => {
 }
 
 async function observer(client, message, command) {
-    var results = null;
-    var {ignoreBots} = client.config
+    let results = null;
+    let {ignoreBots} = client.config
     if (message.channel.type == "text") {
         if (message.guild.customConfig.ignoreBots) {
             ignoreBots = message.guild.customConfig;
@@ -125,8 +125,8 @@ async function observer(client, message, command) {
 
 async function isValidCommand(client, message, commandName) {
     if (client.dataStore.commands.has(commandName)) {
-        var {command} = client.dataStore.commands.get(commandName)
-        var permissions = client.dataStore.permissions.filter(i => {
+        const {command} = client.dataStore.commands.get(commandName)
+        let permissions = client.dataStore.permissions.filter(i => {
                 return i.permission.level == command.level
             })
             .filter(i => client.config.disabled.has("permissions", i.permission.name) == false)
@@ -139,9 +139,9 @@ async function isValidCommand(client, message, commandName) {
                 name: commandName
             }
         }
-        var results = permissions.map(async i => {
-            var {permission} = i
-            var result = await permission.code(client, message)
+        let results = permissions.map(async i => {
+            const {permission} = i
+            const result = await permission.code(client, message)
             if (typeof result != "boolean") {
                 console.log(Chalk.red("Error | ") + "Permission " + Chalk.yellow(permission.name) + " is not returning the correct value, please read " + Chalk.blue("https://discordspark.com/docs/permissions") + " for more information.")
                 return {
@@ -177,7 +177,7 @@ async function isValidCommand(client, message, commandName) {
 }
 
 function executeCommand(client, message, commandName) {
-    var {
+    const {
         command,
         location
     } = client.dataStore.commands.get(commandName)

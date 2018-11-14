@@ -1,10 +1,10 @@
 /* eslint prefer-destructuring: 0  */
-var Spark = require("../../")
+const Spark = require("../../")
 const observer = Spark.observer("prefixHelp")
 observer.setType("message")
 
 observer.code = (client, message) => {
-    var first = message.content;
+    let first = message.content;
     if (message.content.includes(" ") > 0) {
         return
     }
@@ -21,7 +21,7 @@ module.exports = observer;
 
 function prefixHelp(client, message) {
     if (client.customConfig.has(message.guild.id)) {
-        var {prefix} = client.customConfig.get(message.guild.id)
+        const {prefix} = client.customConfig.get(message.guild.id)
 
         if (typeof prefix == "string") {
             message.channel.send("My prefix is: `" + prefix + "`")

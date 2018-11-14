@@ -5,11 +5,11 @@ module.exports = async function(data, location) {
         data.dataStore.functions = {};
     }
     data.dataStore.functions.engines = new DataStore();
-    var temp = await data.searchInDirectories(location);
-    var engines = [];
+    const temp = await data.searchInDirectories(location);
+    let engines = [];
     temp.forEach(i => {
         try {
-            var temp = require(i)
+            const temp = require(i)
             engines.push({engine: temp, location: i})
         } catch (e) {
             console.error(`${i} | Error while loading engine: \n ${e}`)
@@ -17,7 +17,7 @@ module.exports = async function(data, location) {
     })
 
     engines.forEach(i => {
-        var {engine} = i
+        const {engine} = i
         if (engine.constructor.name !== "Engine") {
             console.warn(`${i.location} | Error while loading engine: \n File is not an engine class | See https://discordspark.com/documentation/engines for more info.`)
             i = null;

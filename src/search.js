@@ -65,19 +65,19 @@ module.exports.SearchLoader = class SearchLoader {
     }
 
     async searchInDirectories(location, notFirst) {
-        var files = null;
+        let files = null;
         try {
             files = await fs.readdir(location)
         } catch (err) {
 
             if (err.code == "ENOENT") {
                 await this.genFolder(location)
-                var x = await this.searchInDirectories(location, notFirst)
+                const x = await this.searchInDirectories(location, notFirst)
                 return x;
             }
             return console.error("An error occurred while searching directories.", err)
         }
-        var jsFiles = files.filter(i => {
+        let jsFiles = files.filter(i => {
             return i.endsWith(".js")
         })
         jsFiles = jsFiles.map(i => (resolve(location, i)))
@@ -85,11 +85,11 @@ module.exports.SearchLoader = class SearchLoader {
             return new DataStore()
         }
         if (!notFirst) {
-            var folders = files.filter(i => {
+            const folders = files.filter(i => {
                 return !(i.includes("."))
             })
-            var all = folders.map(i => (this.searchInDirectories(resolve(location, i), true)))
-            var data = await Promise.all(all)
+            const all = folders.map(i => (this.searchInDirectories(resolve(location, i), true)))
+            const data = await Promise.all(all)
             data.forEach(i => {
                 i.forEach(i => {
                     jsFiles.push(resolve(location, i))
@@ -130,6 +130,6 @@ module.exports.SearchLoader = class SearchLoader {
 
 }
 module.exports.func = async (client) => {
-    var loader = new module.exports.SearchLoader(client)
+    const loader = new module.exports.SearchLoader(client)
     return loader.merge(await loader.loadAll(loader.clientLocations), await loader.loadAll(loader.userLocations))
 }

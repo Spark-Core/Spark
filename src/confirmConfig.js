@@ -1,5 +1,5 @@
-var DisableCache = require("./DisableCache.js")
-var chalk = require("chalk")
+const DisableCache = require("./DisableCache.js")
+const chalk = require("chalk")
 module.exports = (options) => {
     if (typeof options != "object") {
         return console.log(`You are trying to start without ${chalk.red("a starting object")}.\nPlease read this article:\n${chalk.blue("https://discordspark.com/documentation/intro")}`)

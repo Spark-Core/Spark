@@ -1,5 +1,5 @@
 /* eslint no-process-exit: 0*/
-var Spark = require("../")
+const Spark = require("../")
 const Command = Spark.command("reboot")
 
 Command.addAlias("restart")

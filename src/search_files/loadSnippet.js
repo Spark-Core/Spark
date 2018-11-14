@@ -5,11 +5,11 @@ module.exports = async function(data, location) {
         data.dataStore.functions = {};
     }
     data.dataStore.functions.snippet = new DataStore();
-    var temp = await data.searchInDirectories(location);
-    var snippets = [];
+    const temp = await data.searchInDirectories(location);
+    let snippets = [];
     temp.forEach(i => {
         try {
-            var temp = require(i)
+            const temp = require(i)
             snippets.push({snippet: temp, location: i})
         } catch (e) {
             console.error(`${i} | Error while loading snippet: \n ${e}`)
@@ -18,7 +18,7 @@ module.exports = async function(data, location) {
     })
 
     snippets.forEach(i => {
-        var {snippet} = i
+        const {snippet} = i
         if (snippet.constructor.name !== "Snippet") {
             console.warn(`${i.location} | Error while loading snippet: \n File is not a snippet class | See https://discordspark.com/documentation/snippets for more info.`)
             i = null;

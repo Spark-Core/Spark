@@ -7,11 +7,11 @@ module.exports = async function(data, location) {
         data.dataStore.functions = {};
     }
     data.dataStore.functions.observer = new DataStore();
-    var temp = await data.searchInDirectories(location);
-    var observer = [];
+    const temp = await data.searchInDirectories(location);
+    let observer = [];
     temp.forEach(i => {
         try {
-            var temp = require(i)
+            const temp = require(i)
             observer.push({
                 observer: temp,
                 location: i
@@ -23,7 +23,7 @@ module.exports = async function(data, location) {
     })
 
     observer.forEach(i => {
-        var {observer} = i
+        const {observer} = i
         if (observer.constructor.name !== "Observer") {
             console.warn(`${i.location} | Error while loading observer: \n File is not an Observer class | See https://discordspark.com/documentation/observers for more info.`)
             i = null;

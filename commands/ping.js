@@ -1,4 +1,4 @@
-var Spark = require("../")
+const Spark = require("../")
 const Command = Spark.command("ping")
 
 Command.addAlias("test-alias")
@@ -7,7 +7,7 @@ Command.allowDms(true)
 Command.setDescription("Test the latency between Discord's servers and the bot.")
 
 Command.code = async (client, message) => {
-    var result = await message.channel.send("Ping!")
+    const result = await message.channel.send("Ping!")
     result.edit(`Pong! | Took **${result.createdTimestamp - message.createdTimestamp}**ms.`)
 
 }

@@ -5,11 +5,11 @@ module.exports = async function(data, location) {
     }
 
     data.dataStore.events = new DataStore();
-    var temp = await data.searchInDirectories(location);
-    var events = [];
+    const temp = await data.searchInDirectories(location);
+    let events = [];
     temp.forEach(i => {
         try {
-            var temp = require(i)
+            const temp = require(i)
             events.push({
                 event: temp,
                 location: i
@@ -21,7 +21,7 @@ module.exports = async function(data, location) {
     })
 
     events.forEach(function(i) {
-        var {event} = i
+        const {event} = i
         if (event.constructor.name !== "Event") {
             console.warn(`${i.location} | Error while loading event: \n File is not a event class | See https://discordspark.com/docs/events for more info.`)
             i = null;

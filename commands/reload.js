@@ -1,13 +1,13 @@
 /* eslint prefer-destructuring: 0 */
-var Spark = require("../")
+const Spark = require("../")
 const Command = Spark.command("reload")
 
 Command.setLevel(10)
 Command.setDescription("Reload modules in your bot without restarting it.")
 
 Command.code = async (client, message) => {
-    var edit = null;
-    var arg = message.content.split(" ")[1]
+    let edit = null;
+    let arg = message.content.split(" ")[1]
     if (arg) {
         arg = arg.toLowerCase()
     }
@@ -70,7 +70,7 @@ Command.code = async (client, message) => {
 
     async function reloadSearch() {
         try {
-            var temp = await client.search()
+            const temp = await client.search()
             client.dataStore = temp
         } catch (e) {
             console.error(e);

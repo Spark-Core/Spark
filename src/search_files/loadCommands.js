@@ -5,11 +5,11 @@ module.exports = async function(data, location) {
     }
     data.dataStore.commands = new DataStore();
     data.dataStore.aliases = new DataStore();
-    var tempcommands = await data.searchInDirectories(location);
-    var commands = [];
+    const tempcommands = await data.searchInDirectories(location);
+    let commands = [];
     tempcommands.forEach(i => {
         try {
-            var temp = require(i)
+            const temp = require(i)
             commands.push({
                 command: temp,
                 location: i
@@ -20,7 +20,7 @@ module.exports = async function(data, location) {
 
     })
     commands = commands.filter(i => {
-        var {command} = i
+        const {command} = i
         if (command.constructor.name !== "Command") {
             console.warn(`${i.location} | Error while loading command: \n File is not a Command class | See https://discordspark.com/documentation/commands for more info.`)
             return false;

@@ -1,4 +1,4 @@
-var DisableCache = require("./DisableCache.js")
+const DisableCache = require("./DisableCache.js")
 class CustomConfig {
 
     constructor(client, id) {

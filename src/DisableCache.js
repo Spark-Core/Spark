@@ -37,7 +37,7 @@ module.exports = class DisableCache {
     }
 
     remove(type, name) {
-        var nr = this[type].indexOf(name)
+        const nr = this[type].indexOf(name)
         if (nr != -1) {
             this[type].splice(nr, 1)
         }

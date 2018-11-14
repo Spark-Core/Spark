@@ -1,5 +1,5 @@
 /* eslint prefer-destructuring: 0 */
-var Spark = require("../")
+const Spark = require("../")
 const Command = Spark.command("help")
 
 Command.setLevel(0)
@@ -11,8 +11,8 @@ Command.code = async (client, message) => {
     if (!message.content.split(" ")[1]) {
         sendCommands()
     } else if (client.dataStore.commands.has(message.content.split(" ")[1].toLowerCase())) {
-        var {command} = client.dataStore.commands.get(message.content.split(" ")[1].toLowerCase())
-        var data = await getData()
+        const {command} = client.dataStore.commands.get(message.content.split(" ")[1].toLowerCase())
+        const data = await getData()
         if (message.channel.permissionsFor(message.guild.members.get(client.user.id)).serialize().EMBED_LINKS) {
             embed.setTitle(cap(command.name) + " command information")
             embed.addField("Name", command.name)
@@ -31,7 +31,7 @@ Command.code = async (client, message) => {
             embed.setColor(client.config.embedColor || 0xffe13f)
             message.channel.send("", {embed})
         } else {
-            var text = `**${command.name} command information**\n\n• **Name:**\n   ${command.name}\n\n• **Level required:**\n   ${command.level}\n\n• **Description:**\n   ${command.description}\n\n`
+            let text = `**${command.name} command information**\n\n• **Name:**\n   ${command.name}\n\n• **Level required:**\n   ${command.level}\n\n• **Description:**\n   ${command.description}\n\n`
             command.helpFields.forEach(i => {
                 if (text.length < 1950) {
                     text = text + `• **${i.title}:**\n   ${i.desc}\n\n`
@@ -49,13 +49,13 @@ Command.code = async (client, message) => {
     }
 
     async function sendCommands() {
-        var data = await getData();
+        let data = await getData();
         if (message.channel.permissionsFor(message.guild.members.get(client.user.id)).serialize().EMBED_LINKS) {
             embed.setTitle(`${client.user.username} help information`)
             embed.setDescription(`Type ${client.config.prefix[0]}help command-name to get more information.`)
-            var oldData = data;
+            const oldData = data;
             data = Array.from(data)
-            var n = 0
+            let n = 0
             if (!isNaN(message.content.split(" ")[1])) {
                 if (parseInt(message.content.split(" ")[1]) >= 0 || (parseInt(message.content.split(" ")[1]) - 1) * 25 < data.length) {
                     n = (parseInt(message.content.split(" ")[1]) - 1) * 25;
@@ -63,12 +63,12 @@ Command.code = async (client, message) => {
             }
             data = data.splice(n, 25)
             data.forEach((entry) => {
-                var {command} = entry[1];
+                const {command} = entry[1];
 
                 return embed.addField("• " + command.name, command.description, false)
             })
             embed.setColor(client.config.embedColor || 0xffe13f)
-            var footer = "You can use " + oldData.size + " commands."
+            let footer = "You can use " + oldData.size + " commands."
             if (oldData.size > 25) {
                 footer = footer + " - do help < number > to see the next page"
             }
@@ -77,18 +77,18 @@ Command.code = async (client, message) => {
 
             return message.channel.send("", {embed});
         }
-        var text = `**${client.user.username} help information**\nType \`${client.config.prefix[0]}help command-name\` to get more information.\n\n`
+        let text = `**${client.user.username} help information**\nType \`${client.config.prefix[0]}help command-name\` to get more information.\n\n`
         data.forEach(entry => {
-            var {command} = entry;
+            const {command} = entry;
             text = text + "• **" + command.name + "**\n     " + command.description + "\n"
         })
         embed.setFooter(data.count + " Commands for you")
         return message.channel.send(text)
     }
     async function getData() {
-        var levels = []
+        let levels = []
         client.dataStore.commands.forEach(i => {
-            var {command} = i
+            const {command} = i
             if (!levels.includes(command.level)) {
                 levels.push(command.level)
             }
@@ -96,13 +96,13 @@ Command.code = async (client, message) => {
         levels = client.dataStore.permissions.filter(i => {
             return levels.includes(i.permission.level)
         }).map(async i => {
-            var result = await i.permission.code(client, message)
+            const result = await i.permission.code(client, message)
             return {
                 level: i.permission.level,
                 result
             };
         })
-        var result = await Promise.all(levels)
+        const result = await Promise.all(levels)
         levels = new Map()
         result.forEach(i => {
             levels.set(i.level, i.result)
